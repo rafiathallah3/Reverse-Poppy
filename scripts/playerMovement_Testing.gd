@@ -15,8 +15,12 @@ var base_gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 
+var is_paused: bool = false
+
 func _physics_process(delta):
-	
+	if is_paused:
+		return
+		
 	if not is_on_floor():
 		if velocity.y > 0:
 			velocity.y += base_gravity * FALL_GRAVITY_MULTIPLIER * delta
@@ -26,7 +30,6 @@ func _physics_process(delta):
 		coyote_timer -= delta
 	else:
 		coyote_timer = COYOTE_DURATION 
-
 
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= delta
@@ -50,3 +53,9 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
 	move_and_slide()
+
+func set_paused(paused: bool) -> void:
+	is_paused = paused
+	# Reset velocity to 0 when paused so the player immediately stops moving
+	if paused:
+		velocity = Vector2.ZERO
