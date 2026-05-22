@@ -1,6 +1,45 @@
 [gd_scene format=3 uid="uid://b7ka55n8a4okr"]
 
 [ext_resource type="Script" uid="uid://dpp4s0i8dakrl" path="res://game_manager.gd" id="1_70yv6"]
+[ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="2_d5upp"]
+[ext_resource type="Texture2D" uid="uid://bajfnnf56ketc" path="res://assets/test_Sprite.png" id="3_vk86k"]
+[ext_resource type="Texture2D" uid="uid://brtbomj4dfr6t" path="res://assets/floorsAndSuch_Spriite.png" id="4_shwjl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eakoi"]
+size = Vector2(160, 133)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8jrwq"]
+size = Vector2(936, 225)
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
+position = Vector2(404, 440)
+scale = Vector2(0.44, 0.36)
 script = ExtResource("1_70yv6")
+
+[node name="Player (Testing)" type="CharacterBody2D" parent="." unique_id=682974834]
+position = Vector2(-435, -30)
+script = ExtResource("2_d5upp")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Player (Testing)" unique_id=94201368]
+position = Vector2(1.9999695, 0)
+scale = Vector2(0.24166544, 0.33381185)
+texture = ExtResource("3_vk86k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player (Testing)" unique_id=1591381885]
+position = Vector2(2, 10.5)
+shape = SubResource("RectangleShape2D_eakoi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=899829669]
+position = Vector2(-32, 8)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1025361402]
+position = Vector2(-94.37499, 184.00002)
+scale = Vector2(0.87838465, 0.37)
+texture = ExtResource("4_shwjl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=726054451]
+position = Vector2(-94, 185.5)
+shape = SubResource("RectangleShape2D_8jrwq")
+metadata/_edit_group_ = true
