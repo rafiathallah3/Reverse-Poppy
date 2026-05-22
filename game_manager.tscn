@@ -4,3 +4,5 @@
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
 script = ExtResource("1_70yv6")
+
+[node name="TestGhossan" type="Node2D" parent="." unique_id=386694599]
