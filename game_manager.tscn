@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b7ka55n8a4okr"]
 
 [ext_resource type="Script" uid="uid://dpp4s0i8dakrl" path="res://game_manager.gd" id="1_70yv6"]
-[ext_resource type="Texture2D" uid="uid://1uelpgse1kki" path="res://Drifted placeholder.png" id="2_smx3j"]
+[ext_resource type="Texture2D" uid="uid://bjvlnsx0neurw" path="res://Sunset Skybox-Recovered.png" id="2_smx3j"]
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
 script = ExtResource("1_70yv6")
@@ -10,5 +10,6 @@ script = ExtResource("1_70yv6")
 
 [node name="TextureRect" type="TextureRect" parent="TestGhossan" unique_id=311826232]
 offset_right = 1154.0
-offset_bottom = 646.0
+offset_bottom = 720.0
+scale = Vector2(1, 0.8961732)
 texture = ExtResource("2_smx3j")
