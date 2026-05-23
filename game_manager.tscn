@@ -1,8 +1,37 @@
 [gd_scene format=3 uid="uid://b7ka55n8a4okr"]
 
 [ext_resource type="Script" uid="uid://dpp4s0i8dakrl" path="res://game_manager.gd" id="1_70yv6"]
+[ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="2_o2178"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_smx3j"]
+atlas = ExtResource("2_o2178")
+region = Rect2(6, 11, 24, 37)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2178"]
+atlas = ExtResource("2_o2178")
+region = Rect2(30, 11, 24, 37)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_smx3j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_smx3j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2178")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
 position = Vector2(404, 440)
 scale = Vector2(0.44, 0.36)
 script = ExtResource("1_70yv6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=790929605]
+position = Vector2(422.72723, 47.2222)
+scale = Vector2(21.02273, 20.720722)
+sprite_frames = SubResource("SpriteFrames_smx3j")
+frame_progress = 0.09368736

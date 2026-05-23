@@ -1,3 +1,14 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://iqkvsbu87sth"]
 
+[ext_resource type="Texture2D" uid="uid://beefr6wbruw7n" path="res://assets/sunset.png" id="1_o5qi2"]
+
 [resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_o5qi2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
