@@ -54,7 +54,7 @@ func _ready() -> void:
 	_add_joypad_button_to_action("shoot", JOY_BUTTON_RIGHT_SHOULDER)
 	
 	# 5. Grenade input action & events (E on Keyboard, B Button/LB/Y on Xbox)
-	_add_key_to_action("grenade", KEY_E)
+	_add_key_to_action("grenade", KEY_F)
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_B)
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_Y)
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_LEFT_SHOULDER)
