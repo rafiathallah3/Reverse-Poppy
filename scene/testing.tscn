@@ -1,3 +1,73 @@
 [gd_scene format=3 uid="uid://clxolmj35ahsf"]
 
+[ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="3_6jrte"]
+[ext_resource type="Texture2D" uid="uid://ce3d2et6x4me1" path="res://assets/BackgroundMastertake1.png" id="3_o4coy"]
+[ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="5_6jrte"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wya11"]
+atlas = ExtResource("3_6jrte")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o4coy"]
+atlas = ExtResource("3_6jrte")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8i7lg"]
+atlas = ExtResource("3_6jrte")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6jrte"]
+animations = [{
+"frames": [{
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_wya11")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_o4coy")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_8i7lg")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_o4coy")
+}, {
+"duration": 0.3,
+"texture": SubResource("AtlasTexture_wya11")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ye2h"]
+texture = ExtResource("5_6jrte")
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_jxjbq"]
+sources/0 = SubResource("TileSetAtlasSource_1ye2h")
+
 [node name="Testing" type="Node2D" unique_id=1548511231]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=405558179]
+position = Vector2(384, 357)
+scale = Vector2(2.291667, 2.375)
+sprite_frames = SubResource("SpriteFrames_6jrte")
+frame_progress = 0.23156077
+
+[node name="TileMap" type="TileMap" parent="." unique_id=1367675923]
+position = Vector2(218, 271)
+scale = Vector2(3, 3)
+tile_set = SubResource("TileSet_jxjbq")
+format = 2
+layer_0/tile_data = PackedInt32Array(196610, 0, 1, 196611, 0, 1, 196612, 0, 1, 196613, 0, 1, 196614, 0, 1, 196609, 65536, 1, 131073, 65536, 1, 65537, 65536, 1, 1, 65536, 1, -65535, 65536, 1, -65534, 65536, 1, -65533, 65536, 1, -65532, 65536, 1, -65531, 65536, 1, -65530, 65536, 1, 196615, 0, 0, 196616, 0, 0, 196617, 0, 0, 131081, 0, 0, 65545, 0, 0, 131079, 65536, 0, 131080, 65536, 0, 65544, 65536, 0, 65546, 0, 0, 9, 0, 1, 10, 0, 1, 11, 0, 0, 12, 0, 1, 13, 0, 1, -65523, 0, 1, -65522, 0, 1, -65525, 65536, 1, -65524, 65536, 1, -131059, 65536, 1, -131058, 65536, 1, -196594, 65536, 1, -131066, 0, 1, -131067, 0, 1)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1258497640]
+z_index = -2
+offset_left = -6.0
+offset_top = -8.0
+offset_right = 1160.0
+offset_bottom = 655.0
+texture = ExtResource("3_o4coy")
