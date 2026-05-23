@@ -451,10 +451,10 @@ shape = SubResource("CircleShape2D_trigger")
 [node name="TimeUiCanvas" type="CanvasLayer" parent="." unique_id=1267792695]
 
 [node name="ControlPanel" type="Panel" parent="TimeUiCanvas" unique_id=1350763413]
-offset_left = 427.0
-offset_top = 17.0
-offset_right = 827.0
-offset_bottom = 177.0
+offset_left = 432.0
+offset_top = 15.0
+offset_right = 832.0
+offset_bottom = 175.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TimeUiCanvas/ControlPanel" unique_id=634306256]
 layout_mode = 1
@@ -522,7 +522,7 @@ shape = SubResource("RectangleShape2D_2tadr")
 position = Vector2(65.65912, 82.22223)
 scale = Vector2(3.5748675, 3.740741)
 sprite_frames = SubResource("SpriteFrames_tmn8n")
-frame_progress = 0.6109915
+frame_progress = 0.5097055
 
 [node name="TimeGlitchCanvas" type="CanvasLayer" parent="." unique_id=987293820]
 layer = 10
@@ -552,13 +552,13 @@ shape = SubResource("RectangleShape2D_tmn8n")
 position = Vector2(-1027.2727, -197.22223)
 scale = Vector2(4.299716, 4.2193975)
 sprite_frames = SubResource("SpriteFrames_lx373")
-frame_progress = 0.33898234
+frame_progress = 0.97706205
 
 [node name="EnemiesIdle" type="AnimatedSprite2D" parent="Node2D" unique_id=179487245]
 position = Vector2(-1043.1819, -469.44446)
 scale = Vector2(3.8373425, 3.791667)
 sprite_frames = SubResource("SpriteFrames_s6dek")
-frame_progress = 0.8457646
+frame_progress = 0.16480255
 
 [connection signal="body_entered" from="Enemy1/Hitbox (To hurt Player)" to="Enemy1" method="_on_hitbox_to_hurt_player_body_entered"]
 [connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
