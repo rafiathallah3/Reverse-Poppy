@@ -11,6 +11,29 @@ var time_elapsed: float = 0.0
 func _ready() -> void:
 	add_to_group("enemies")
 	spawn_position = position
+	
+	# Create a subtle glowing light for the enemy to make them slightly bright in the dark
+	var light = PointLight2D.new()
+	light.name = "EnemyLight"
+	light.color = Color(0.85, 0.3, 0.95, 1.0) # Soft purple/pink glow matching their style
+	light.energy = 2
+	light.texture_scale = 5.0 # Moderate aura size
+	
+	# Generate a radial gradient texture programmatically
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	grad.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(0.0, 0.0, 0.0, 0.0)])
+	
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 64
+	grad_tex.height = 64
+	
+	light.texture = grad_tex
+	add_child(light)
 
 func _physics_process(delta: float) -> void:
 	# Smooth sinusoidal floating motion — no gravity
@@ -28,9 +51,9 @@ func _spawn_death_effect() -> void:
 
 	# Create multiple expanding rings for a dramatic death burst
 	var colors = [
-		Color(0.85, 0.15, 0.95, 0.9),  # Purple outer ring
-		Color(1.0, 0.3, 0.5, 0.9),     # Pink middle ring
-		Color(1.0, 1.0, 1.0, 1.0),     # White inner flash
+		Color(0.85, 0.15, 0.95, 0.9), # Purple outer ring
+		Color(1.0, 0.3, 0.5, 0.9), # Pink middle ring
+		Color(1.0, 1.0, 1.0, 1.0), # White inner flash
 	]
 	var radii = [16.0, 10.0, 5.0]
 	var widths = [4.0, 3.0, 2.0]

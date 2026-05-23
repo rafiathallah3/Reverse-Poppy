@@ -22,6 +22,9 @@ func _ready() -> void:
 	
 	activate_btn.text = "RESET TO PRESENT"
 	activate_btn.pressed.connect(_on_reset_pressed)
+	
+	if bg_sky:
+		bg_sky.modulate = Color(0.12, 0.12, 0.2, 1.0)
 
 func _on_slider_value_changed(value: float) -> void:
 	current_slider_offset_ms = value
@@ -32,7 +35,7 @@ func _on_slider_value_changed(value: float) -> void:
 	# Dynamic Background Sky Modulate
 	if bg_sky:
 		var t = clamp(value / 5000.0, 0.0, 1.0)
-		bg_sky.modulate = Color(1.0, 1.0, 1.0).lerp(Color(0.45, 0.65, 1.0, 1.0), t)
+		bg_sky.modulate = Color(0.12, 0.12, 0.2, 1.0).lerp(Color(0.45, 0.65, 1.0, 1.0), t)
 		
 	# Dynamic Background Particles Speed & Direction
 	if bg_particles:
@@ -68,7 +71,7 @@ func _on_resume_pressed() -> void:
 		
 	# Reset background modulations and particles to their normal present-time state on resume
 	if bg_sky:
-		bg_sky.modulate = Color(1.0, 1.0, 1.0, 1.0)
+		bg_sky.modulate = Color(0.12, 0.12, 0.2, 1.0)
 	if bg_particles:
 		bg_particles.speed_scale = 1.0
 

@@ -33,6 +33,28 @@ func _ready() -> void:
 	laser_core.position = -laser_core.size / 2.0
 	add_child(laser_core)
 	
+	# Create a tiny point light to make the laser beam glow in the dark
+	var light = PointLight2D.new()
+	light.name = "PointLight2D"
+	light.color = Color(1.0, 0.1, 0.2, 1.0) # Vibrant neon red glow
+	light.energy = 1.8
+	light.texture_scale = 3.0 # Compact glow surrounding the laser
+	
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	grad.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(0.0, 0.0, 0.0, 0.0)])
+	
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 64
+	grad_tex.height = 64
+	
+	light.texture = grad_tex
+	add_child(light)
+	
 	# Create a physics collision shape matching the laser dimensions
 	var collision_shape = CollisionShape2D.new()
 	var shape = RectangleShape2D.new()
@@ -88,26 +110,64 @@ func _spawn_impact_effect() -> void:
 	get_parent().add_child(effect)
 	effect.global_position = global_position
 	
-	# Create an expanding shockwave ring
+	# 1. Create an expanding shockwave ring
 	var line = Line2D.new()
 	line.points = _get_circle_points(12.0)
 	line.width = 4.0
 	line.default_color = Color(1.0, 0.0, 0.1, 0.9) # Neon red glowing impact
 	effect.add_child(line)
 	
-	# Add an inner expanding ring
+	# 2. Add an inner expanding ring
 	var inner_line = Line2D.new()
 	inner_line.points = _get_circle_points(7.0)
 	inner_line.width = 2.0
 	inner_line.default_color = Color(1.0, 0.9, 0.9, 1.0) # Bright core impact
 	effect.add_child(inner_line)
 	
-	# Animate the shockwave using a smooth Tween
+	# 3. Tiny glowing point light flash!
+	var light = PointLight2D.new()
+	light.name = "ImpactLight"
+	light.color = Color(1.0, 0.2, 0.3, 1.0) # Neon red glow
+	light.energy = 2.5 # Bright initial spark
+	light.texture_scale = 1.0 # Will scale up slightly
+	
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	grad.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(0.0, 0.0, 0.0, 0.0)])
+	
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 32
+	grad_tex.height = 32
+	
+	light.texture = grad_tex
+	effect.add_child(light)
+	
+	# 4. Spunky sparks particle burst!
+	var particles = CPUParticles2D.new()
+	particles.amount = 8
+	particles.explosiveness = 1.0
+	particles.spread = 180.0
+	particles.gravity = Vector2(0, 80) # Slight falling weight
+	particles.initial_velocity_min = 60.0
+	particles.initial_velocity_max = 120.0
+	particles.scale_amount_min = 2.0
+	particles.scale_amount_max = 4.0
+	particles.color = Color(1.0, 0.4, 0.2, 1.0) # Bright neon orange sparks
+	effect.add_child(particles)
+	particles.emitting = true
+	
+	# Animate the shockwave, particle timing, and light flash using a smooth Tween
 	var tween = effect.create_tween()
 	tween.tween_property(line, "scale", Vector2(1.8, 1.8), 0.15)
 	tween.parallel().tween_property(line, "default_color:a", 0.0, 0.15)
 	tween.parallel().tween_property(inner_line, "scale", Vector2(2.2, 2.2), 0.15)
 	tween.parallel().tween_property(inner_line, "default_color:a", 0.0, 0.15)
+	tween.parallel().tween_property(light, "texture_scale", 4.0, 0.15).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(light, "energy", 0.0, 0.15)
 	tween.tween_callback(effect.queue_free)
 
 func _get_circle_points(radius: float) -> PackedVector2Array:
@@ -123,8 +183,12 @@ func set_paused(paused: bool) -> void:
 	if laser_rect:
 		if paused:
 			laser_rect.color = Color(0.0, 0.8, 1.0, 1.0) # Tint neon cyan when paused/rewinding
+			if has_node("PointLight2D"):
+				$PointLight2D.color = Color(0.0, 0.8, 1.0, 1.0) # Tint light cyan
 		else:
 			laser_rect.color = Color(1.0, 0.0, 0.1, 1.0) # Restore neon red
+			if has_node("PointLight2D"):
+				$PointLight2D.color = Color(1.0, 0.1, 0.2, 1.0) # Restore light red
 
 func scrub_time(offset_ms: float) -> void:
 	if history.size() == 0:

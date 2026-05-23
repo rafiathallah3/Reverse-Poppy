@@ -24,7 +24,12 @@ func _on_body_entered(body: Node2D) -> void:
 			tween.tween_property(visual, "modulate:a", 0.0, 0.4)
 			tween.parallel().tween_property(visual, "scale", Vector2(1.6, 1.6), 0.4)
 		
-		# Trigger time-reverse state in game manager
-		var game_manager = get_tree().current_scene
-		if game_manager and game_manager.has_method("on_player_entered_trigger"):
-			game_manager.on_player_entered_trigger()
+		# Trigger level completion / scene transition
+		if get_tree().root.has_node("SceneTransition"):
+			get_node("/root/SceneTransition").complete_level()
+		else:
+			# Fallback to time-reverse state in game manager if no global transition manager exists
+			var game_manager = get_tree().current_scene
+			if game_manager and game_manager.has_method("on_player_entered_trigger"):
+				game_manager.on_player_entered_trigger()
+

@@ -11,7 +11,7 @@
 [ext_resource type="Shader" uid="uid://1d3pxypgmoxi" path="res://shaders/time_glitch.gdshader" id="9_shader"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="10_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="11_poppy_walk"]
-[ext_resource type="Script" path="res://scripts/Killzone.gd" id="12_le433"]
+[ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="12_le433"]
 [ext_resource type="Texture2D" uid="uid://cnopcenrf4k8j" path="res://assets/campfire.png" id="13_2tadr"]
 [ext_resource type="Texture2D" uid="uid://c5fl3vpyxi7ll" path="res://assets/enemies.png" id="14_tmn8n"]
 
@@ -185,10 +185,28 @@ animations = [{
 "speed": 4.0
 }]
 
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
 [node name="GameManager" type="Node2D" unique_id=323088821]
 position = Vector2(404, 440)
 scale = Vector2(0.44, 0.36)
 script = ExtResource("1_70yv6")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-918.1818, -1222.2222)
+anchor_mode = 0
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.12, 0.12, 0.2, 1)
+
 
 [node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=987293817]
 layer = -100
@@ -199,6 +217,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+modulate = Color(0.12, 0.12, 0.2, 1)
 texture = ExtResource("2_tmn8n")
 expand_mode = 1
 stretch_mode = 6
@@ -222,9 +241,10 @@ color = Color(1, 0.9, 0.7, 0.3)
 [node name="Player (Testing)" type="CharacterBody2D" parent="." unique_id=682974834]
 position = Vector2(-435, -30)
 script = ExtResource("2_d5upp")
-shoot_cooldown = 0.2
-grenade_cooldown = 0.9
-max_bullets = 10
+shoot_cooldown = 0.3
+grenade_cooldown = 0.6
+max_bullets = 30
+max_grenades = 3
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player (Testing)" unique_id=94201368]
@@ -237,6 +257,13 @@ autoplay = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player (Testing)" unique_id=1591381885]
 position = Vector2(5.454529, 10.5)
 shape = SubResource("RectangleShape2D_eakoi")
+
+[node name="PointLight2D" type="PointLight2D" parent="Player (Testing)"]
+position = Vector2(5.45, 10.5)
+energy = 1.3
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=899829669]
 position = Vector2(-32, 8)

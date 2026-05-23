@@ -146,7 +146,7 @@ func explode() -> void:
 	
 	# Disable shape collision so it doesn't trigger collisions anymore
 	if my_collision_shape:
-		my_collision_shape.disabled = true
+		my_collision_shape.set_deferred("disabled", true)
 
 	
 	# Spawn beautiful custom visual blast shockwaves & fire debris particles
@@ -198,12 +198,37 @@ func _spawn_blast_particles() -> void:
 	effect.add_child(particles)
 	particles.emitting = true
 	
-	# Animate rings using Tweens
+	# 4. Big bright explosion light flash!
+	var light = PointLight2D.new()
+	light.name = "ExplosionLight"
+	light.color = Color(1.0, 0.55, 0.1, 1.0) # Bright fiery orange
+	light.energy = 4.5 # High initial energy for blinding flash
+	light.texture_scale = 1.0 # Will scale up dynamically
+	
+	# Radial gradient texture
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	grad.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(0.0, 0.0, 0.0, 0.0)])
+	
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 128
+	grad_tex.height = 128
+	
+	light.texture = grad_tex
+	effect.add_child(light)
+	
+	# Animate rings & dynamic light using Tweens
 	var tween = effect.create_tween()
 	tween.tween_property(shockwave, "scale", Vector2(4.5, 4.5), 0.28)
 	tween.parallel().tween_property(shockwave, "default_color:a", 0.0, 0.28)
 	tween.parallel().tween_property(core_ring, "scale", Vector2(3.5, 3.5), 0.22)
 	tween.parallel().tween_property(core_ring, "default_color:a", 0.0, 0.22)
+	tween.parallel().tween_property(light, "texture_scale", 10.0, 0.35).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.parallel().tween_property(light, "energy", 0.0, 0.35)
 	tween.tween_callback(effect.queue_free)
 
 func _get_circle_points(radius: float) -> PackedVector2Array:
