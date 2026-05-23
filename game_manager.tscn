@@ -1,7 +1,24 @@
 [gd_scene format=3 uid="uid://b7ka55n8a4okr"]
 
 [ext_resource type="Script" uid="uid://dpp4s0i8dakrl" path="res://game_manager.gd" id="1_70yv6"]
+[ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="2_d5upp"]
 [ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="2_o2178"]
+[ext_resource type="Texture2D" uid="uid://bajfnnf56ketc" path="res://assets/test_Sprite.png" id="3_vk86k"]
+[ext_resource type="Texture2D" uid="uid://brtbomj4dfr6t" path="res://assets/floorsAndSuch_Spriite.png" id="4_shwjl"]
+[ext_resource type="Script" uid="uid://b1xre1ii15t4r" path="res://scripts/moving_platform.gd" id="5_moving_platform"]
+[ext_resource type="Script" uid="uid://d23ngeoiixwtv" path="res://scripts/time_trigger.gd" id="6_time_trigger"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eakoi"]
+size = Vector2(160, 133)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8jrwq"]
+size = Vector2(936, 225)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_brown_platform"]
+size = Vector2(300, 40)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
+radius = 60.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_smx3j"]
 atlas = ExtResource("2_o2178")
@@ -29,6 +46,164 @@ animations = [{
 position = Vector2(404, 440)
 scale = Vector2(0.44, 0.36)
 script = ExtResource("1_70yv6")
+
+[node name="Player (Testing)" type="CharacterBody2D" parent="." unique_id=682974834]
+position = Vector2(-435, -30)
+script = ExtResource("2_d5upp")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Player (Testing)" unique_id=94201368]
+position = Vector2(1.9999695, 0)
+scale = Vector2(0.24166544, 0.33381185)
+texture = ExtResource("3_vk86k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player (Testing)" unique_id=1591381885]
+position = Vector2(2, 10.5)
+shape = SubResource("RectangleShape2D_eakoi")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=899829669]
+position = Vector2(-32, 8)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1025361402]
+position = Vector2(-94.37499, 184.00002)
+scale = Vector2(0.87838465, 0.37)
+texture = ExtResource("4_shwjl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=726054451]
+position = Vector2(-94, 185.5)
+shape = SubResource("RectangleShape2D_8jrwq")
+metadata/_edit_group_ = true
+
+[node name="BrownPlatform2" type="StaticBody2D" parent="." unique_id=852516101]
+position = Vector2(1586.3638, 108.3333)
+
+[node name="ColorRect" type="ColorRect" parent="BrownPlatform2" unique_id=284255547]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.26, 0.16, 0.11, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BrownPlatform2" unique_id=1903300646]
+shape = SubResource("RectangleShape2D_brown_platform")
+
+[node name="MovingPlatformSystem" type="Node2D" parent="." unique_id=628392856]
+position = Vector2(756.81824, 111.1111)
+
+[node name="PointA" type="Marker2D" parent="MovingPlatformSystem" unique_id=1739277501]
+position = Vector2(-329.54553, -8.333397)
+
+[node name="PointB" type="Marker2D" parent="MovingPlatformSystem" unique_id=1555641659]
+position = Vector2(413.6363, -2.7778397)
+
+[node name="MovingPlatform" type="AnimatableBody2D" parent="MovingPlatformSystem" unique_id=1215203925 node_paths=PackedStringArray("point_a", "point_b")]
+script = ExtResource("5_moving_platform")
+point_a = NodePath("../PointA")
+point_b = NodePath("../PointB")
+
+[node name="ColorRect" type="ColorRect" parent="MovingPlatformSystem/MovingPlatform" unique_id=697464067]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.26, 0.16, 0.11, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=2144006657]
+shape = SubResource("RectangleShape2D_brown_platform")
+
+[node name="MovingPlatformSystem2" type="Node2D" parent="." unique_id=1402722503]
+position = Vector2(304.5455, -591.6667)
+
+[node name="PointA" type="Marker2D" parent="MovingPlatformSystem2" unique_id=788035568]
+position = Vector2(-329.54553, -8.333397)
+
+[node name="PointB" type="Marker2D" parent="MovingPlatformSystem2" unique_id=524912741]
+position = Vector2(1193.1818, -2.7777548)
+
+[node name="MovingPlatform" type="AnimatableBody2D" parent="MovingPlatformSystem2" unique_id=705226217 node_paths=PackedStringArray("point_a", "point_b")]
+script = ExtResource("5_moving_platform")
+point_a = NodePath("../PointA")
+point_b = NodePath("../PointB")
+
+[node name="ColorRect" type="ColorRect" parent="MovingPlatformSystem2/MovingPlatform" unique_id=47744719]
+offset_left = -150.0
+offset_top = -20.0
+offset_right = 150.0
+offset_bottom = 20.0
+color = Color(0.26, 0.16, 0.11, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=934626419]
+shape = SubResource("RectangleShape2D_brown_platform")
+
+[node name="TimeTriggerArea" type="Area2D" parent="." unique_id=2110585556]
+position = Vector2(1575, 25.000017)
+script = ExtResource("6_time_trigger")
+
+[node name="PortalVisual" type="ColorRect" parent="TimeTriggerArea" unique_id=407400799]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.18, 0.6, 0.96, 0.4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TimeTriggerArea" unique_id=1871024062]
+shape = SubResource("CircleShape2D_trigger")
+
+[node name="TimeUiCanvas" type="CanvasLayer" parent="." unique_id=1267792695]
+
+[node name="ControlPanel" type="Panel" parent="TimeUiCanvas" unique_id=1350763413]
+offset_left = 376.0
+offset_top = 448.0
+offset_right = 776.0
+offset_bottom = 608.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TimeUiCanvas/ControlPanel" unique_id=634306256]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="TimeUiCanvas/ControlPanel/VBoxContainer" unique_id=1721884619]
+layout_mode = 2
+text = "TIME REVERSE CONTROLLER"
+horizontal_alignment = 1
+
+[node name="SliderRow" type="HBoxContainer" parent="TimeUiCanvas/ControlPanel/VBoxContainer" unique_id=462727534]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="HSlider" type="HSlider" parent="TimeUiCanvas/ControlPanel/VBoxContainer/SliderRow" unique_id=2118815818]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 5000.0
+step = 100.0
+
+[node name="ValueLabel" type="Label" parent="TimeUiCanvas/ControlPanel/VBoxContainer/SliderRow" unique_id=1281077532]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "0.0 sec"
+horizontal_alignment = 2
+
+[node name="ButtonsRow" type="HBoxContainer" parent="TimeUiCanvas/ControlPanel/VBoxContainer" unique_id=49891472]
+layout_mode = 2
+alignment = 1
+
+[node name="ActivateButton" type="Button" parent="TimeUiCanvas/ControlPanel/VBoxContainer/ButtonsRow" unique_id=986634462]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ACTIVATE REVERSE"
+
+[node name="ResumeButton" type="Button" parent="TimeUiCanvas/ControlPanel/VBoxContainer/ButtonsRow" unique_id=284689806]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "RESUME"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=790929605]
 position = Vector2(422.72723, 47.2222)
