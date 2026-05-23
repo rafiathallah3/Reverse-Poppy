@@ -15,7 +15,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	# Smooth sinusoidal floating motion — no gravity
 	time_elapsed += delta
-	position.y = spawn_position.y + sin(time_elapsed * float_speed * TAU) * float_amplitude
+	position.x = spawn_position.x + sin(time_elapsed * float_speed * TAU) * float_amplitude
 
 func take_damage(_amount: int) -> void:
 	_spawn_death_effect()

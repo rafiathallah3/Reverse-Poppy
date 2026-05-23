@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="11_poppy_walk"]
 [ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="12_le433"]
 [ext_resource type="Texture2D" uid="uid://cnopcenrf4k8j" path="res://assets/campfire.png" id="13_2tadr"]
+[ext_resource type="Texture2D" uid="uid://c5fl3vpyxi7ll" path="res://assets/enemies.png" id="14_tmn8n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
 atlas = ExtResource("10_poppy_idle")
@@ -73,7 +74,7 @@ animations = [{
 size = Vector2(77.272675, 133)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8jrwq"]
-size = Vector2(936, 225)
+size = Vector2(1246.5455, 225)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_platform_1"]
 atlas = ExtResource("2_o2178")
@@ -104,10 +105,32 @@ size = Vector2(300, 40)
 radius = 60.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
-size = Vector2(40, 60)
+size = Vector2(120.454544, 94.44437)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2tadr"]
-size = Vector2(40.909073, 61.111183)
+size = Vector2(120.45456, 94.44435)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0lch"]
+atlas = ExtResource("14_tmn8n")
+region = Rect2(5, 0, 51, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lx373"]
+atlas = ExtResource("14_tmn8n")
+region = Rect2(61, 0, 51, 60)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tmn8n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0lch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lx373")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_glitch"]
 shader = ExtResource("9_shader")
@@ -146,6 +169,20 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 8.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_s6dek"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0lch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lx373")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
 }]
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
@@ -204,12 +241,12 @@ position = Vector2(-32, 8)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1025361402]
-position = Vector2(-94.37499, 184.00002)
-scale = Vector2(0.87838465, 0.37)
+position = Vector2(-247.13638, 184.00002)
+scale = Vector2(1.1636534, 0.37)
 texture = ExtResource("4_shwjl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=726054451]
-position = Vector2(-94, 185.5)
+position = Vector2(-249.2727, 185.5)
 shape = SubResource("RectangleShape2D_8jrwq")
 metadata/_edit_group_ = true
 
@@ -414,10 +451,10 @@ shape = SubResource("CircleShape2D_trigger")
 [node name="TimeUiCanvas" type="CanvasLayer" parent="." unique_id=1267792695]
 
 [node name="ControlPanel" type="Panel" parent="TimeUiCanvas" unique_id=1350763413]
-offset_left = 376.0
-offset_top = 448.0
-offset_right = 776.0
-offset_bottom = 608.0
+offset_left = 427.0
+offset_top = 17.0
+offset_right = 827.0
+offset_bottom = 177.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TimeUiCanvas/ControlPanel" unique_id=634306256]
 layout_mode = 1
@@ -467,36 +504,25 @@ size_flags_horizontal = 3
 text = "RESUME"
 
 [node name="Enemy1" type="CharacterBody2D" parent="." unique_id=548338183]
-position = Vector2(300, -300)
+position = Vector2(-184.0909, -74.99997)
 script = ExtResource("7_enemy")
 metadata/_edit_group_ = true
 
-[node name="BodyVisual" type="ColorRect" parent="Enemy1" unique_id=1356572107]
-offset_left = -20.0
-offset_top = -30.0
-offset_right = 20.0
-offset_bottom = 30.0
-color = Color(0.75, 0.1, 0.85, 1)
-
-[node name="EyeLeft" type="ColorRect" parent="Enemy1" unique_id=470426789]
-offset_left = -12.0
-offset_top = -22.0
-offset_right = -4.0
-offset_bottom = -14.0
-
-[node name="EyeRight" type="ColorRect" parent="Enemy1" unique_id=645384616]
-offset_left = 4.0
-offset_top = -22.0
-offset_right = 12.0
-offset_bottom = -14.0
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy1" unique_id=785727833]
+position = Vector2(60.227295, 75)
 shape = SubResource("RectangleShape2D_enemy")
 
 [node name="Hitbox (To hurt Player)" type="Area2D" parent="Enemy1" unique_id=797150226]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy1/Hitbox (To hurt Player)" unique_id=132669540]
+position = Vector2(60.227295, 75)
 shape = SubResource("RectangleShape2D_2tadr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Enemy1" unique_id=1516295921]
+position = Vector2(65.65912, 82.22223)
+scale = Vector2(3.5748675, 3.740741)
+sprite_frames = SubResource("SpriteFrames_tmn8n")
+frame_progress = 0.6109915
 
 [node name="TimeGlitchCanvas" type="CanvasLayer" parent="." unique_id=987293820]
 layer = 10
@@ -522,12 +548,17 @@ shape = SubResource("RectangleShape2D_tmn8n")
 
 [node name="Node2D" type="Node2D" parent="." unique_id=19900476]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Node2D" unique_id=100416031]
+[node name="Campfire" type="AnimatedSprite2D" parent="Node2D" unique_id=100416031]
 position = Vector2(-1027.2727, -197.22223)
 scale = Vector2(4.299716, 4.2193975)
 sprite_frames = SubResource("SpriteFrames_lx373")
-frame = 2
-frame_progress = 0.08449132
+frame_progress = 0.33898234
+
+[node name="EnemiesIdle" type="AnimatedSprite2D" parent="Node2D" unique_id=179487245]
+position = Vector2(-1043.1819, -469.44446)
+scale = Vector2(3.8373425, 3.791667)
+sprite_frames = SubResource("SpriteFrames_s6dek")
+frame_progress = 0.8457646
 
 [connection signal="body_entered" from="Enemy1/Hitbox (To hurt Player)" to="Enemy1" method="_on_hitbox_to_hurt_player_body_entered"]
 [connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
