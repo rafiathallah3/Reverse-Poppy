@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://clxolmj35ahsf"]
 
+[ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="1_o4coy"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="3_6jrte"]
-[ext_resource type="Texture2D" uid="uid://ce3d2et6x4me1" path="res://assets/BackgroundMastertake1.png" id="3_o4coy"]
+[ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="3_8i7lg"]
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="5_6jrte"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wya11"]
@@ -49,20 +50,58 @@ texture = ExtResource("5_6jrte")
 [sub_resource type="TileSet" id="TileSet_jxjbq"]
 sources/0 = SubResource("TileSetAtlasSource_1ye2h")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_6jrte"]
+atlas = ExtResource("1_o4coy")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ye2h"]
+atlas = ExtResource("1_o4coy")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jxjbq"]
+atlas = ExtResource("1_o4coy")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fd8mw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6jrte")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ye2h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jxjbq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_8i7lg"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6jrte"]
+gradient = SubResource("Gradient_8i7lg")
+fill = 1
+fill_from = Vector2(1, 0)
+fill_to = Vector2(0.5, 0.5)
+metadata/_snap_count = 2
+
 [node name="Testing" type="Node2D" unique_id=1548511231]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=405558179]
 position = Vector2(384, 357)
 scale = Vector2(2.291667, 2.375)
 sprite_frames = SubResource("SpriteFrames_6jrte")
-frame_progress = 0.23156077
+frame_progress = 0.43709633
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1367675923]
 position = Vector2(218, 271)
 scale = Vector2(3, 3)
 tile_set = SubResource("TileSet_jxjbq")
 format = 2
-layer_0/tile_data = PackedInt32Array(196610, 0, 1, 196611, 0, 1, 196612, 0, 1, 196613, 0, 1, 196614, 0, 1, 196609, 65536, 1, 131073, 65536, 1, 65537, 65536, 1, 1, 65536, 1, -65535, 65536, 1, -65534, 65536, 1, -65533, 65536, 1, -65532, 65536, 1, -65531, 65536, 1, -65530, 65536, 1, 196615, 0, 0, 196616, 0, 0, 196617, 0, 0, 131081, 0, 0, 65545, 0, 0, 131079, 65536, 0, 131080, 65536, 0, 65544, 65536, 0, 65546, 0, 0, 9, 0, 1, 10, 0, 1, 11, 0, 0, 12, 0, 1, 13, 0, 1, -65523, 0, 1, -65522, 0, 1, -65525, 65536, 1, -65524, 65536, 1, -131059, 65536, 1, -131058, 65536, 1, -196594, 65536, 1, -131066, 0, 1, -131067, 0, 1)
+layer_0/tile_data = PackedInt32Array(196610, 0, 1, 196611, 0, 1, 196612, 0, 1, 196613, 0, 1, 196614, 0, 1, 196609, 65536, 1, 131073, 65536, 1, 65537, 65536, 1, 1, 65536, 1, -65535, 65536, 1, -65534, 65536, 1, -65533, 65536, 1, -65532, 65536, 1, -65531, 65536, 1, -65530, 65536, 1, 196615, 0, 0, 196616, 0, 0, 196617, 0, 0, 131081, 0, 0, 65545, 0, 0, 131079, 65536, 0, 131080, 65536, 0, 65544, 65536, 0, 65546, 0, 0, 9, 0, 1, 10, 0, 1, 11, 0, 0, 12, 0, 1, 13, 0, 1, -65523, 0, 1, -65522, 0, 1, -65525, 65536, 1, -65524, 65536, 1, -131059, 65536, 1, -131058, 65536, 1, -196594, 65536, 1, -131066, 0, 1, -131067, 0, 1, -393232, 0, 0, -393231, 0, 0, -393230, 0, 0, -393229, 0, 1, -393228, 0, 1, -458765, 0, 1, -458764, 0, 1, -524301, 65536, 0, -524300, 65536, 0, -589836, 65536, 0, -458770, 65536, 1, -524306, 65536, 1, -589842, 65536, 1, -655378, 65536, 1, -655377, 65536, 1, -655376, 65536, 1, -393234, 65536, 1, -393233, 65536, 1, -458771, 65536, 1, -393235, 65536, 1, -327699, 65536, 1, -327698, 65536, 1, -786446, 65536, 1, -786445, 65536, 1, -786444, 65536, 1, -786443, 65536, 1, -786442, 65536, 1, -720906, 65536, 1, -720905, 65536, 1, -720904, 65536, 1, -458763, 0, 1, -393227, 0, 1, -327691, 0, 1, -524299, 65536, 0, -524298, 65536, 0, -458762, 65536, 0, -393226, 65536, 0, -655347, 65536, 1, -655346, 65536, 1, -655345, 65536, 1, -655344, 65536, 1, -655343, 65536, 1, -589811, 65536, 1, -589810, 65536, 1, -589809, 65536, 1, -589808, 65536, 1, -589807, 65536, 1, -524274, 65536, 1, -524273, 65536, 1, -524272, 65536, 1, -851955, 65536, 1, -851954, 65536, 1, -851953, 65536, 1, -851952, 65536, 1, -851951, 65536, 1, -917491, 65536, 1, -983027, 65536, 1, -983026, 65536, 1, -983025, 65536, 1, -917489, 65536, 1, -983024, 65536, 1, -983023, 65536, 1, -917487, 65536, 1)
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1258497640]
 z_index = -2
@@ -70,4 +109,30 @@ offset_left = -6.0
 offset_top = -8.0
 offset_right = 1160.0
 offset_bottom = 655.0
-texture = ExtResource("3_o4coy")
+texture = ExtResource("3_8i7lg")
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="." unique_id=1437210585]
+position = Vector2(643, -153.99997)
+scale = Vector2(4.8125, 5.875)
+sprite_frames = SubResource("SpriteFrames_fd8mw")
+frame_progress = 0.04321007
+
+[node name="Parallax2D" type="Parallax2D" parent="." unique_id=520467265]
+scale = Vector2(7.2, 1)
+scroll_offset = Vector2(224, 125)
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1801598820]
+visible = false
+color = Color(0.33, 0.33, 0.33, 1)
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=658909449]
+visible = false
+position = Vector2(732, 883)
+rotation = -4.829326
+scale = Vector2(13.418478, 20.952446)
+skew = -0.012217305
+energy = 1.83
+shadow_color = Color(0, 0, 0, 1)
+texture = SubResource("GradientTexture2D_6jrte")
+texture_scale = 1.22
+height = 1024.0
