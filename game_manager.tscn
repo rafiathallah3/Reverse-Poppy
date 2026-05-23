@@ -186,6 +186,7 @@ color = Color(1, 0.9, 0.7, 0.3)
 position = Vector2(-435, -30)
 script = ExtResource("2_d5upp")
 shoot_cooldown = 0.2
+grenade_cooldown = 0.9
 max_bullets = 10
 metadata/_edit_group_ = true
 
