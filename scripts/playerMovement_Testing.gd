@@ -17,9 +17,19 @@ var jump_buffer_timer = 0.0
 
 var is_paused: bool = false
 
+# Shooting System Configuration
+const BULLET_SCRIPT = preload("res://scripts/bullet.gd")
+@export var shoot_cooldown: float = 0.3
+
+var shoot_timer: float = 0.0
+var facing_direction: float = 1.0
+
 func _physics_process(delta):
 	if is_paused:
 		return
+		
+	if shoot_timer > 0.0:
+		shoot_timer -= delta
 		
 	if not is_on_floor():
 		if velocity.y > 0:
@@ -48,6 +58,7 @@ func _physics_process(delta):
 	var direction = Input.get_axis("move_left", "move_right")
 	
 	if direction != 0:
+		facing_direction = sign(direction)
 		velocity.x = move_toward(velocity.x, direction * SPEED, ACCELERATION * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
@@ -59,3 +70,22 @@ func set_paused(paused: bool) -> void:
 	# Reset velocity to 0 when paused so the player immediately stops moving
 	if paused:
 		velocity = Vector2.ZERO
+
+func _unhandled_input(event: InputEvent) -> void:
+	if is_paused:
+		return
+	if event is InputEventKey and event.pressed and not event.is_echo():
+		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+			shoot()
+
+func shoot() -> void:
+	if shoot_timer > 0.0:
+		return
+		
+	shoot_timer = shoot_cooldown
+	
+	var bullet = Area2D.new()
+	bullet.set_script(BULLET_SCRIPT)
+	bullet.direction = Vector2(facing_direction, 0.0)
+	get_parent().add_child(bullet)
+	bullet.global_position = global_position + Vector2(facing_direction * 40.0, 0.0)

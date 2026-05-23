@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://brtbomj4dfr6t" path="res://assets/floorsAndSuch_Spriite.png" id="4_shwjl"]
 [ext_resource type="Script" uid="uid://b1xre1ii15t4r" path="res://scripts/moving_platform.gd" id="5_moving_platform"]
 [ext_resource type="Script" uid="uid://d23ngeoiixwtv" path="res://scripts/time_trigger.gd" id="6_time_trigger"]
+[ext_resource type="Script" uid="uid://r4qq3va5bahb" path="res://scripts/enemy.gd" id="7_enemy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eakoi"]
 size = Vector2(160, 133)
@@ -19,6 +20,9 @@ size = Vector2(300, 40)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
 radius = 60.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
+size = Vector2(40, 60)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_smx3j"]
 atlas = ExtResource("2_o2178")
@@ -204,6 +208,33 @@ text = "ACTIVATE REVERSE"
 layout_mode = 2
 size_flags_horizontal = 3
 text = "RESUME"
+
+[node name="Enemy1" type="CharacterBody2D" parent="." unique_id=548338183]
+position = Vector2(300, -300)
+script = ExtResource("7_enemy")
+metadata/_edit_group_ = true
+
+[node name="BodyVisual" type="ColorRect" parent="Enemy1" unique_id=1356572107]
+offset_left = -20.0
+offset_top = -30.0
+offset_right = 20.0
+offset_bottom = 30.0
+color = Color(0.75, 0.1, 0.85, 1)
+
+[node name="EyeLeft" type="ColorRect" parent="Enemy1" unique_id=470426789]
+offset_left = -12.0
+offset_top = -22.0
+offset_right = -4.0
+offset_bottom = -14.0
+
+[node name="EyeRight" type="ColorRect" parent="Enemy1" unique_id=645384616]
+offset_left = 4.0
+offset_top = -22.0
+offset_right = 12.0
+offset_bottom = -14.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy1" unique_id=785727833]
+shape = SubResource("RectangleShape2D_enemy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=790929605]
 position = Vector2(422.72723, 47.2222)
