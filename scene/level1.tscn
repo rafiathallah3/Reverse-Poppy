@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ccij7klgautp5"]
+[gd_scene load_steps=6 format=3 uid="uid://ccij7klgautp5"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://c7mkm3e1u35s7" path="res://Sunset Skybox.webp" id="2_skybox"]
+[ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="3_platform_float"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(800, 60)
@@ -22,12 +23,9 @@ position = Vector2(576, 324)
 [node name="BrownBlackBlock" type="StaticBody2D" parent="."]
 position = Vector2(576, 500)
 
-[node name="ColorRect" type="ColorRect" parent="BrownBlackBlock"]
-offset_left = -400.0
-offset_top = -30.0
-offset_right = 400.0
-offset_bottom = 30.0
-color = Color(0.18, 0.12, 0.08, 1.0)
+[node name="Sprite2D" type="Sprite2D" parent="BrownBlackBlock"]
+scale = Vector2(12.5, 0.9375)
+texture = ExtResource("3_platform_float")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BrownBlackBlock"]
 shape = SubResource("RectangleShape2D_platform")

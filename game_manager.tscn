@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://b1xre1ii15t4r" path="res://scripts/moving_platform.gd" id="5_moving_platform"]
 [ext_resource type="Script" uid="uid://d23ngeoiixwtv" path="res://scripts/time_trigger.gd" id="6_time_trigger"]
 [ext_resource type="Script" uid="uid://r4qq3va5bahb" path="res://scripts/enemy.gd" id="7_enemy"]
+[ext_resource type="Texture2D" uid="uid://c7mkm3e1u35s7" path="res://Sunset Skybox.webp" id="8_skybox"]
+[ext_resource type="Shader" uid="uid://1d3pxypgmoxi" path="res://shaders/time_glitch.gdshader" id="9_shader"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eakoi"]
 size = Vector2(160, 133)
@@ -24,32 +26,46 @@ radius = 60.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
 size = Vector2(40, 60)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_smx3j"]
-atlas = ExtResource("2_o2178")
-region = Rect2(6, 11, 24, 37)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_o2178"]
-atlas = ExtResource("2_o2178")
-region = Rect2(30, 11, 24, 37)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_smx3j"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_smx3j")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_o2178")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_glitch"]
+shader = ExtResource("9_shader")
+shader_parameter/color_aberration = 0.003
+shader_parameter/scanline_strength = 0.25
+shader_parameter/vignette_strength = 0.4
+shader_parameter/noise_strength = 0.08
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
 position = Vector2(404, 440)
 scale = Vector2(0.44, 0.36)
 script = ExtResource("1_70yv6")
+
+[node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=987293817]
+layer = -100
+
+[node name="SkyBackground" type="TextureRect" parent="BackgroundCanvas" unique_id=987293818]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_skybox")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TimeDustParticles" type="CPUParticles2D" parent="BackgroundCanvas" unique_id=987293819]
+position = Vector2(576, 680)
+amount = 60
+lifetime = 12.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(576, 1)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+color = Color(1, 0.9, 0.7, 0.3)
 
 [node name="Player (Testing)" type="CharacterBody2D" parent="." unique_id=682974834]
 position = Vector2(-435, -30)
@@ -82,12 +98,9 @@ metadata/_edit_group_ = true
 [node name="BrownPlatform2" type="StaticBody2D" parent="." unique_id=852516101]
 position = Vector2(1586.3638, 108.3333)
 
-[node name="ColorRect" type="ColorRect" parent="BrownPlatform2" unique_id=284255547]
-offset_left = -150.0
-offset_top = -20.0
-offset_right = 150.0
-offset_bottom = 20.0
-color = Color(0.26, 0.16, 0.11, 1)
+[node name="Sprite2D" type="Sprite2D" parent="BrownPlatform2" unique_id=284255547]
+scale = Vector2(4.6875, 0.625)
+texture = ExtResource("2_o2178")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BrownPlatform2" unique_id=1903300646]
 shape = SubResource("RectangleShape2D_brown_platform")
@@ -106,12 +119,9 @@ script = ExtResource("5_moving_platform")
 point_a = NodePath("../PointA")
 point_b = NodePath("../PointB")
 
-[node name="ColorRect" type="ColorRect" parent="MovingPlatformSystem/MovingPlatform" unique_id=697464067]
-offset_left = -150.0
-offset_top = -20.0
-offset_right = 150.0
-offset_bottom = 20.0
-color = Color(0.26, 0.16, 0.11, 1)
+[node name="Sprite2D" type="Sprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=697464067]
+scale = Vector2(4.6875, 0.625)
+texture = ExtResource("2_o2178")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=2144006657]
 shape = SubResource("RectangleShape2D_brown_platform")
@@ -130,12 +140,9 @@ script = ExtResource("5_moving_platform")
 point_a = NodePath("../PointA")
 point_b = NodePath("../PointB")
 
-[node name="ColorRect" type="ColorRect" parent="MovingPlatformSystem2/MovingPlatform" unique_id=47744719]
-offset_left = -150.0
-offset_top = -20.0
-offset_right = 150.0
-offset_bottom = 20.0
-color = Color(0.26, 0.16, 0.11, 1)
+[node name="Sprite2D" type="Sprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=47744719]
+scale = Vector2(4.6875, 0.625)
+texture = ExtResource("2_o2178")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=934626419]
 shape = SubResource("RectangleShape2D_brown_platform")
@@ -236,8 +243,16 @@ offset_bottom = -14.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy1" unique_id=785727833]
 shape = SubResource("RectangleShape2D_enemy")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=790929605]
-position = Vector2(422.72723, 47.2222)
-scale = Vector2(21.02273, 20.720722)
-sprite_frames = SubResource("SpriteFrames_smx3j")
-frame_progress = 0.09368736
+[node name="TimeGlitchCanvas" type="CanvasLayer" parent="." unique_id=987293820]
+layer = 10
+
+[node name="GlitchOverlay" type="ColorRect" parent="TimeGlitchCanvas" unique_id=987293821]
+visible = false
+material = SubResource("ShaderMaterial_glitch")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
