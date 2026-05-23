@@ -160,4 +160,3 @@ func commit_scrubbed_state(offset_ms: float) -> void:
 		current_recording_time = history[history.size() - 1]["time"]
 	else:
 		current_recording_time = 0.0
-

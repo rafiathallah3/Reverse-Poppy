@@ -150,7 +150,6 @@ func _physics_process(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
-	# Update character animations and orientation
 	if animated_sprite:
 		if direction != 0:
 			animated_sprite.flip_h = direction < 0
@@ -162,18 +161,17 @@ func _physics_process(delta):
 
 func set_paused(paused: bool) -> void:
 	is_paused = paused
-	# Reset velocity to 0 when paused so the player immediately stops moving
 	if paused:
 		velocity = Vector2.ZERO
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_paused:
 		return
+
 	if event.is_action_pressed("shoot"):
 		shoot()
 	elif event.is_action_pressed("grenade"):
 		throw_grenade()
-
 
 func shoot() -> void:
 	if shoot_timer > 0.0:
