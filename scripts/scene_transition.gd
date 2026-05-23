@@ -7,6 +7,7 @@ var is_timer_running: bool = true
 var canvas_layer: CanvasLayer
 var timer_panel: PanelContainer
 var timer_label: Label
+var grenade_label: Label
 var black_overlay: ColorRect
 
 func _ready() -> void:
@@ -60,6 +61,11 @@ func setup_ui() -> void:
 	margin_container.add_theme_constant_override("margin_bottom", 8)
 	timer_panel.add_child(margin_container)
 	
+	# VBoxContainer to stack Timer and Grenade counter vertically
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 2)
+	margin_container.add_child(vbox)
+	
 	# Label for modern digital stopwatch text
 	timer_label = Label.new()
 	timer_label.name = "TimerLabel"
@@ -68,7 +74,15 @@ func setup_ui() -> void:
 	timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0)) # Bright glowing cyan
 	# Set pivot to center for the win-animation scale effect
 	timer_label.pivot_offset = Vector2(70, 15)
-	margin_container.add_child(timer_label)
+	vbox.add_child(timer_label)
+	
+	# Label for grenade counter
+	grenade_label = Label.new()
+	grenade_label.name = "GrenadeLabel"
+	grenade_label.text = "GRENADES: 3"
+	grenade_label.add_theme_font_size_override("font_size", 16)
+	grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5)) # Bright glowing neon green
+	vbox.add_child(grenade_label)
 
 func reset_overlay_position() -> void:
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -79,6 +93,7 @@ func _process(delta: float) -> void:
 	if is_timer_running:
 		elapsed_time += delta
 		update_timer_text()
+	update_grenade_counter()
 
 func update_timer_text() -> void:
 	if not timer_label:
@@ -87,6 +102,24 @@ func update_timer_text() -> void:
 	var seconds = int(elapsed_time) % 60
 	var centiseconds = int((elapsed_time - int(elapsed_time)) * 100)
 	timer_label.text = "TIME: %02d:%02d.%02d" % [minutes, seconds, centiseconds]
+
+func update_grenade_counter() -> void:
+	if not grenade_label:
+		return
+		
+	var current_scene = get_tree().current_scene
+	if not current_scene:
+		grenade_label.text = "GRENADES: --"
+		return
+		
+	var player = current_scene.get_node_or_null("Player")
+	if not player:
+		player = current_scene.get_node_or_null("Player (Testing)")
+		
+	if player and "grenades" in player:
+		grenade_label.text = "GRENADES: %d" % player.grenades
+	else:
+		grenade_label.text = "GRENADES: --"
 
 func complete_level() -> void:
 	if not is_timer_running:
@@ -137,11 +170,12 @@ func complete_level() -> void:
 	# Wait for the scene change to register and instantiate
 	await get_tree().process_frame
 	
-	# Reset timer and UI state back to default cyan
+	# Reset timer and UI state back to default cyan/green
 	elapsed_time = 0.0
 	is_timer_running = true
 	timer_label.scale = Vector2.ONE
 	timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+	grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
 	if style_box:
 		style_box.border_color = Color(0.0, 0.8, 1.0, 0.45)
 	
