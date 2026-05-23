@@ -14,18 +14,98 @@ var base_gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 
 var is_paused: bool = false
 
-# Shooting System Configuration
+# Projectile Configurations
 const BULLET_SCRIPT = preload("res://scripts/bullet.gd")
 @export var shoot_cooldown: float = 0.3
-
 var shoot_timer: float = 0.0
+
+const GRENADE_SCRIPT = preload("res://scripts/grenade.gd")
+@export var grenade_cooldown: float = 0.6
+var grenade_timer: float = 0.0
+
 var facing_direction: float = 1.0
+
+func _ready() -> void:
+	# 1. Keyboard Arrow Keys support
+	_add_key_to_action("move_left", KEY_LEFT)
+	_add_key_to_action("move_right", KEY_RIGHT)
+	_add_key_to_action("jump", KEY_UP)
+	
+	# 2. Xbox Controller D-Pad & Left Stick Horizontal
+	_add_joypad_button_to_action("move_left", JOY_BUTTON_DPAD_LEFT)
+	_add_joypad_motion_to_action("move_left", JOY_AXIS_LEFT_X, -1.0)
+	
+	_add_joypad_button_to_action("move_right", JOY_BUTTON_DPAD_RIGHT)
+	_add_joypad_motion_to_action("move_right", JOY_AXIS_LEFT_X, 1.0)
+	
+	# 3. Xbox Controller Jump (A Button and D-Pad Up)
+	_add_joypad_button_to_action("jump", JOY_BUTTON_A)
+	_add_joypad_button_to_action("jump", JOY_BUTTON_DPAD_UP)
+	
+	# 4. Shoot input action & events (Enter/KP_Enter on Keyboard, X Button/RB on Xbox)
+	_add_key_to_action("shoot", KEY_ENTER)
+	_add_key_to_action("shoot", KEY_KP_ENTER)
+	_add_joypad_button_to_action("shoot", JOY_BUTTON_X)
+	_add_joypad_button_to_action("shoot", JOY_BUTTON_RIGHT_SHOULDER)
+	
+	# 5. Grenade input action & events (E on Keyboard, B Button/LB/Y on Xbox)
+	_add_key_to_action("grenade", KEY_E)
+	_add_joypad_button_to_action("grenade", JOY_BUTTON_B)
+	_add_joypad_button_to_action("grenade", JOY_BUTTON_Y)
+	_add_joypad_button_to_action("grenade", JOY_BUTTON_LEFT_SHOULDER)
+
+func _add_key_to_action(action_name: String, keycode: int) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+	
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventKey and event.physical_keycode == keycode:
+			already_exists = true
+			break
+	
+	if not already_exists:
+		var new_event = InputEventKey.new()
+		new_event.physical_keycode = keycode
+		InputMap.action_add_event(action_name, new_event)
+
+func _add_joypad_button_to_action(action_name: String, button_index: int) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventJoypadButton and event.button_index == button_index:
+			already_exists = true
+			break
+			
+	if not already_exists:
+		var new_event = InputEventJoypadButton.new()
+		new_event.button_index = button_index
+		InputMap.action_add_event(action_name, new_event)
+
+func _add_joypad_motion_to_action(action_name: String, axis: int, value: float) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventJoypadMotion and event.axis == axis and sign(event.axis_value) == sign(value):
+			already_exists = true
+			break
+			
+	if not already_exists:
+		var new_event = InputEventJoypadMotion.new()
+		new_event.axis = axis
+		new_event.axis_value = value
+		InputMap.action_add_event(action_name, new_event)
+
+
 
 func _physics_process(delta):
 	if is_paused:
@@ -33,6 +113,10 @@ func _physics_process(delta):
 		
 	if shoot_timer > 0.0:
 		shoot_timer -= delta
+		
+	if grenade_timer > 0.0:
+		grenade_timer -= delta
+
 		
 	if not is_on_floor():
 		if velocity.y > 0:
@@ -85,9 +169,11 @@ func set_paused(paused: bool) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if is_paused:
 		return
-	if event is InputEventKey and event.pressed and not event.is_echo():
-		if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
-			shoot()
+	if event.is_action_pressed("shoot"):
+		shoot()
+	elif event.is_action_pressed("grenade"):
+		throw_grenade()
+
 
 func shoot() -> void:
 	if shoot_timer > 0.0:
@@ -100,3 +186,15 @@ func shoot() -> void:
 	bullet.direction = Vector2(facing_direction, 0.0)
 	get_parent().add_child(bullet)
 	bullet.global_position = global_position + Vector2(facing_direction * 40.0, 0.0)
+
+func throw_grenade() -> void:
+	if grenade_timer > 0.0:
+		return
+		
+	grenade_timer = grenade_cooldown
+	
+	var grenade = Area2D.new()
+	grenade.set_script(GRENADE_SCRIPT)
+	grenade.velocity = Vector2(facing_direction * grenade.speed_x, grenade.speed_y)
+	get_parent().add_child(grenade)
+	grenade.global_position = global_position + Vector2(facing_direction * 35.0, -10.0)

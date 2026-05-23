@@ -23,8 +23,8 @@ func take_damage(_amount: int) -> void:
 
 func _spawn_death_effect() -> void:
 	var effect = Node2D.new()
-	effect.global_position = global_position
 	get_parent().add_child(effect)
+	effect.global_position = global_position
 
 	# Create multiple expanding rings for a dramatic death burst
 	var colors = [

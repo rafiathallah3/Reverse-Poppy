@@ -85,8 +85,8 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _spawn_impact_effect() -> void:
 	var effect = Node2D.new()
-	effect.global_position = global_position
 	get_parent().add_child(effect)
+	effect.global_position = global_position
 	
 	# Create an expanding shockwave ring
 	var line = Line2D.new()
