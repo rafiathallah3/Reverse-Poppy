@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="10_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="11_poppy_walk"]
 [ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="12_le433"]
+[ext_resource type="Texture2D" uid="uid://cnopcenrf4k8j" path="res://assets/campfire.png" id="13_2tadr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
 atlas = ExtResource("10_poppy_idle")
@@ -117,6 +118,35 @@ shader_parameter/noise_strength = 0.08
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tmn8n"]
 size = Vector2(2643.1816, 316.66672)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmn8n"]
+atlas = ExtResource("13_2tadr")
+region = Rect2(4, 0, 56, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_es4nv"]
+atlas = ExtResource("13_2tadr")
+region = Rect2(54, 0, 50, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_anra8"]
+atlas = ExtResource("13_2tadr")
+region = Rect2(102, 0, 50, 52)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lx373"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tmn8n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_es4nv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_anra8")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
 position = Vector2(404, 440)
@@ -489,6 +519,15 @@ script = ExtResource("12_le433")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D (Death Area)" unique_id=224014603]
 position = Vector2(1221.5908, -13.888916)
 shape = SubResource("RectangleShape2D_tmn8n")
+
+[node name="Node2D" type="Node2D" parent="." unique_id=19900476]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Node2D" unique_id=100416031]
+position = Vector2(-1027.2727, -197.22223)
+scale = Vector2(4.299716, 4.2193975)
+sprite_frames = SubResource("SpriteFrames_lx373")
+frame = 2
+frame_progress = 0.08449132
 
 [connection signal="body_entered" from="Enemy1/Hitbox (To hurt Player)" to="Enemy1" method="_on_hitbox_to_hurt_player_body_entered"]
 [connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
