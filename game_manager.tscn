@@ -11,6 +11,7 @@
 [ext_resource type="Shader" uid="uid://1d3pxypgmoxi" path="res://shaders/time_glitch.gdshader" id="9_shader"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="10_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="11_poppy_walk"]
+[ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="12_le433"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
 atlas = ExtResource("10_poppy_idle")
@@ -104,12 +105,18 @@ radius = 60.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
 size = Vector2(40, 60)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2tadr"]
+size = Vector2(40.909073, 61.111183)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_glitch"]
 shader = ExtResource("9_shader")
 shader_parameter/color_aberration = 0.003
 shader_parameter/scanline_strength = 0.25
 shader_parameter/vignette_strength = 0.4
 shader_parameter/noise_strength = 0.08
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tmn8n"]
+size = Vector2(2643.1816, 316.66672)
 
 [node name="GameManager" type="Node2D" unique_id=323088821]
 position = Vector2(404, 440)
@@ -456,6 +463,11 @@ offset_bottom = -14.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy1" unique_id=785727833]
 shape = SubResource("RectangleShape2D_enemy")
 
+[node name="Hitbox (To hurt Player)" type="Area2D" parent="Enemy1" unique_id=797150226]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy1/Hitbox (To hurt Player)" unique_id=132669540]
+shape = SubResource("RectangleShape2D_2tadr")
+
 [node name="TimeGlitchCanvas" type="CanvasLayer" parent="." unique_id=987293820]
 layer = 10
 
@@ -469,3 +481,14 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
+
+[node name="Area2D (Death Area)" type="Area2D" parent="." unique_id=476169591]
+position = Vector2(-827.2727, 486.11108)
+script = ExtResource("12_le433")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D (Death Area)" unique_id=224014603]
+position = Vector2(1221.5908, -13.888916)
+shape = SubResource("RectangleShape2D_tmn8n")
+
+[connection signal="body_entered" from="Enemy1/Hitbox (To hurt Player)" to="Enemy1" method="_on_hitbox_to_hurt_player_body_entered"]
+[connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]

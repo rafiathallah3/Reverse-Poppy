@@ -56,3 +56,8 @@ func _get_circle_points(radius: float) -> PackedVector2Array:
 		var angle = i * TAU / steps
 		points.append(Vector2(cos(angle), sin(angle)) * radius)
 	return points
+
+
+func _on_hitbox_to_hurt_player_body_entered(body: Node2D) -> void:
+	if body.has_method("die"):
+		body.die()

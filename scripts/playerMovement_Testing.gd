@@ -30,6 +30,8 @@ var grenade_timer: float = 0.0
 
 var facing_direction: float = 1.0
 
+var spawn_position: Vector2
+
 func _ready() -> void:
 	# 1. Keyboard Arrow Keys support
 	_add_key_to_action("move_left", KEY_LEFT)
@@ -58,6 +60,8 @@ func _ready() -> void:
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_B)
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_Y)
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_LEFT_SHOULDER)
+	
+	spawn_position = global_position
 
 func _add_key_to_action(action_name: String, keycode: int) -> void:
 	if not InputMap.has_action(action_name):
@@ -196,3 +200,7 @@ func throw_grenade() -> void:
 	grenade.velocity = Vector2(facing_direction * grenade.speed_x, grenade.speed_y)
 	get_parent().add_child(grenade)
 	grenade.global_position = global_position + Vector2(facing_direction * 35.0, -10.0)
+	
+func die() -> void:
+	global_position = spawn_position
+	velocity = Vector2.ZERO
