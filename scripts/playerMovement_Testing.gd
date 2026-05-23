@@ -12,6 +12,9 @@ extends CharacterBody2D
 
 var base_gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
+
 var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 
@@ -62,6 +65,14 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, direction * SPEED, ACCELERATION * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+
+	# Update character animations and orientation
+	if animated_sprite:
+		if direction != 0:
+			animated_sprite.flip_h = direction < 0
+			animated_sprite.play("walk")
+		else:
+			animated_sprite.play("idle")
 
 	move_and_slide()
 

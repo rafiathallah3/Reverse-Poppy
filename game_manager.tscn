@@ -3,19 +3,97 @@
 [ext_resource type="Script" uid="uid://dpp4s0i8dakrl" path="res://game_manager.gd" id="1_70yv6"]
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="2_d5upp"]
 [ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="2_o2178"]
-[ext_resource type="Texture2D" uid="uid://bajfnnf56ketc" path="res://assets/test_Sprite.png" id="3_vk86k"]
 [ext_resource type="Texture2D" uid="uid://brtbomj4dfr6t" path="res://assets/floorsAndSuch_Spriite.png" id="4_shwjl"]
 [ext_resource type="Script" uid="uid://b1xre1ii15t4r" path="res://scripts/moving_platform.gd" id="5_moving_platform"]
 [ext_resource type="Script" uid="uid://d23ngeoiixwtv" path="res://scripts/time_trigger.gd" id="6_time_trigger"]
 [ext_resource type="Script" uid="uid://r4qq3va5bahb" path="res://scripts/enemy.gd" id="7_enemy"]
 [ext_resource type="Texture2D" uid="uid://c7mkm3e1u35s7" path="res://Sunset Skybox.webp" id="8_skybox"]
 [ext_resource type="Shader" uid="uid://1d3pxypgmoxi" path="res://shaders/time_glitch.gdshader" id="9_shader"]
+[ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="10_poppy_idle"]
+[ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="11_poppy_walk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("10_poppy_idle")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("10_poppy_idle")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("10_poppy_idle")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_1"]
+atlas = ExtResource("11_poppy_walk")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_2"]
+atlas = ExtResource("11_poppy_walk")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_3"]
+atlas = ExtResource("11_poppy_walk")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_player"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_3")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eakoi"]
-size = Vector2(160, 133)
+size = Vector2(77.272675, 133)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8jrwq"]
 size = Vector2(936, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_1"]
+atlas = ExtResource("2_o2178")
+region = Rect2(0, 0, 16, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_2"]
+atlas = ExtResource("2_o2178")
+region = Rect2(16, 0, 16, 15)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_platform"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_2")
+}],
+"loop": true,
+"name": &"float",
+"speed": 6.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_brown_platform"]
 size = Vector2(300, 40)
@@ -72,13 +150,15 @@ position = Vector2(-435, -30)
 script = ExtResource("2_d5upp")
 metadata/_edit_group_ = true
 
-[node name="Sprite2D" type="Sprite2D" parent="Player (Testing)" unique_id=94201368]
-position = Vector2(1.9999695, 0)
-scale = Vector2(0.24166544, 0.33381185)
-texture = ExtResource("3_vk86k")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player (Testing)" unique_id=94201368]
+position = Vector2(2, 0)
+scale = Vector2(3.33, 3.33)
+sprite_frames = SubResource("SpriteFrames_player")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player (Testing)" unique_id=1591381885]
-position = Vector2(2, 10.5)
+position = Vector2(5.454529, 10.5)
 shape = SubResource("RectangleShape2D_eakoi")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=899829669]
@@ -98,9 +178,53 @@ metadata/_edit_group_ = true
 [node name="BrownPlatform2" type="StaticBody2D" parent="." unique_id=852516101]
 position = Vector2(1586.3638, 108.3333)
 
-[node name="Sprite2D" type="Sprite2D" parent="BrownPlatform2" unique_id=284255547]
-scale = Vector2(4.6875, 0.625)
-texture = ExtResource("2_o2178")
+[node name="AnimatedSprite_1" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=1779292571]
+position = Vector2(-128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_2" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=691670800]
+position = Vector2(-85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_3" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=550833936]
+position = Vector2(-42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_4" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=1136398003]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=982831948]
+position = Vector2(42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=51574263]
+position = Vector2(85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="BrownPlatform2" unique_id=433804991]
+position = Vector2(128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BrownPlatform2" unique_id=1903300646]
 shape = SubResource("RectangleShape2D_brown_platform")
@@ -119,9 +243,53 @@ script = ExtResource("5_moving_platform")
 point_a = NodePath("../PointA")
 point_b = NodePath("../PointB")
 
-[node name="Sprite2D" type="Sprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=697464067]
-scale = Vector2(4.6875, 0.625)
-texture = ExtResource("2_o2178")
+[node name="AnimatedSprite_1" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=1041199654]
+position = Vector2(-128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_2" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=1061153303]
+position = Vector2(-85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_3" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=425110230]
+position = Vector2(-42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_4" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=1750414678]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=666150506]
+position = Vector2(42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=1921224359]
+position = Vector2(85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=680536270]
+position = Vector2(128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatformSystem/MovingPlatform" unique_id=2144006657]
 shape = SubResource("RectangleShape2D_brown_platform")
@@ -140,9 +308,53 @@ script = ExtResource("5_moving_platform")
 point_a = NodePath("../PointA")
 point_b = NodePath("../PointB")
 
-[node name="Sprite2D" type="Sprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=47744719]
-scale = Vector2(4.6875, 0.625)
-texture = ExtResource("2_o2178")
+[node name="AnimatedSprite_1" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=1133037943]
+position = Vector2(-128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_2" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=198433199]
+position = Vector2(-85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_3" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=1483507234]
+position = Vector2(-42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_4" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=882853168]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=1843406488]
+position = Vector2(42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=1401969383]
+position = Vector2(85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=1097818842]
+position = Vector2(128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatformSystem2/MovingPlatform" unique_id=934626419]
 shape = SubResource("RectangleShape2D_brown_platform")

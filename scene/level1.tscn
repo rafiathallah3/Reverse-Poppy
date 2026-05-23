@@ -1,14 +1,96 @@
-[gd_scene load_steps=6 format=3 uid="uid://ccij7klgautp5"]
+[gd_scene load_steps=8 format=3 uid="uid://ccij7klgautp5"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://c7mkm3e1u35s7" path="res://Sunset Skybox.webp" id="2_skybox"]
 [ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="3_platform_float"]
+[ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
+[ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(800, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(40, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("4_poppy_idle")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("4_poppy_idle")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("4_poppy_idle")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_1"]
+atlas = ExtResource("5_poppy_walk")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_2"]
+atlas = ExtResource("5_poppy_walk")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_3"]
+atlas = ExtResource("5_poppy_walk")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_player"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_3")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
+
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_1"]
+atlas = ExtResource("3_platform_float")
+region = Rect2(0, 0, 16, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_2"]
+atlas = ExtResource("3_platform_float")
+region = Rect2(16, 0, 16, 15)
+
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_platform"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_2")
+}],
+"loop": true,
+"name": &"float",
+"speed": 6.0
+}]
 
 [node name="Level1" type="Node2D"]
 
@@ -23,9 +105,97 @@ position = Vector2(576, 324)
 [node name="BrownBlackBlock" type="StaticBody2D" parent="."]
 position = Vector2(576, 500)
 
-[node name="Sprite2D" type="Sprite2D" parent="BrownBlackBlock"]
-scale = Vector2(12.5, 0.9375)
-texture = ExtResource("3_platform_float")
+[node name="AnimatedSprite_1" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(-384, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_2" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(-320, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_3" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(-256, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_4" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(-192, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(-128, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(-64, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(0, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_8" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(64, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_9" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(128, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_10" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(192, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_11" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(256, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_12" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(320, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_13" type="AnimatedSprite2D" parent="BrownBlackBlock"]
+position = Vector2(384, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BrownBlackBlock"]
 shape = SubResource("RectangleShape2D_platform")
@@ -34,26 +204,11 @@ shape = SubResource("RectangleShape2D_platform")
 position = Vector2(576, 350)
 script = ExtResource("1_player_script")
 
-[node name="ColorRect" type="ColorRect" parent="Player"]
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-color = Color(0.12, 0.08, 0.05, 1.0)
-
-[node name="EyeLeft" type="ColorRect" parent="Player"]
-offset_left = -10.0
-offset_top = -7.0
-offset_right = -4.0
-offset_bottom = -1.0
-color = Color(0.95, 0.95, 0.9, 1.0)
-
-[node name="EyeRight" type="ColorRect" parent="Player"]
-offset_left = 4.0
-offset_top = -7.0
-offset_right = 10.0
-offset_bottom = -1.0
-color = Color(0.95, 0.95, 0.9, 1.0)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player"]
+scale = Vector2(0.9, 0.9)
+sprite_frames = SubResource("SpriteFrames_player")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("RectangleShape2D_player")
