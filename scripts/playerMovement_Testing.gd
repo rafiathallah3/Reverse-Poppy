@@ -32,6 +32,12 @@ var facing_direction: float = 1.0
 
 var spawn_position: Vector2
 
+@export var max_bullets: int = 30
+@export var max_grenades: int = 3
+
+var bullets: int = max_bullets
+var grenades: int = max_grenades
+
 func _ready() -> void:
 	# 1. Keyboard Arrow Keys support
 	_add_key_to_action("move_left", KEY_LEFT)
@@ -178,10 +184,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		throw_grenade()
 
 func shoot() -> void:
+	if bullets <= 0:
+		print("Out of bullets!")
+		return
+		
 	if shoot_timer > 0.0:
 		return
 		
 	shoot_timer = shoot_cooldown
+	bullets -= 1 
 	
 	var bullet = Area2D.new()
 	bullet.set_script(BULLET_SCRIPT)
@@ -190,10 +201,12 @@ func shoot() -> void:
 	bullet.global_position = global_position + Vector2(facing_direction * 40.0, 0.0)
 
 func throw_grenade() -> void:
-	if grenade_timer > 0.0:
+	if grenades <= 0:
+		print("No grenades left!")
 		return
 		
 	grenade_timer = grenade_cooldown
+	grenades -= 1 
 	
 	var grenade = Area2D.new()
 	grenade.set_script(GRENADE_SCRIPT)
