@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dg3ytnpw8ver7"]
+[gd_scene format=3 uid="uid://dh3mch7rkp0d"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="2_yilmc"]
@@ -113,6 +113,9 @@ fill_to = Vector2(0.85, 0.85)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vwck2"]
 size = Vector2(2840.909, 316.66672)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_68ptg"]
+size = Vector2(137, 412)
 
 [node name="Level2" type="Node2D" unique_id=1209518241]
 position = Vector2(98, 63)
@@ -437,6 +440,10 @@ script = ExtResource("3_ebr37")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D (Death Area)" unique_id=1799784709]
 position = Vector2(1122.7272, -13.888916)
 shape = SubResource("RectangleShape2D_vwck2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=1295984050]
+position = Vector2(1413.5, 320)
+shape = SubResource("RectangleShape2D_68ptg")
 
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
 [connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
