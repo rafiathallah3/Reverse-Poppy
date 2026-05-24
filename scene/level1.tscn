@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
 [ext_resource type="PackedScene" uid="uid://1o5v4ffb5skp" path="res://prefab/finish_level.tscn" id="6_ebr37"]
+[ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(337, 50)
@@ -479,3 +480,7 @@ metadata/_edit_lock_ = true
 rotation = -0.24958208
 scroll_scale = Vector2(10, 10)
 repeat_times = 10
+
+[node name="Enemy1" parent="." unique_id=1510465436 instance=ExtResource("8_3ud3r")]
+position = Vector2(259, 236)
+scale = Vector2(0.49932808, 0.53301734)

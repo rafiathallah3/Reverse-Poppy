@@ -31,17 +31,21 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w2xka"]
+size = Vector2(32.25144, 32.66881)
+
 [node name="Enemy1" type="CharacterBody2D" unique_id=1510465436]
 script = ExtResource("1_w2xka")
+float_speed = 5.0
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=322478063]
 position = Vector2(60.227295, 75)
 shape = SubResource("RectangleShape2D_enemy")
 
-[node name="Hitbox (To hurt Player)" type="Area2D" parent="." unique_id=290919373]
+[node name="Hitbox_to_hurt_player" type="Area2D" parent="." unique_id=290919373]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox (To hurt Player)" unique_id=1926966958]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox_to_hurt_player" unique_id=1926966958]
 position = Vector2(60.227295, 66.666626)
 shape = SubResource("RectangleShape2D_2tadr")
 
@@ -51,4 +55,18 @@ scale = Vector2(3.5748675, 3.740741)
 sprite_frames = SubResource("SpriteFrames_tmn8n")
 frame_progress = 0.5097055
 
-[connection signal="body_entered" from="Hitbox (To hurt Player)" to="." method="_on_hitbox_to_hurt_player_body_entered"]
+[node name="ReviveLabel" type="Label" parent="." unique_id=1283510931]
+offset_left = -8.0
+offset_top = -11.0
+offset_right = 127.0
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 44
+
+[node name="ReviveZone" type="Area2D" parent="." unique_id=1238667613]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ReviveZone" unique_id=1940498334]
+position = Vector2(59.5, 66)
+scale = Vector2(3.689758, 3.3059056)
+shape = SubResource("RectangleShape2D_w2xka")
+
+[connection signal="body_entered" from="Hitbox_to_hurt_player" to="." method="_on_hitbox_to_hurt_player_body_entered"]
