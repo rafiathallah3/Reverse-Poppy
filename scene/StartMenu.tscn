@@ -1,0 +1,371 @@
+[gd_scene format=3 uid="uid://c6120o0llrrjn"]
+
+[ext_resource type="Script" uid="uid://celg2nfs6gbbj" path="res://scripts/start_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="3_poppy_idle"]
+[ext_resource type="Texture2D" uid="uid://cnopcenrf4k8j" path="res://assets/campfire.png" id="4_8t8u8"]
+[ext_resource type="FontFile" uid="uid://dww4fmuwatjsy" path="res://assets/font/upheavtt.ttf" id="4_font"]
+[ext_resource type="AudioStream" uid="uid://d3uc5wwsj8hwd" path="res://assets/ThemeSong/MainMenuSong.mp3" id="6_pbb8y"]
+
+[sub_resource type="Gradient" id="Gradient_campfire"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_campfire"]
+gradient = SubResource("Gradient_campfire")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("3_poppy_idle")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("3_poppy_idle")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("3_poppy_idle")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_poppy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmn8n"]
+atlas = ExtResource("4_8t8u8")
+region = Rect2(4, 0, 56, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_es4nv"]
+atlas = ExtResource("4_8t8u8")
+region = Rect2(54, 0, 50, 52)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_anra8"]
+atlas = ExtResource("4_8t8u8")
+region = Rect2(102, 0, 50, 52)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pbb8y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tmn8n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_es4nv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_anra8")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+bg_color = Color(0.13, 0.04, 0.04, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.1, 0.1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+bg_color = Color(0.65, 0.05, 0.05, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.4, 0.4, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.45, 0.05, 0.05, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.2, 0.2, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.07, 0.07, 0.12, 0.97)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.75, 0.1, 0.1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.8)
+shadow_size = 16
+
+[node name="StartMenu" type="Node2D" unique_id=985188545]
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1951788522]
+z_index = -2
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("2_bg")
+stretch_mode = 1
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1932828366]
+color = Color(0.12, 0.12, 0.2, 1)
+
+[node name="CampfireScene" type="Node2D" parent="." unique_id=1822274862]
+position = Vector2(820, 430)
+
+[node name="CampfireLight" type="PointLight2D" parent="CampfireScene" unique_id=1240663237]
+position = Vector2(-538, 3)
+color = Color(1, 0.55, 0.1, 1)
+energy = 1.8
+texture = SubResource("GradientTexture2D_campfire")
+texture_scale = 10.0
+
+[node name="PoppyIdle" type="AnimatedSprite2D" parent="CampfireScene" unique_id=1279069081]
+position = Vector2(-654, 55)
+scale = Vector2(3.5, 3.5)
+sprite_frames = SubResource("SpriteFrames_poppy")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.5377809
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": false,
+"layer_section": true,
+"output_section": true,
+"pending_changes": {
+"embed_tex": true,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "",
+"o_name": "",
+"only_visible": false,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "",
+"source_uid": -1
+},
+"slice_section": true
+}
+
+[node name="Campfire" type="AnimatedSprite2D" parent="CampfireScene" unique_id=259676352]
+position = Vector2(-539, 42)
+scale = Vector2(4.299716, 4.2193975)
+sprite_frames = SubResource("SpriteFrames_pbb8y")
+frame_progress = 0.19152918
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=244191597]
+
+[node name="GameTitle" type="Label" parent="UI" unique_id=1711656231]
+offset_left = 176.0
+offset_top = 100.0
+offset_right = 976.0
+offset_bottom = 210.0
+theme_override_colors/font_color = Color(1, 0.95, 0.95, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 40
+text = "REVERSE POPPY"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="UI" unique_id=1180524542]
+offset_left = 176.0
+offset_top = 210.0
+offset_right = 976.0
+offset_bottom = 250.0
+theme_override_colors/font_color = Color(0.8, 0.5, 0.5, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 22
+text = "TIME WAITS FOR NO ONE"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=336182322]
+offset_left = 426.0
+offset_top = 300.0
+offset_right = 726.0
+offset_bottom = 520.0
+theme_override_constants/separation = 8
+
+[node name="PlayButton" type="Button" parent="UI/VBoxContainer" unique_id=1566473330]
+custom_minimum_size = Vector2(300, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "PLAY"
+
+[node name="SettingsButton" type="Button" parent="UI/VBoxContainer" unique_id=546015488]
+custom_minimum_size = Vector2(300, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "SETTINGS"
+
+[node name="QuitButton" type="Button" parent="UI/VBoxContainer" unique_id=940591112]
+custom_minimum_size = Vector2(300, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "QUIT"
+
+[node name="SettingsPanel" type="PanelContainer" parent="UI" unique_id=711200001]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -210.0
+offset_right = 260.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SettingsPanel" unique_id=711200002]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TitleLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200003]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0.4, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 26
+text = "— SETTINGS —"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200010]
+layout_mode = 2
+
+[node name="VolumeRow" type="HBoxContainer" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200004]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="VolumeLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer/VolumeRow" unique_id=711200005]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 16
+text = "MUSIC VOL"
+vertical_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="UI/SettingsPanel/VBoxContainer/VolumeRow" unique_id=711200006]
+custom_minimum_size = Vector2(200, 28)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 80.0
+
+[node name="VolumeValueLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer/VolumeRow" unique_id=711200009]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 16
+text = "80%"
+horizontal_alignment = 2
+
+[node name="FullscreenRow" type="HBoxContainer" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200007]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="FullscreenLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer/FullscreenRow" unique_id=711200011]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.85, 0.85, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 16
+text = "FULLSCREEN"
+vertical_alignment = 1
+
+[node name="FullscreenToggle" type="CheckButton" parent="UI/SettingsPanel/VBoxContainer/FullscreenRow" unique_id=711200008]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "OFF"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200013]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200012]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "X  CLOSE"
+
+[node name="TransitionOverlay" type="ColorRect" parent="." unique_id=613886250]
+z_index = 10
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -1.0
+offset_right = 1150.0
+offset_bottom = 647.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="BGMusic" type="AudioStreamPlayer" parent="." unique_id=833374301]
+stream = ExtResource("6_pbb8y")
+volume_db = -8.958
+autoplay = true
+
+[connection signal="pressed" from="UI/VBoxContainer/PlayButton" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="UI/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="UI/VBoxContainer/QuitButton" to="." method="_on_quit_pressed"]
+[connection signal="value_changed" from="UI/SettingsPanel/VBoxContainer/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_changed"]
+[connection signal="toggled" from="UI/SettingsPanel/VBoxContainer/FullscreenRow/FullscreenToggle" to="." method="_on_fullscreen_toggled"]
+[connection signal="pressed" from="UI/SettingsPanel/VBoxContainer/CloseButton" to="." method="_on_close_settings_pressed"]
