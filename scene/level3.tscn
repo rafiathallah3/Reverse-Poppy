@@ -1,37 +1,61 @@
-[gd_scene format=3 uid="uid://buwl0obsxp2eu"]
+[gd_scene format=3 uid="uid://c0nxhx4s1t7o7"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
+[ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="2_87m6s"]
+[ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="3_8s5jp"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
 [ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
-[ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
-[ext_resource type="Texture2D" uid="uid://ce3d2et6x4me1" path="res://assets/BackgroundMastertake1.png" id="9_bgmaster"]
 [ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_music"]
 [ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_music_script"]
-[ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="15_blocks1"]
-[ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="16_blocks2"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
-size = Vector2(1600, 40)
+[sub_resource type="RectangleShape2D" id="Shape_floor"]
+size = Vector2(2400, 48)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_left"]
-size = Vector2(40, 600)
+[sub_resource type="RectangleShape2D" id="Shape_wall"]
+size = Vector2(48, 800)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_right"]
-size = Vector2(40, 600)
+[sub_resource type="RectangleShape2D" id="Shape_plat_L"]
+size = Vector2(192, 36)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_plat_mid"]
-size = Vector2(200, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_1"]
+atlas = ExtResource("3_8s5jp")
+region = Rect2(0, 0, 16, 15)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_plat_center"]
-size = Vector2(260, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_2"]
+atlas = ExtResource("3_8s5jp")
+region = Rect2(16, 0, 16, 15)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_plat_small"]
-size = Vector2(120, 32)
+[sub_resource type="SpriteFrames" id="SpriteFrames_float"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_2")
+}],
+"loop": true,
+"name": &"float",
+"speed": 6.0
+}]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_plat_wide"]
-size = Vector2(320, 32)
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
+[sub_resource type="RectangleShape2D" id="Shape_plat_M"]
+size = Vector2(128, 36)
+
+[sub_resource type="RectangleShape2D" id="Shape_plat_S"]
+size = Vector2(85, 36)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
 atlas = ExtResource("4_poppy_idle")
@@ -91,53 +115,47 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(24, 31)
 
-[sub_resource type="Gradient" id="Gradient_light"]
-offsets = PackedFloat32Array(0, 0.75)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
-gradient = SubResource("Gradient_light")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(0.85, 0.85)
-
-[node name="Level3" type="Node2D" unique_id=-1294967295]
+[node name="Level3" type="Node2D" unique_id=1209518241]
 script = ExtResource("14_music_script")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=-1294967294]
-position = Vector2(800, 380)
-zoom = Vector2(1.1, 1.1)
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1205140196]
+position = Vector2(1200, 400)
 limit_left = 0
-limit_top = 0
-limit_right = 1600
+limit_top = -200
+limit_right = 2400
 limit_bottom = 700
 position_smoothing_enabled = true
 
-[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=-1294967293]
-color = Color(0.1, 0.08, 0.14, 1)
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=265017318]
+color = Color(0.08, 0.07, 0.13, 1)
 
-[node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=-1294967292]
+[node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=2032204257]
 layer = -100
 
-[node name="BossBG" type="TextureRect" parent="BackgroundCanvas" unique_id=-1294967291]
+[node name="SkyBackground" type="TextureRect" parent="BackgroundCanvas" unique_id=1266315011]
+modulate = Color(0.12, 0.12, 0.2, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -209.0
+offset_right = 1264.0
+offset_bottom = 48.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("9_bgmaster")
+texture = ExtResource("2_87m6s")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="ParticleCanvas" type="CanvasLayer" parent="." unique_id=-1294967290]
+[node name="ParticleCanvas" type="CanvasLayer" parent="." unique_id=1406131764]
 
-[node name="TimeDustParticles" type="CPUParticles2D" parent="ParticleCanvas" unique_id=-1294967289]
-position = Vector2(800, 700)
-amount = 80
+[node name="TimeDustParticles" type="CPUParticles2D" parent="ParticleCanvas" unique_id=1242315073]
+position = Vector2(1200, 750)
+amount = 90
 lifetime = 14.0
 preprocess = 10.0
 emission_shape = 3
-emission_rect_extents = Vector2(800, 1)
+emission_rect_extents = Vector2(1200, 1)
 direction = Vector2(0, -1)
 spread = 0.0
 gravity = Vector2(0, 0)
@@ -145,144 +163,337 @@ initial_velocity_min = 40.0
 initial_velocity_max = 70.0
 scale_amount_min = 2.0
 scale_amount_max = 5.0
-color = Color(0.6, 0.2, 1, 0.25)
+color = Color(0.7, 0.3, 1, 0.22)
 
-[node name="ArenaSolid" type="StaticBody2D" parent="." unique_id=-1294967286]
+[node name="ArenaBounds" type="StaticBody2D" parent="." unique_id=1253486993]
 
-[node name="Floor" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967285]
-position = Vector2(800, 540)
-shape = SubResource("RectangleShape2D_floor")
+[node name="Floor" type="CollisionShape2D" parent="ArenaBounds" unique_id=3100001]
+position = Vector2(1200, 560)
+shape = SubResource("Shape_floor")
 
-[node name="FloorVisualL" type="Sprite2D" parent="ArenaSolid/Floor" unique_id=-1294967284]
-position = Vector2(-560, 0)
-scale = Vector2(6.667, 0.667)
-texture = ExtResource("15_blocks1")
+[node name="WallLeft" type="CollisionShape2D" parent="ArenaBounds" unique_id=3100002]
+position = Vector2(0, 200)
+shape = SubResource("Shape_wall")
 
-[node name="FloorVisualR" type="Sprite2D" parent="ArenaSolid/Floor" unique_id=-1294967283]
-position = Vector2(560, 0)
-scale = Vector2(6.667, 0.667)
-texture = ExtResource("15_blocks1")
+[node name="WallRight" type="CollisionShape2D" parent="ArenaBounds" unique_id=3100003]
+position = Vector2(2400, 200)
+shape = SubResource("Shape_wall")
 
-[node name="WallLeft" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967282]
-position = Vector2(60, 280)
-shape = SubResource("RectangleShape2D_wall_left")
+[node name="FP_LeftA" type="StaticBody2D" parent="." unique_id=3200001]
+position = Vector2(280, 350)
 
-[node name="WallLeftVisual" type="Sprite2D" parent="ArenaSolid/WallLeft" unique_id=-1294967281]
-scale = Vector2(0.833, 12.5)
-texture = ExtResource("16_blocks2")
+[node name="Col" type="CollisionShape2D" parent="FP_LeftA" unique_id=3200002]
+shape = SubResource("Shape_plat_L")
 
-[node name="WallRight" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967280]
-position = Vector2(1540, 280)
-shape = SubResource("RectangleShape2D_wall_right")
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_LeftA" unique_id=3200003]
+position = Vector2(-64, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="WallRightVisual" type="Sprite2D" parent="ArenaSolid/WallRight" unique_id=-1294967279]
-scale = Vector2(0.833, 12.5)
-texture = ExtResource("16_blocks2")
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_LeftA" unique_id=3200004]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="PlatLeftLow" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967276]
-position = Vector2(240, 420)
-shape = SubResource("RectangleShape2D_plat_mid")
+[node name="Spr3" type="AnimatedSprite2D" parent="FP_LeftA" unique_id=3200005]
+position = Vector2(64, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="Visual" type="Sprite2D" parent="ArenaSolid/PlatLeftLow" unique_id=-1294967275]
-scale = Vector2(4.167, 0.667)
-texture = ExtResource("15_blocks1")
+[node name="Light" type="PointLight2D" parent="FP_LeftA" unique_id=3200006]
+color = Color(0.4, 0.6, 1, 1)
+energy = 0.8
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 8.0
 
-[node name="PlatRightLow" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967274]
-position = Vector2(1360, 420)
-shape = SubResource("RectangleShape2D_plat_mid")
+[node name="FP_LeftB" type="StaticBody2D" parent="." unique_id=3201001]
+position = Vector2(180, 440)
 
-[node name="Visual" type="Sprite2D" parent="ArenaSolid/PlatRightLow" unique_id=-1294967273]
-scale = Vector2(4.167, 0.667)
-texture = ExtResource("15_blocks1")
+[node name="Col" type="CollisionShape2D" parent="FP_LeftB" unique_id=3201002]
+shape = SubResource("Shape_plat_M")
 
-[node name="PlatCenterLow" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967272]
-position = Vector2(800, 440)
-shape = SubResource("RectangleShape2D_plat_center")
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_LeftB" unique_id=3201003]
+position = Vector2(-42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="Visual" type="Sprite2D" parent="ArenaSolid/PlatCenterLow" unique_id=-1294967271]
-scale = Vector2(5.417, 0.667)
-texture = ExtResource("15_blocks1")
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_LeftB" unique_id=3201004]
+position = Vector2(42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="PlatLeftHigh" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967270]
-position = Vector2(200, 300)
-shape = SubResource("RectangleShape2D_plat_small")
+[node name="Light" type="PointLight2D" parent="FP_LeftB" unique_id=3201005]
+color = Color(0.5, 0.4, 1, 1)
+energy = 0.7
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 7.0
 
-[node name="Visual" type="Sprite2D" parent="ArenaSolid/PlatLeftHigh" unique_id=-1294967269]
-scale = Vector2(2.5, 0.667)
-texture = ExtResource("16_blocks2")
+[node name="FP_QuarterL" type="StaticBody2D" parent="." unique_id=3202001]
+position = Vector2(530, 490)
 
-[node name="PlatRightHigh" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967268]
-position = Vector2(1400, 300)
-shape = SubResource("RectangleShape2D_plat_small")
+[node name="Col" type="CollisionShape2D" parent="FP_QuarterL" unique_id=3202002]
+shape = SubResource("Shape_plat_S")
 
-[node name="Visual" type="Sprite2D" parent="ArenaSolid/PlatRightHigh" unique_id=-1294967267]
-scale = Vector2(2.5, 0.667)
-texture = ExtResource("16_blocks2")
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_QuarterL" unique_id=3202003]
+position = Vector2(-21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="PlatBossCenter" type="CollisionShape2D" parent="ArenaSolid" unique_id=-1294967266]
-position = Vector2(800, 260)
-shape = SubResource("RectangleShape2D_plat_wide")
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_QuarterL" unique_id=3202004]
+position = Vector2(21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
 
-[node name="Visual" type="Sprite2D" parent="ArenaSolid/PlatBossCenter" unique_id=-1294967265]
-scale = Vector2(6.667, 0.667)
-texture = ExtResource("16_blocks2")
+[node name="Light" type="PointLight2D" parent="FP_QuarterL" unique_id=3202005]
+color = Color(0.3, 0.8, 1, 1)
+energy = 0.65
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 6.0
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=-1294967256]
-position = Vector2(160, 490)
+[node name="FP_CenterL" type="StaticBody2D" parent="." unique_id=3203001]
+position = Vector2(820, 430)
+
+[node name="Col" type="CollisionShape2D" parent="FP_CenterL" unique_id=3203002]
+shape = SubResource("Shape_plat_M")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_CenterL" unique_id=3203003]
+position = Vector2(-42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_CenterL" unique_id=3203004]
+position = Vector2(42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_CenterL" unique_id=3203005]
+color = Color(0.6, 0.3, 1, 1)
+energy = 0.9
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 8.0
+
+[node name="FP_CenterTop" type="StaticBody2D" parent="." unique_id=3204001]
+position = Vector2(1200, 290)
+
+[node name="Col" type="CollisionShape2D" parent="FP_CenterTop" unique_id=3204002]
+shape = SubResource("Shape_plat_L")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_CenterTop" unique_id=3204003]
+position = Vector2(-64, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_CenterTop" unique_id=3204004]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr3" type="AnimatedSprite2D" parent="FP_CenterTop" unique_id=3204005]
+position = Vector2(64, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_CenterTop" unique_id=3204006]
+color = Color(1, 0.85, 0.3, 1)
+energy = 1.4
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 14.0
+
+[node name="FP_CenterR" type="StaticBody2D" parent="." unique_id=3205001]
+position = Vector2(1580, 430)
+
+[node name="Col" type="CollisionShape2D" parent="FP_CenterR" unique_id=3205002]
+shape = SubResource("Shape_plat_M")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_CenterR" unique_id=3205003]
+position = Vector2(-42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_CenterR" unique_id=3205004]
+position = Vector2(42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_CenterR" unique_id=3205005]
+color = Color(0.6, 0.3, 1, 1)
+energy = 0.9
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 8.0
+
+[node name="FP_QuarterR" type="StaticBody2D" parent="." unique_id=3206001]
+position = Vector2(1870, 490)
+
+[node name="Col" type="CollisionShape2D" parent="FP_QuarterR" unique_id=3206002]
+shape = SubResource("Shape_plat_S")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_QuarterR" unique_id=3206003]
+position = Vector2(-21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_QuarterR" unique_id=3206004]
+position = Vector2(21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_QuarterR" unique_id=3206005]
+color = Color(0.3, 0.8, 1, 1)
+energy = 0.65
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 6.0
+
+[node name="FP_RightB" type="StaticBody2D" parent="." unique_id=3207001]
+position = Vector2(2220, 440)
+
+[node name="Col" type="CollisionShape2D" parent="FP_RightB" unique_id=3207002]
+shape = SubResource("Shape_plat_M")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_RightB" unique_id=3207003]
+position = Vector2(-42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_RightB" unique_id=3207004]
+position = Vector2(42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_RightB" unique_id=3207005]
+color = Color(0.5, 0.4, 1, 1)
+energy = 0.7
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 7.0
+
+[node name="FP_RightA" type="StaticBody2D" parent="." unique_id=3208001]
+position = Vector2(2120, 350)
+
+[node name="Col" type="CollisionShape2D" parent="FP_RightA" unique_id=3208002]
+shape = SubResource("Shape_plat_L")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_RightA" unique_id=3208003]
+position = Vector2(-64, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_RightA" unique_id=3208004]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr3" type="AnimatedSprite2D" parent="FP_RightA" unique_id=3208005]
+position = Vector2(64, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_RightA" unique_id=3208006]
+color = Color(0.4, 0.6, 1, 1)
+energy = 0.8
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 8.0
+
+[node name="AmbientLights" type="Node2D" parent="." unique_id=3300000]
+
+[node name="AmbLight1" type="PointLight2D" parent="AmbientLights" unique_id=3300001]
+position = Vector2(300, 530)
+color = Color(0.2, 0.4, 1, 1)
+energy = 0.5
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 18.0
+
+[node name="AmbLight2" type="PointLight2D" parent="AmbientLights" unique_id=3300002]
+position = Vector2(700, 530)
+color = Color(0.8, 0.2, 1, 1)
+energy = 0.45
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 16.0
+
+[node name="AmbLight3" type="PointLight2D" parent="AmbientLights" unique_id=3300003]
+position = Vector2(1200, 530)
+color = Color(1, 0.5, 0.1, 1)
+energy = 0.55
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 20.0
+
+[node name="AmbLight4" type="PointLight2D" parent="AmbientLights" unique_id=3300004]
+position = Vector2(1700, 530)
+color = Color(0.8, 0.2, 1, 1)
+energy = 0.45
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 16.0
+
+[node name="AmbLight5" type="PointLight2D" parent="AmbientLights" unique_id=3300005]
+position = Vector2(2100, 530)
+color = Color(0.2, 0.4, 1, 1)
+energy = 0.5
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 18.0
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1414785346]
+position = Vector2(150, 490)
 script = ExtResource("1_player_script")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=-1294967255]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=242453107]
 sprite_frames = SubResource("SpriteFrames_player")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=-1294967254]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=288183150]
 position = Vector2(1, 5.5)
 shape = SubResource("RectangleShape2D_player")
 
-[node name="PointLight2D" type="PointLight2D" parent="Player" unique_id=-1294967253]
-energy = 1.5
-texture = SubResource("GradientTexture2D_light")
-texture_scale = 14.0
-metadata/_edit_lock_ = true
-
-[node name="Enemy1" parent="." unique_id=-1294967246 instance=ExtResource("8_3ud3r")]
-position = Vector2(350, 490)
-scale = Vector2(0.5, 0.5)
-
-[node name="PointLight2D" type="PointLight2D" parent="Enemy1" unique_id=-1294967245]
+[node name="PointLight2D" type="PointLight2D" parent="Player" unique_id=333928561]
 energy = 1.3
 texture = SubResource("GradientTexture2D_light")
 texture_scale = 12.0
 metadata/_edit_lock_ = true
 
-[node name="Enemy2" parent="." unique_id=-1294967244 instance=ExtResource("8_3ud3r")]
-position = Vector2(800, 400)
-scale = Vector2(0.5, 0.5)
+[node name="LevelFinish" parent="." unique_id=1066231283 instance=ExtResource("7_3ud3r")]
+position = Vector2(1200, 240)
 
-[node name="PointLight2D" type="PointLight2D" parent="Enemy2" unique_id=-1294967243]
-energy = 1.3
-texture = SubResource("GradientTexture2D_light")
-texture_scale = 12.0
-metadata/_edit_lock_ = true
+[node name="TimeTriggerArea" parent="." unique_id=1788768943 instance=ExtResource("8_ldwqa")]
+position = Vector2(1200, 240)
 
-[node name="Enemy3" parent="." unique_id=-1294967242 instance=ExtResource("8_3ud3r")]
-position = Vector2(1250, 490)
-scale = Vector2(0.5, 0.5)
-
-[node name="PointLight2D" type="PointLight2D" parent="Enemy3" unique_id=-1294967241]
-energy = 1.3
-texture = SubResource("GradientTexture2D_light")
-texture_scale = 12.0
-metadata/_edit_lock_ = true
-
-[node name="LevelFinish" parent="." unique_id=-1294967236 instance=ExtResource("7_3ud3r")]
-position = Vector2(800, 210)
-
-[node name="TimeTriggerArea" parent="." unique_id=-1294967235 instance=ExtResource("8_ldwqa")]
-position = Vector2(800, 210)
-
-[node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=-1294967226]
+[node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141142]
 stream = ExtResource("13_music")
 volume_db = -2.583
 

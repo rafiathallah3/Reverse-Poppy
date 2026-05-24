@@ -294,6 +294,9 @@ func _stop_level_music() -> void:
 func complete_level() -> void:
 	_stop_level_music()
 	var viewport_size = get_viewport().get_visible_rect().size
+	# Pastikan overlay visible, ukuran benar, dan tidak transparan
+	black_overlay.size = viewport_size
+	black_overlay.color = Color(0.0, 0.0, 0.0, 1.0)
 	black_overlay.position = Vector2(0, viewport_size.y)
 	var tween = create_tween()
 	tween.tween_property(black_overlay, "position", Vector2.ZERO, 0.6)
@@ -351,8 +354,16 @@ func complete_level() -> void:
 	if not is_reversing:
 		is_timer_running = true
 	
+	# Reset ukuran overlay lagi setelah scene baru (viewport bisa berubah)
+	var new_viewport_size = get_viewport().get_visible_rect().size
+	black_overlay.size = new_viewport_size
+	black_overlay.color = Color(0.0, 0.0, 0.0, 1.0)
+	black_overlay.position = Vector2.ZERO
 	var out_tween = create_tween()
-	out_tween.tween_property(black_overlay, "position", Vector2(0, -viewport_size.y), 0.6)
+	out_tween.tween_property(black_overlay, "position", Vector2(0, -new_viewport_size.y), 0.6)
+	out_tween.tween_callback(func():
+		black_overlay.position = Vector2(0, new_viewport_size.y)
+	)
 
 func _on_slider_drag_started() -> void:
 	is_scrubbing = true
