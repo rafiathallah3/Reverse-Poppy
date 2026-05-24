@@ -10,6 +10,7 @@ var level_start_time: float = 0.0  # elapsed_time value at the start of the curr
 
 var is_reversing: bool = false
 var is_scrubbing: bool = false
+var is_joystick_scrubbing: bool = false
 var is_using_controller: bool = false  # toggled true when a controller input is detected
 var previous_slider_value: float = 0.0
 
@@ -101,7 +102,7 @@ func setup_ui() -> void:
 	
 	time_slider = HSlider.new()
 	time_slider.max_value = 5.0
-	time_slider.step = 0.01
+	time_slider.step = 0.001
 	time_slider.visible = false
 	time_slider.value_changed.connect(_on_slider_changed)
 	vbox.add_child(time_slider)
@@ -195,8 +196,25 @@ func _process(delta: float) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.get_last_mouse_velocity().length() > 0:
 		is_using_controller = false
 
+	# Handle Right Joystick scrubbing during reverse phase
+	if is_reversing and time_slider and time_slider.visible:
+		var joy_x = 0.0
+		for joy_id in Input.get_connected_joypads():
+			var axis_val = Input.get_joy_axis(joy_id, JOY_AXIS_RIGHT_X)
+			if abs(axis_val) > abs(joy_x):
+				joy_x = axis_val
+				
+		if abs(joy_x) > 0.15:
+			is_joystick_scrubbing = true
+			var time_range = time_slider.max_value - time_slider.min_value
+			var speed = time_range / 2.0  # Scrub full range in 2 seconds at max deflection
+			var delta_val = joy_x * speed * delta
+			time_slider.value = clamp(time_slider.value + delta_val, time_slider.min_value, time_slider.max_value)
+		else:
+			is_joystick_scrubbing = false
+
 	# Dynamic particle direction reversal based on is_reversing state
-	if not is_scrubbing:
+	if not is_scrubbing and not is_joystick_scrubbing:
 		var current_scene = get_tree().current_scene
 		if current_scene:
 			var bg_particles = current_scene.get_node_or_null("ParticleCanvas/TimeDustParticles")

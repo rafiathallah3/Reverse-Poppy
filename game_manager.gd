@@ -103,3 +103,18 @@ func on_player_entered_trigger() -> void:
 	if glitch_overlay:
 		glitch_overlay.visible = true
 		glitch_overlay.modulate.a = 0.4
+
+func _process(delta: float) -> void:
+	if ui_canvas and ui_canvas.visible and time_slider:
+		var joy_x = 0.0
+		for joy_id in Input.get_connected_joypads():
+			var axis_val = Input.get_joy_axis(joy_id, JOY_AXIS_RIGHT_X)
+			if abs(axis_val) > abs(joy_x):
+				joy_x = axis_val
+				
+		if abs(joy_x) > 0.15:
+			is_scrubbing = true
+			var time_range = time_slider.max_value - time_slider.min_value
+			var speed = time_range / 2.0
+			var delta_val = joy_x * speed * delta
+			time_slider.value = clamp(time_slider.value + delta_val, time_slider.min_value, time_slider.max_value)

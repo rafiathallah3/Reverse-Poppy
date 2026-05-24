@@ -8,6 +8,8 @@ var _settings_panel: PanelContainer
 var _vol_slider:     HSlider
 var _vol_label:      Label
 var _fs_toggle:      CheckButton
+var _resume_btn:     Button
+var _settings_btn:   Button
 
 # ── Style helpers ─────────────────────────────
 func _make_panel_style(bg: Color, border: Color, radius: int = 12) -> StyleBoxFlat:
@@ -38,12 +40,29 @@ func _style_button(btn: Button, color: Color = Color(0.9, 0.9, 0.9)) -> void:
 	btn.add_theme_stylebox_override("normal",  normal)
 	btn.add_theme_stylebox_override("hover",   hover)
 	btn.add_theme_stylebox_override("pressed", hover)
+	btn.add_theme_stylebox_override("focus",   hover)
 	btn.add_theme_color_override("font_color", color)
 	btn.add_theme_font_size_override("font_size", 18)
 	btn.custom_minimum_size = Vector2(216, 44)
 
 # ── Build UI ──────────────────────────────────
 func _ready() -> void:
+	# Ensure controller inputs are mapped to standard UI actions
+	_add_joypad_button_to_action("ui_up", JOY_BUTTON_DPAD_UP)
+	_add_joypad_motion_to_action("ui_up", JOY_AXIS_LEFT_Y, -1.0)
+	
+	_add_joypad_button_to_action("ui_down", JOY_BUTTON_DPAD_DOWN)
+	_add_joypad_motion_to_action("ui_down", JOY_AXIS_LEFT_Y, 1.0)
+	
+	_add_joypad_button_to_action("ui_left", JOY_BUTTON_DPAD_LEFT)
+	_add_joypad_motion_to_action("ui_left", JOY_AXIS_LEFT_X, -1.0)
+	
+	_add_joypad_button_to_action("ui_right", JOY_BUTTON_DPAD_RIGHT)
+	_add_joypad_motion_to_action("ui_right", JOY_AXIS_LEFT_X, 1.0)
+	
+	_add_joypad_button_to_action("ui_accept", JOY_BUTTON_A)
+	_add_joypad_button_to_action("ui_cancel", JOY_BUTTON_B)
+
 	process_mode = PROCESS_MODE_ALWAYS
 	layer = 100
 	_build_ui()
@@ -94,17 +113,17 @@ func _build_ui() -> void:
 	vbox.add_child(sep)
 
 	# Buttons
-	var resume_btn := Button.new()
-	resume_btn.text = "▶  Resume"
-	_style_button(resume_btn)
-	resume_btn.pressed.connect(_on_resume_pressed)
-	vbox.add_child(resume_btn)
+	_resume_btn = Button.new()
+	_resume_btn.text = "▶  Resume"
+	_style_button(_resume_btn)
+	_resume_btn.pressed.connect(_on_resume_pressed)
+	vbox.add_child(_resume_btn)
 
-	var settings_btn := Button.new()
-	settings_btn.text = "⚙  Settings"
-	_style_button(settings_btn)
-	settings_btn.pressed.connect(_on_settings_pressed)
-	vbox.add_child(settings_btn)
+	_settings_btn = Button.new()
+	_settings_btn.text = "⚙  Settings"
+	_style_button(_settings_btn)
+	_settings_btn.pressed.connect(_on_settings_pressed)
+	vbox.add_child(_settings_btn)
 
 	var restart_btn := Button.new()
 	restart_btn.text = "↺  Restart"
@@ -198,10 +217,23 @@ func _build_ui() -> void:
 	back_btn.text = "← Back"
 	back_btn.add_theme_font_size_override("font_size", 14)
 	back_btn.add_theme_stylebox_override("normal", _make_btn_style(Color(0.1,0.1,0.18,0.9), Color(0,0.78,1,0.45)))
-	back_btn.add_theme_stylebox_override("hover",  _make_btn_style(Color(0.15,0.45,0.7,0.95), Color(0,0.9,1,0.9)))
+	var bh := _make_btn_style(Color(0.15,0.45,0.7,0.95), Color(0,0.9,1,0.9))
+	back_btn.add_theme_stylebox_override("hover",  bh)
+	back_btn.add_theme_stylebox_override("focus",  bh)
 	back_btn.custom_minimum_size = Vector2(0, 36)
 	back_btn.pressed.connect(_on_close_settings_pressed)
 	svbox.add_child(back_btn)
+
+	if _fs_toggle:
+		var fh := _make_btn_style(Color(0.15,0.45,0.7,0.95), Color(0,0.9,1,0.9))
+		_fs_toggle.add_theme_stylebox_override("focus", fh)
+
+	# Set focus neighbors for settings elements
+	if _vol_slider and _fs_toggle and back_btn:
+		_vol_slider.focus_neighbor_bottom = _fs_toggle.get_path()
+		_fs_toggle.focus_neighbor_top = _vol_slider.get_path()
+		_fs_toggle.focus_neighbor_bottom = back_btn.get_path()
+		back_btn.focus_neighbor_top = _fs_toggle.get_path()
 
 	# ── Sync initial values ──
 	var current_linear := db_to_linear(AudioServer.get_bus_volume_db(0))
@@ -219,8 +251,22 @@ func _build_ui() -> void:
 # ── Input ─────────────────────────────────────
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		_toggle_pause()
-		get_viewport().set_input_as_handled()
+		if _settings_panel and _settings_panel.visible:
+			get_viewport().set_input_as_handled()
+			_on_close_settings_pressed()
+		else:
+			_toggle_pause()
+			get_viewport().set_input_as_handled()
+			
+	# Fallback safety: if they press any UI action but nothing is focused, refocus the menu
+	if event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down") or event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right") or event.is_action_pressed("ui_accept"):
+		if is_paused and get_viewport().gui_get_focus_owner() == null:
+			if _settings_panel and _settings_panel.visible:
+				if _vol_slider:
+					_vol_slider.grab_focus()
+			else:
+				if _resume_btn:
+					_resume_btn.grab_focus()
 
 # ── Pause logic ───────────────────────────────
 func _toggle_pause() -> void:
@@ -243,6 +289,11 @@ func _apply_pause(paused: bool) -> void:
 	if player and player.has_method("set_paused"):
 		player.set_paused(paused)
 
+	if paused:
+		await get_tree().process_frame
+		if _resume_btn:
+			_resume_btn.grab_focus()
+
 # ── Button callbacks ──────────────────────────
 func _on_resume_pressed() -> void:
 	_apply_pause(false)
@@ -252,11 +303,17 @@ func _on_settings_pressed() -> void:
 	_settings_panel.visible    = true
 	var tw := create_tween()
 	tw.tween_property(_settings_panel, "modulate:a", 1.0, 0.18)
+	if _vol_slider:
+		_vol_slider.grab_focus()
 
 func _on_close_settings_pressed() -> void:
 	var tw := create_tween()
 	tw.tween_property(_settings_panel, "modulate:a", 0.0, 0.15)
-	tw.tween_callback(func(): _settings_panel.visible = false)
+	tw.tween_callback(func():
+		_settings_panel.visible = false
+		if _settings_btn:
+			_settings_btn.grab_focus()
+	)
 
 func _on_restart_pressed() -> void:
 	var current_path := get_tree().current_scene.scene_file_path
@@ -302,3 +359,34 @@ func _get_player() -> Node:
 	var p := scene.get_node_or_null("Player")
 	if not p: p = scene.get_node_or_null("Player (Testing)")
 	return p
+
+func _add_joypad_button_to_action(action_name: String, button_index: int) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventJoypadButton and event.button_index == button_index:
+			already_exists = true
+			break
+		
+	if not already_exists:
+		var new_event = InputEventJoypadButton.new()
+		new_event.button_index = button_index
+		InputMap.action_add_event(action_name, new_event)
+
+func _add_joypad_motion_to_action(action_name: String, axis: int, value: float) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventJoypadMotion and event.axis == axis and sign(event.axis_value) == sign(value):
+			already_exists = true
+			break
+		
+	if not already_exists:
+		var new_event = InputEventJoypadMotion.new()
+		new_event.axis = axis
+		new_event.axis_value = value
+		InputMap.action_add_event(action_name, new_event)

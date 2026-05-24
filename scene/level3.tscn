@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://df08wboxjo7lu"]
+[gd_scene format=4 uid="uid://buwl0obsxp2eu"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="2_87m6s"]

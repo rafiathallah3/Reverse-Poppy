@@ -103,6 +103,8 @@ func _process(_delta: float) -> void:
 func _on_frame_changed() -> void:
 	if is_dead or is_time_reversing or was_revived_in_reverse:
 		return
+	if _is_reverse_phase():
+		return
 		
 	if animated_sprite and animated_sprite.animation == "shoot" and animated_sprite.frame == 3:
 		fire_laser()
@@ -137,7 +139,7 @@ func fire_laser() -> void:
 		end_pos = result.position
 		var hit_collider = result.collider
 		if hit_collider and hit_collider.name.contains("Player"):
-			if hit_collider.has_method("die"):
+			if not _is_reverse_phase() and hit_collider.has_method("die"):
 				hit_collider.die()
 
 	# 2. Draw Premium Laser Beam Visuals
@@ -311,6 +313,9 @@ func _on_zone_exited(body: Node2D) -> void:
 			revive_label.visible = false
 
 func _on_hurtbox_entered(body: Node2D) -> void:
+	# Never damage player during the global reverse phase
+	if _is_reverse_phase():
+		return
 	if not is_dead and not is_time_reversing and not was_revived_in_reverse:
 		if body.has_method("die"):
 			body.die()

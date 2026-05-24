@@ -9,6 +9,22 @@ extends Node2D
 @onready var fullscreen_check: CheckButton = $UI/SettingsPanel/MarginContainer/VBoxContainer/FullscreenRow/FullscreenToggle
 
 func _ready() -> void:
+	# Ensure controller inputs are mapped to standard UI actions
+	_add_joypad_button_to_action("ui_up", JOY_BUTTON_DPAD_UP)
+	_add_joypad_motion_to_action("ui_up", JOY_AXIS_LEFT_Y, -1.0)
+	
+	_add_joypad_button_to_action("ui_down", JOY_BUTTON_DPAD_DOWN)
+	_add_joypad_motion_to_action("ui_down", JOY_AXIS_LEFT_Y, 1.0)
+	
+	_add_joypad_button_to_action("ui_left", JOY_BUTTON_DPAD_LEFT)
+	_add_joypad_motion_to_action("ui_left", JOY_AXIS_LEFT_X, -1.0)
+	
+	_add_joypad_button_to_action("ui_right", JOY_BUTTON_DPAD_RIGHT)
+	_add_joypad_motion_to_action("ui_right", JOY_AXIS_LEFT_X, 1.0)
+	
+	_add_joypad_button_to_action("ui_accept", JOY_BUTTON_A)
+	_add_joypad_button_to_action("ui_cancel", JOY_BUTTON_B)
+
 	if get_tree().root.has_node("SceneTransition"):
 		var st = get_node("/root/SceneTransition")
 		st.is_timer_running = false
@@ -49,6 +65,11 @@ func _ready() -> void:
 		if hover_style:
 			close_btn.add_theme_stylebox_override("focus", hover_style)
 
+	if fullscreen_check:
+		var hover_style = fullscreen_check.get_theme_stylebox("hover")
+		if hover_style:
+			fullscreen_check.add_theme_stylebox_override("focus", hover_style)
+
 	# Robust focus neighbor configurations for the Settings Panel
 	if volume_slider and fullscreen_check and close_btn:
 		volume_slider.focus_neighbor_bottom = fullscreen_check.get_path()
@@ -56,7 +77,8 @@ func _ready() -> void:
 		fullscreen_check.focus_neighbor_bottom = close_btn.get_path()
 		close_btn.focus_neighbor_top = fullscreen_check.get_path()
 
-	# Focus PlayButton initially
+	# Focus PlayButton initially (deferred by one frame to ensure UI is ready)
+	await get_tree().process_frame
 	var play_btn = $UI/VBoxContainer/PlayButton
 	if play_btn:
 		play_btn.grab_focus()
@@ -124,3 +146,51 @@ func _fade_and_go(target_scene: String) -> void:
 	var tween = create_tween()
 	tween.tween_property(transition_overlay, "color", Color(0, 0, 0, 1), 0.8)
 	tween.tween_callback(func(): get_tree().change_scene_to_file(target_scene))
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		if settings_panel and settings_panel.visible:
+			get_viewport().set_input_as_handled()
+			_on_close_settings_pressed()
+			
+	# Fallback safety: if they press any UI action but nothing is focused, refocus the menu
+	if event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down") or event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right") or event.is_action_pressed("ui_accept"):
+		if get_viewport().gui_get_focus_owner() == null:
+			if settings_panel and settings_panel.visible:
+				if volume_slider:
+					volume_slider.grab_focus()
+			else:
+				var play_btn = $UI/VBoxContainer/PlayButton
+				if play_btn:
+					play_btn.grab_focus()
+
+func _add_joypad_button_to_action(action_name: String, button_index: int) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventJoypadButton and event.button_index == button_index:
+			already_exists = true
+			break
+		
+	if not already_exists:
+		var new_event = InputEventJoypadButton.new()
+		new_event.button_index = button_index
+		InputMap.action_add_event(action_name, new_event)
+
+func _add_joypad_motion_to_action(action_name: String, axis: int, value: float) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		
+	var already_exists = false
+	for event in InputMap.action_get_events(action_name):
+		if event is InputEventJoypadMotion and event.axis == axis and sign(event.axis_value) == sign(value):
+			already_exists = true
+			break
+		
+	if not already_exists:
+		var new_event = InputEventJoypadMotion.new()
+		new_event.axis = axis
+		new_event.axis_value = value
+		InputMap.action_add_event(action_name, new_event)

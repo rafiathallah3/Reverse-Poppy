@@ -55,6 +55,11 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		return
 
+	# Freeze during the global Time Reverse phase
+	if _is_reverse_phase():
+		velocity = Vector2.ZERO
+		return
+
 	time_elapsed += delta
 	position.x = spawn_position.x + sin(time_elapsed * float_speed * TAU) * float_amplitude
 
@@ -159,7 +164,9 @@ func _on_zone_exited(body: Node2D) -> void:
 			revive_label.visible = false
 
 func _on_hurtbox_entered(body: Node2D) -> void:
-	# Never damage player if: dead, awaiting revival, or revived-but-reverse-ongoing
+	# Never damage player if: dead, awaiting revival, revived-but-reverse-ongoing, or in reverse phase
+	if _is_reverse_phase():
+		return
 	if not is_dead and not is_time_reversing and not was_revived_in_reverse:
 		if body.has_method("die"):
 			body.die()
