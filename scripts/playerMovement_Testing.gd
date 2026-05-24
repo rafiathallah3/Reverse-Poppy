@@ -31,7 +31,7 @@ var facing_direction: float = 1.0
 
 var spawn_position: Vector2
 
-@export var max_bullets: int = 30
+@export var max_bullets: int = 10
 @export var max_grenades: int = 3
 
 var bullets: int = max_bullets
