@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
 [ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_music"]
-[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_music_script"]
+[ext_resource type="Script" path="res://scripts/level_music.gd" id="14_music_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_large"]
 size = Vector2(129, 38)
@@ -386,7 +386,7 @@ texture_scale = 12.0
 metadata/_edit_lock_ = true
 
 [node name="LevelFinish" parent="." unique_id=1066231283 instance=ExtResource("7_3ud3r")]
-position = Vector2(1144, 380)
+position = Vector2(57, 342)
 
 [node name="TimeTriggerArea" parent="." unique_id=1788768943 instance=ExtResource("8_ldwqa")]
 position = Vector2(1144, 380)
