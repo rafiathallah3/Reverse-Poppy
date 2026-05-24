@@ -164,6 +164,7 @@ animation = &"float"
 autoplay = "float"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BrownPlatform2" unique_id=1903300646]
+position = Vector2(-125, 77.77777)
 shape = SubResource("RectangleShape2D_brown_platform")
 
 [node name="MovingPlatformSystem" parent="." unique_id=628392856 instance=ExtResource("16_moving_platform_prefab")]
