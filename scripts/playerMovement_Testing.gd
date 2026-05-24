@@ -1,14 +1,14 @@
 extends CharacterBody2D
 
 @export var SPEED = 250.0
-@export var ACCELERATION = 1800.0  
-@export var FRICTION = 2200.0     
+@export var ACCELERATION = 1800.0
+@export var FRICTION = 2200.0
 
 @export var JUMP_VELOCITY = -450.0
-@export var FALL_GRAVITY_MULTIPLIER = 1.6  
+@export var FALL_GRAVITY_MULTIPLIER = 1.6
 
-@export var COYOTE_DURATION = 0.1      
-@export var JUMP_BUFFER_DURATION = 0.1 
+@export var COYOTE_DURATION = 0.1
+@export var JUMP_BUFFER_DURATION = 0.1
 
 var base_gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -89,7 +89,6 @@ func _ready() -> void:
 		sf.set_animation_speed("death", 16.0)
 
 
-
 func _add_key_to_action(action_name: String, keycode: int) -> void:
 	if not InputMap.has_action(action_name):
 		InputMap.add_action(action_name)
@@ -157,7 +156,7 @@ func _physics_process(delta):
 		
 		coyote_timer -= delta
 	else:
-		coyote_timer = COYOTE_DURATION 
+		coyote_timer = COYOTE_DURATION
 
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= delta
@@ -167,11 +166,11 @@ func _physics_process(delta):
 
 	if jump_buffer_timer > 0 and coyote_timer > 0:
 		velocity.y = JUMP_VELOCITY
-		jump_buffer_timer = 0.0 
-		coyote_timer = 0.0    
+		jump_buffer_timer = 0.0
+		coyote_timer = 0.0
 
 	if Input.is_action_just_released("jump") and velocity.y < 0:
-		velocity.y *= 0.45 
+		velocity.y *= 0.45
 
 	var direction = Input.get_axis("move_left", "move_right")
 	
@@ -218,7 +217,7 @@ func shoot() -> void:
 		return
 		
 	shoot_timer = shoot_cooldown
-	bullets -= 1 
+	bullets -= 1
 	
 	var bullet = Area2D.new()
 	bullet.set_script(BULLET_SCRIPT)
@@ -236,7 +235,7 @@ func throw_grenade() -> void:
 		return
 		
 	grenade_timer = grenade_cooldown
-	grenades -= 1 
+	grenades -= 1
 	
 	var grenade = Area2D.new()
 	grenade.set_script(GRENADE_SCRIPT)
@@ -267,8 +266,12 @@ func die() -> void:
 	velocity = Vector2.ZERO
 	
 	# Reset bullet and grenade counts
-	bullets = 10
-	grenades = 3
+	if get_tree().current_scene and get_tree().current_scene.name == "Level3":
+		bullets = 30
+		grenades = 20
+	else:
+		bullets = 10
+		grenades = 3
 	
 	# Clear active bullets and grenades in the scene from the previous life
 	var active_bullets = get_tree().get_nodes_in_group("bullets")
@@ -281,6 +284,13 @@ func die() -> void:
 		if is_instance_valid(grenade):
 			grenade.queue_free()
 	
+	# Reset Boss Fight Manager if present
+	var current_scene = get_tree().current_scene
+	if current_scene:
+		var boss_mgr = current_scene.get_node_or_null("BossFightManager")
+		if boss_mgr and boss_mgr.has_method("reset_boss_fight"):
+			boss_mgr.reset_boss_fight()
+
 	# Revive all enemies
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	for enemy in enemies:

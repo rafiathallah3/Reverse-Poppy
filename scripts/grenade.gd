@@ -187,7 +187,7 @@ func _on_body_entered(body: Node2D) -> void:
 				velocity.x = 0.0
 		position += normal * 2.0
 	else:
-		velocity.y = -velocity.y * bounce_damping
+		velocity.y = - velocity.y * bounce_damping
 		velocity.x = velocity.x * friction_damping
 		if abs(velocity.y) < 60.0:
 			velocity.y = 0.0
@@ -219,7 +219,10 @@ func explode() -> void:
 		if is_instance_valid(enemy):
 			if global_position.distance_to(enemy.global_position) <= explosion_radius:
 				if enemy.has_method("take_damage"):
-					enemy.take_damage(1)
+					if enemy.name == "Boss" or enemy.is_in_group("boss"):
+						enemy.take_damage(1, true)
+					else:
+						enemy.take_damage(1)
 
 	# ── PLAYER in radius ─────────────────────────────────────────────────────
 	var current_scene = get_tree().current_scene
