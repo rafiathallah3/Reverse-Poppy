@@ -1,14 +1,5 @@
 extends CanvasLayer
 
-# ─────────────────────────────────────────────
-#  PauseMenu.gd  — v2 (fully procedural, no .tscn needed)
-#  Cara pakai: 
-#    1. Taruh script ini di res://scripts/pause_menu.gd
-#    2. Di level scene, tambah node CanvasLayer, rename "PauseMenu"
-#    3. Attach script ini ke node tersebut
-#    4. Selesai! Tidak perlu .tscn apapun.
-# ─────────────────────────────────────────────
-
 var is_paused: bool = false
 
 # Referensi node — dibuat manual di _ready()

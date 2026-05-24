@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://or276grgot5x" path="res://scripts/pause_menu.gd" id="13_cmtua"]
 [ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_music"]
 [ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_music_script"]
+[ext_resource type="Script" uid="uid://0x3b3wlrym3g" path="res://scripts/level2_dialogue.gd" id="14_nx5n0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_large"]
 size = Vector2(129, 38)
@@ -124,8 +125,8 @@ position = Vector2(98, 63)
 script = ExtResource("14_music_script")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1624380459]
-position = Vector2(800, 280)
-scale = Vector2(1.2, 0.8)
+position = Vector2(667.49994, 284.00006)
+scale = Vector2(1.5947915, 1.2518519)
 texture = ExtResource("9_pipes")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1205140196]
@@ -503,6 +504,22 @@ scale_amount_min = 3.0
 scale_amount_max = 6.0
 color = Color(1, 0.9, 0.7, 0.3)
 
+[node name="TimeDustParticles2" type="CPUParticles2D" parent="ParticleCanvas" unique_id=1400333705]
+position = Vector2(836, 706)
+amount = 60
+lifetime = 12.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(600, 1)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+color = Color(1, 0.9, 0.7, 0.3)
+
 [node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141142]
 stream = ExtResource("13_music")
 volume_db = -2.583
@@ -568,6 +585,9 @@ texture_scale = 12.0
 
 [node name="PauseMenu" type="CanvasLayer" parent="." unique_id=241949720]
 script = ExtResource("13_cmtua")
+
+[node name="level2Dialogue" type="Node" parent="." unique_id=1786650458]
+script = ExtResource("14_nx5n0")
 
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
 [connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
