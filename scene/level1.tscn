@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
 [ext_resource type="PackedScene" uid="uid://tybkxowgocmt" path="res://prefab/destructible_box.tscn" id="11_e6f45"]
+[ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_6i17f"]
+[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_wrpia"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(337, 50)
@@ -260,6 +262,7 @@ sources/1 = SubResource("TileSetAtlasSource_kjjd3")
 
 [node name="Level1" type="Node2D" unique_id=210175747]
 position = Vector2(98, 63)
+script = ExtResource("14_wrpia")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=351554841]
 position = Vector2(85, 280)
@@ -497,5 +500,11 @@ scale_amount_max = 6.0
 color = Color(1, 0.9, 0.7, 0.3)
 
 [node name="DestructibleBox" parent="." unique_id=1973914487 instance=ExtResource("11_e6f45")]
-position = Vector2(776, 206)
+position = Vector2(761, 206)
 scale = Vector2(0.47197032, 0.4826077)
+
+[node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141141]
+stream = ExtResource("13_6i17f")
+volume_db = -8.665
+
+[connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
