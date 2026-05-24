@@ -1,0 +1,276 @@
+[gd_scene format=4 uid="uid://dh3mch7rkp0d"]
+
+[ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="1_a215g"]
+[ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
+[ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="2_ebr37"]
+[ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="3_ebr37"]
+[ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
+[ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
+[ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
+[ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
+[ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
+[ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
+size = Vector2(337, 50)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ud3r"]
+texture = ExtResource("1_a215g")
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ldwqa"]
+texture = ExtResource("2_ebr37")
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+13:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+9:4/0 = 0
+10:4/0 = 0
+11:4/0 = 0
+12:4/0 = 0
+13:4/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_kjjd3"]
+sources/0 = SubResource("TileSetAtlasSource_3ud3r")
+sources/1 = SubResource("TileSetAtlasSource_ldwqa")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a215g"]
+size = Vector2(48, 190.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ebr37"]
+size = Vector2(50, 44.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3ud3r"]
+size = Vector2(93, 47)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ldwqa"]
+size = Vector2(292, 45)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("4_poppy_idle")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("4_poppy_idle")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("4_poppy_idle")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_1"]
+atlas = ExtResource("5_poppy_walk")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_2"]
+atlas = ExtResource("5_poppy_walk")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_3"]
+atlas = ExtResource("5_poppy_walk")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_player"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_3")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(24, 31)
+
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
+[node name="Level2" type="Node2D" unique_id=1209518241]
+position = Vector2(98, 63)
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1624380459]
+position = Vector2(85, 280)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("9_pipes")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1205140196]
+position = Vector2(481, 261)
+position_smoothing_enabled = true
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=265017318]
+color = Color(0.12, 0.12, 0.2, 1)
+
+[node name="MainPlatform" type="StaticBody2D" parent="." unique_id=1253486993]
+position = Vector2(576, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainPlatform" unique_id=21151853]
+position = Vector2(-360.5, -118)
+shape = SubResource("RectangleShape2D_platform")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="MainPlatform" unique_id=401081844]
+scale = Vector2(3, 3)
+tile_map_data = PackedByteArray("AAD1//3/AQAGAAMAAAD2//3/AQAHAAMAAAD1//7/AQAGAAQAAAD2//7/AQAHAAQAAAD1////AQAGAAMAAAD2////AQAHAAMAAAD1/wAAAQAGAAQAAAD2/wAAAQAHAAQAAAD0//z/AAABAAEAAAD0//3/AQACAAQAAAD3//3/AQAEAAMAAAD4//3/AQAFAAMAAAD5//3/AQAEAAMAAAD5//n/AAAAAAEAACD4//n/AQAHAAQAAAD2//n/AQAHAAQAAAD3//n/AQAGAAQAAAD1//n/AQAGAAQAAAD0//n/AQAHAAQAAADz//r/AQAHAAMAAADz//v/AQAHAAMAAADz//n/AQAHAAQAAADz//z/AQAHAAQAAADy//n/AQAGAAQAAADy//r/AQAGAAMAAADy//v/AQAGAAMAAADy//z/AQAGAAQAAADz//j/AQAHAAMAAAD0//j/AQAHAAMAAAD1//j/AQAGAAMAAAD2//j/AQAHAAMAAAD3//j/AQAGAAMAAAD4//j/AQAHAAMAAAD5//j/AAABAAEAAAD3//7/AQAEAAQAAAD4//7/AQAFAAQAAAD5//7/AQAEAAQAAAD6//7/AQAFAAQAAAD7//7/AQAEAAQAAAD6//3/AQAFAAMAAAD7//3/AQAEAAMAAAD5//z/AAABAAAAAAD6//z/AAABAAAAAAD8//z/AQAEAAMAAAD9//z/AQAFAAMAAAD8//3/AQAEAAQAAAD6//n/AAAAAAEAACD6//j/AAAAAAEAACD7//j/AAAAAAEAACD5//f/AAABAAEAAAD6//f/AAABAAEAAAD8//7/AQAFAAQAAAD9//7/AQAEAAQAAAD9//3/AQAFAAQAAAD+//3/AQAEAAQAAAD+//z/AQAEAAMAAAD8//n/AAABAAAAAAD///v/AQANAAQAAAD///z/AQAFAAMAAAAAAPz/AQAEAAMAAAAAAPv/AQAEAAQAAAAAAPr/AQAEAAQAAAAAAPn/AQAEAAMAAAD///3/AQAFAAQAAAAAAP3/AQAEAAQAAAABAP3/AQAFAAQAAAABAPz/AQAFAAMAAAABAPv/AQAFAAQAAAABAPr/AQAFAAQAAAABAPn/AQAFAAMAAAD7//f/AAAAAAEAACD7//b/AAAAAAEAACD8//b/AAAAAAEAACD9//b/AAAAAAEAACD9//X/AAAAAAEAACD+//X/AAAAAAEAACD///X/AAAAAAEAACAAAPX/AAAAAAEAACD7//n/AAABAAAAAAD8//j/AAABAAAAAAD8//r/AAABAAAAAAD9//r/AAABAAAAAAD///n/AAABAAAAAAACAPn/AQAEAAMAAAACAPr/AQAEAAQAAAADAPn/AQAFAAMAAAAEAPn/AAAAAAEAAAAFAPn/AAAAAAEAAAAGAPn/AAAAAAEAAAAHAPn/AAAAAAEAAAAJAPn/AAABAAEAAAAJAPj/AAABAAEAAAAJAPf/AAABAAEAAAABAPX/AAAAAAEAACACAPX/AAAAAAEAACADAPX/AAAAAAEAACAEAPX/AAAAAAEAACAFAPX/AAAAAAEAACAGAPX/AAAAAAEAACAHAPX/AAAAAAEAACAIAPX/AAAAAAEAACAJAPX/AAAAAAEAACD6//b/AAABAAEAAAD6//X/AAABAAEAAAD7//X/AAABAAEAAAD8//X/AAABAAEAAAD8//T/AAABAAEAAAD9//T/AAABAAEAAAD+//T/AAABAAEAAAD///T/AAABAAEAAAAAAPT/AAABAAEAAAABAPT/AAABAAEAAAACAPT/AAABAAEAAAADAPT/AAABAAEAAAAEAPT/AAABAAEAAAAFAPT/AAABAAEAAAAGAPT/AAABAAEAAAAHAPT/AAABAAEAAAAIAPT/AAABAAEAAAAJAPT/AAABAAEAAAAKAPT/AAABAAEAAAAKAPX/AAAAAAEAACAKAPb/AAAAAAEAACD6//T/AAABAAEAAAD7//T/AAABAAEAAAD8//f/AAABAAEAAADy//j/AQAGAAMAAAD+//7/AQAFAAQAAAADAPr/AQAFAAQAAAA=")
+tile_set = SubResource("TileSet_kjjd3")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="MainPlatform" unique_id=320322296]
+position = Vector2(-603, -239.25)
+shape = SubResource("RectangleShape2D_a215g")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="MainPlatform" unique_id=987070531]
+position = Vector2(-553, -167.25)
+shape = SubResource("RectangleShape2D_ebr37")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="MainPlatform" unique_id=2026556521]
+position = Vector2(-290, -170)
+rotation = 3.1415927
+shape = SubResource("RectangleShape2D_3ud3r")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="MainPlatform" unique_id=1942497819]
+position = Vector2(-156, -313)
+rotation = -0.029587984
+shape = SubResource("RectangleShape2D_3ud3r")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="MainPlatform" unique_id=606941263]
+position = Vector2(-531, -311)
+rotation = -3.1415925
+shape = SubResource("RectangleShape2D_3ud3r")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="MainPlatform" unique_id=711710681]
+position = Vector2(-336, -311)
+shape = SubResource("RectangleShape2D_ldwqa")
+
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="MainPlatform" unique_id=113258225]
+position = Vector2(332, -118)
+shape = SubResource("RectangleShape2D_ldwqa")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="MainPlatform" unique_id=1316292399]
+position = Vector2(-42, -122)
+shape = SubResource("RectangleShape2D_ldwqa")
+
+[node name="CollisionShape2D10" type="CollisionShape2D" parent="MainPlatform" unique_id=1535447499]
+position = Vector2(243, -122)
+shape = SubResource("RectangleShape2D_ldwqa")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1414785346]
+position = Vector2(85, 306)
+script = ExtResource("1_player_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=242453107]
+sprite_frames = SubResource("SpriteFrames_player")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=288183150]
+position = Vector2(1, 5.5)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="PointLight2D" type="PointLight2D" parent="Player" unique_id=333928561]
+energy = 1.3
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+metadata/_edit_lock_ = true
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1604287393]
+collision_layer = 0
+script = ExtResource("3_ebr37")
+
+[node name="Enemy1" parent="." unique_id=1259864038 instance=ExtResource("8_3ud3r")]
+position = Vector2(410, 295)
+scale = Vector2(0.5, 0.5)
+
+[node name="Enemy2" parent="." unique_id=2141758742 instance=ExtResource("8_3ud3r")]
+position = Vector2(640, 295)
+scale = Vector2(0.5, 0.5)
+
+[node name="Enemy3" parent="." unique_id=1781924806 instance=ExtResource("8_3ud3r")]
+position = Vector2(806, 290)
+scale = Vector2(0.5, 0.5)
+
+[node name="LevelFinish" parent="." unique_id=1066231283 instance=ExtResource("7_3ud3r")]
+position = Vector2(997, 329)
+
+[node name="TimeTriggerArea" parent="." unique_id=1788768943 instance=ExtResource("8_ldwqa")]
+position = Vector2(997, 327)
+
+[node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=2032204257]
+layer = -100
+
+[node name="SkyBackground" type="TextureRect" parent="BackgroundCanvas" unique_id=1266315011]
+modulate = Color(0.12, 0.12, 0.2, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_pipes")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ParticleCanvas" type="CanvasLayer" parent="." unique_id=1406081764]
+
+[node name="TimeDustParticles" type="CPUParticles2D" parent="ParticleCanvas" unique_id=1242315073]
+position = Vector2(576, 680)
+amount = 60
+lifetime = 12.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(576, 1)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+color = Color(1, 0.9, 0.7, 0.3)
