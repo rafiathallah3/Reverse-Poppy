@@ -296,6 +296,72 @@ func _spawn_blast_particles() -> void:
 	tween.parallel().tween_property(light, "energy", 0.0, 0.35)
 	tween.tween_callback(effect.queue_free)
 
+func _spawn_implode_particles() -> void:
+	var effect = Node2D.new()
+	get_parent().add_child(effect)
+	effect.global_position = global_position
+	
+	# 1. Shockwave line ring
+	var shockwave = Line2D.new()
+	shockwave.points = _get_circle_points(20.0)
+	shockwave.width = 8.0
+	shockwave.default_color = Color(1.0, 0.45, 0.0, 0.0) # Start faded out
+	shockwave.scale = Vector2(4.5, 4.5) # Start expanded
+	effect.add_child(shockwave)
+	
+	# 2. Inner flame core ring
+	var core_ring = Line2D.new()
+	core_ring.points = _get_circle_points(10.0)
+	core_ring.width = 5.0
+	core_ring.default_color = Color(1.0, 0.95, 0.2, 0.0) # Start faded out
+	core_ring.scale = Vector2(3.5, 3.5) # Start expanded
+	effect.add_child(core_ring)
+	
+	# 3. Burst particles (flying inward debris sparks)
+	var particles = CPUParticles2D.new()
+	particles.amount = 22
+	particles.explosiveness = 0.95
+	particles.spread = 180.0
+	particles.gravity = Vector2(0, -180) # Reversed gravity
+	particles.initial_velocity_min = -220.0 # Fly inwards!
+	particles.initial_velocity_max = -90.0
+	particles.scale_amount_min = 4.0
+	particles.scale_amount_max = 7.0
+	particles.color = Color(1.0, 0.6, 0.1, 0.9)
+	effect.add_child(particles)
+	particles.emitting = true
+	
+	# 4. Light flash rising!
+	var light = PointLight2D.new()
+	light.name = "ExplosionLight"
+	light.color = Color(1.0, 0.55, 0.1, 1.0)
+	light.energy = 0.0 # Start off
+	light.texture_scale = 10.0 # Start large
+	
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	grad.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(0.0, 0.0, 0.0, 0.0)])
+	
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 128
+	grad_tex.height = 128
+	
+	light.texture = grad_tex
+	effect.add_child(light)
+	
+	var tween = effect.create_tween()
+	tween.tween_property(shockwave, "scale", Vector2(1.0, 1.0), 0.28)
+	tween.parallel().tween_property(shockwave, "default_color:a", 0.95, 0.28)
+	tween.parallel().tween_property(core_ring, "scale", Vector2(1.0, 1.0), 0.22)
+	tween.parallel().tween_property(core_ring, "default_color:a", 1.0, 0.22)
+	tween.parallel().tween_property(light, "texture_scale", 1.0, 0.35).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	tween.parallel().tween_property(light, "energy", 4.5, 0.35)
+	tween.tween_callback(effect.queue_free)
+
 func _get_circle_points(radius: float) -> PackedVector2Array:
 	var points = PackedVector2Array()
 	var steps = 16
@@ -329,6 +395,8 @@ func scrub_time_absolute(target_time: float) -> void:
 	if history.size() == 0:
 		return
 		
+	var was_exploded_before = is_exploded
+	
 	var closest_entry = history[0]
 	var min_diff = abs(closest_entry["time"] - target_time)
 	
@@ -349,6 +417,14 @@ func scrub_time_absolute(target_time: float) -> void:
 	# Safely re-enable or disable the collision shape
 	if my_collision_shape:
 		my_collision_shape.disabled = is_exploded
+		
+	# Trigger transition effects based on scrubbing direction crossing the threshold
+	if was_exploded_before and not is_exploded:
+		# Scrubbed backward across explosion threshold: trigger implode!
+		_spawn_implode_particles()
+	elif not was_exploded_before and is_exploded:
+		# Scrubbed forward across explosion threshold: trigger explode!
+		_spawn_blast_particles()
 		
 	queue_redraw()
 

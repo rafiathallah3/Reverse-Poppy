@@ -20,6 +20,13 @@ func _on_body_entered(body: Node2D) -> void:
 		if name == "LevelFinish" and (not st or not st.is_reversing):
 			return
 			
+		# Check if the player has at least 3 grenades to finish the level backward
+		if name == "LevelFinish" and st and st.is_reversing:
+			if "grenades" in body and body.grenades < 3:
+				if st.has_method("show_warning"):
+					st.show_warning("Need 3 grenades to complete level!")
+				return
+			
 		triggered = true
 		
 		# Disable physics monitoring immediately
