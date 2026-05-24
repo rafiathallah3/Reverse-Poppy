@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dr2lmx8tbee1j"]
+
+[ext_resource type="Script" uid="uid://d23ngeoiixwtv" path="res://scripts/time_trigger.gd" id="1_nv2n1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
+radius = 60.0
+
+[node name="TimeTriggerArea" type="Area2D" unique_id=483465147]
+script = ExtResource("1_nv2n1")
+is_final_trigger = true
+
+[node name="PortalVisual" type="ColorRect" parent="." unique_id=1171082599]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.18, 0.6, 0.96, 0.4)
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1005198709]
+shape = SubResource("CircleShape2D_trigger")
