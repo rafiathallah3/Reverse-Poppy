@@ -17,8 +17,8 @@ var dialogue_text: Label = null
 var dialogue_prompt: Label = null
 var white_fade_rect: ColorRect = null
 
-var boss_max_health: int = 1
-var boss_current_health: int = 1
+var boss_max_health: int = 5
+var boss_current_health: int = 5
 var platform_positions: Array = []
 var active_platform_nodes: Array = []
 
