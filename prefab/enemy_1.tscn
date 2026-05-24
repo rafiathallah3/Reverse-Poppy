@@ -34,6 +34,16 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w2xka"]
 size = Vector2(32.25144, 32.66881)
 
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
 [node name="Enemy1" type="CharacterBody2D" unique_id=1510465436]
 script = ExtResource("1_w2xka")
 float_speed = 5.0
@@ -68,5 +78,12 @@ theme_override_font_sizes/font_size = 44
 position = Vector2(59.5, 66)
 scale = Vector2(3.689758, 3.3059056)
 shape = SubResource("RectangleShape2D_w2xka")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=927606973]
+position = Vector2(60, 66)
+energy = 0.8
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+metadata/_edit_lock_ = true
 
 [connection signal="body_entered" from="Hitbox_to_hurt_player" to="." method="_on_hitbox_to_hurt_player_body_entered"]

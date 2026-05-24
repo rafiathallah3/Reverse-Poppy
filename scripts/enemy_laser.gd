@@ -81,6 +81,10 @@ func _process(_delta: float) -> void:
 	if in_reverse and is_time_reversing and player_in_zone:
 		if Input.is_action_just_pressed("interact"):
 			revive()
+			
+	var light = get_node_or_null("PointLight2D")
+	if light:
+		light.visible = not is_dead and not is_time_reversing
 
 func _on_frame_changed() -> void:
 	if is_dead or is_time_reversing or was_revived_in_reverse:

@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://1r2b8l18gpgq"]
+[gd_scene format=3 uid="uid://dmh4vqy6x8nxl"]
 
-[ext_resource type="Script" path="res://scripts/enemy_laser.gd" id="1_laser_script"]
+[ext_resource type="Script" uid="uid://duxru4p8h8suj" path="res://scripts/enemy_laser.gd" id="1_laser_script"]
 [ext_resource type="Texture2D" uid="uid://crhwccuamyvct" path="res://assets/Enemy2.png" id="2_laser_texture"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_laser_enemy"]
@@ -60,6 +60,16 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_laser_revive"]
 size = Vector2(140, 140)
 
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
 [node name="EnemyLaser" type="CharacterBody2D" unique_id=370826370]
 script = ExtResource("1_laser_script")
 
@@ -89,3 +99,9 @@ horizontal_alignment = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ReviveZone" unique_id=1712463897]
 shape = SubResource("RectangleShape2D_laser_revive")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=44139607]
+energy = 0.8
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+metadata/_edit_lock_ = true
