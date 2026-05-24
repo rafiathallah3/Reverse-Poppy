@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://c1q8p207qgdms"]
+
+[ext_resource type="Script" uid="uid://b1xre1ii15t4r" path="res://scripts/moving_platform.gd" id="1_moving_platform"]
+[ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="2_o2178"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_1"]
+atlas = ExtResource("2_o2178")
+region = Rect2(0, 0, 16, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_platform_2"]
+atlas = ExtResource("2_o2178")
+region = Rect2(16, 0, 16, 15)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_platform"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_platform_2")
+}],
+"loop": true,
+"name": &"float",
+"speed": 6.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_brown_platform"]
+size = Vector2(300, 40)
+
+[node name="MovingPlatformSystem" type="Node2D"]
+
+[node name="PointA" type="Marker2D" parent="."]
+position = Vector2(-329.54553, -8.333397)
+
+[node name="PointB" type="Marker2D" parent="."]
+position = Vector2(413.6363, -2.7778397)
+
+[node name="MovingPlatform" type="AnimatableBody2D" parent="." node_paths=PackedStringArray("point_a", "point_b")]
+script = ExtResource("1_moving_platform")
+point_a = NodePath("../PointA")
+point_b = NodePath("../PointB")
+
+[node name="AnimatedSprite_1" type="AnimatedSprite2D" parent="MovingPlatform"]
+position = Vector2(-128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_2" type="AnimatedSprite2D" parent="MovingPlatform"]
+position = Vector2(-85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_3" type="AnimatedSprite2D" parent="MovingPlatform"]
+position = Vector2(-42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_4" type="AnimatedSprite2D" parent="MovingPlatform"]
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="MovingPlatform"]
+position = Vector2(42.67, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="MovingPlatform"]
+position = Vector2(85.33, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="MovingPlatform"]
+position = Vector2(128, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_platform")
+animation = &"float"
+autoplay = "float"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MovingPlatform"]
+shape = SubResource("RectangleShape2D_brown_platform")

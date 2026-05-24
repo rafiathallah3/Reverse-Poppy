@@ -11,6 +11,7 @@ extends Area2D
 var velocity: Vector2 = Vector2.ZERO
 var time_remaining: float = fuse_time
 var my_collision_shape: CollisionShape2D
+var shapecast: ShapeCast2D
 
 
 # Time Rewind variables
@@ -40,6 +41,14 @@ func _ready() -> void:
 	
 	# Connect collision signals
 	body_entered.connect(_on_body_entered)
+	
+	# Set up shapecast for wall/floor collision normal detection
+	shapecast = ShapeCast2D.new()
+	var cast_shape = CircleShape2D.new()
+	cast_shape.radius = 8.0 # Slightly smaller to prevent ghost collisions
+	shapecast.shape = cast_shape
+	shapecast.exclude_parent = true
+	add_child(shapecast)
 
 func _draw() -> void:
 	if is_exploded:
@@ -145,16 +154,49 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 		
 	# Bounce off of solid environment tiles / platforms
-	# Damp and invert velocities
-	velocity.y = -velocity.y * bounce_damping
-	velocity.x = velocity.x * friction_damping
+	var normal = Vector2.UP # Fallback
+	var found_collision = false
 	
-	# Damping slide threshold
-	if abs(velocity.y) < 60.0:
-		velocity.y = 0.0
-	
-	# Move out of collision slightly to avoid getting stuck
-	position.y -= 2.0
+	if shapecast:
+		# Sweep slightly along the velocity direction to detect normal
+		if velocity.length_squared() > 0.01:
+			shapecast.target_position = velocity.normalized() * 5.0
+		else:
+			shapecast.target_position = Vector2.DOWN * 5.0
+			
+		shapecast.force_shapecast_update()
+		for i in range(shapecast.get_collision_count()):
+			var collider = shapecast.get_collider(i)
+			if is_instance_valid(collider):
+				if collider.name.contains("Player") or collider.is_in_group("bullets") or collider.is_in_group("grenades"):
+					continue # Filter out player/bullets/grenades
+				normal = shapecast.get_collision_normal(i)
+				found_collision = true
+				break
+				
+	if found_collision:
+		velocity = velocity.bounce(normal)
+		# Apply correct damping based on collision surface
+		if abs(normal.y) > 0.5: # Floor or ceiling
+			velocity.y *= bounce_damping
+			velocity.x *= friction_damping
+			if abs(velocity.y) < 60.0:
+				velocity.y = 0.0
+		else: # Walls
+			velocity.x *= bounce_damping
+			velocity.y *= friction_damping
+			if abs(velocity.x) < 60.0:
+				velocity.x = 0.0
+		
+		# Push out of wall along the normal to prevent clipping
+		position += normal * 2.0
+	else:
+		# Fallback to simple Y-axis bounce
+		velocity.y = -velocity.y * bounce_damping
+		velocity.x = velocity.x * friction_damping
+		if abs(velocity.y) < 60.0:
+			velocity.y = 0.0
+		position.y -= 2.0
 
 func explode() -> void:
 	if is_exploded:

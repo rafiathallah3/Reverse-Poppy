@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://dngi7ype3vv88" path="res://assets/mainmenu/play button.png" id="6_kgfu0"]
 [ext_resource type="Texture2D" uid="uid://cnopcenrf4k8j" path="res://assets/campfire.png" id="7_ar63i"]
 [ext_resource type="Texture2D" uid="uid://c5fl3vpyxi7ll" path="res://assets/enemies.png" id="8_of14b"]
+[ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="9_player_script"]
+[ext_resource type="PackedScene" uid="uid://d1xrmj35ahsf1" path="res://prefab/one_way_platform.tscn" id="10_oneway_platform_prefab"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wya11"]
 atlas = ExtResource("3_6jrte")
@@ -143,6 +145,53 @@ animations = [{
 "speed": 4.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_player"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6jrte")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ye2h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jxjbq")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wya11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o4coy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8i7lg")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(40, 40)
+
+[sub_resource type="Gradient" id="Gradient_light"]
+offsets = PackedFloat32Array(0, 0.75)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.85, 0.85)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oneway"]
+size = Vector2(240, 20)
+
 [node name="Testing" type="Node2D" unique_id=1548511231]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=405558179]
@@ -256,3 +305,24 @@ sprite_frames = SubResource("SpriteFrames_8ukjr")
 position = Vector2(-1043.1819, -469.44446)
 scale = Vector2(3.8373425, 3.791667)
 sprite_frames = SubResource("SpriteFrames_rkmgp")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=802219786]
+position = Vector2(400, 100)
+script = ExtResource("9_player_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Player" unique_id=1752107169]
+scale = Vector2(0.9, 0.9)
+sprite_frames = SubResource("SpriteFrames_player")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=429751991]
+shape = SubResource("RectangleShape2D_player")
+
+[node name="PointLight2D" type="PointLight2D" parent="Player" unique_id=2039912631]
+energy = 1.3
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+
+[node name="OneWayPlatform" parent="." unique_id=-1912053252 instance=ExtResource("10_oneway_platform_prefab")]
+position = Vector2(403, 145)

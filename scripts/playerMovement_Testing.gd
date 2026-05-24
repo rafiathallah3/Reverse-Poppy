@@ -67,6 +67,12 @@ func _ready() -> void:
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_Y)
 	_add_joypad_button_to_action("grenade", JOY_BUTTON_LEFT_SHOULDER)
 	
+	# 6. Move Down input action & events (Down/S on Keyboard, D-Pad Down on Xbox)
+	_add_key_to_action("move_down", KEY_DOWN)
+	_add_key_to_action("move_down", KEY_S)
+	_add_joypad_button_to_action("move_down", JOY_BUTTON_DPAD_DOWN)
+	_add_joypad_motion_to_action("move_down", JOY_AXIS_LEFT_Y, 1.0)
+	
 	spawn_position = global_position
 
 func _add_key_to_action(action_name: String, keycode: int) -> void:
@@ -126,6 +132,9 @@ func _physics_process(delta):
 		
 	if grenade_timer > 0.0:
 		grenade_timer -= delta
+
+	if is_on_floor() and Input.is_action_just_pressed("move_down"):
+		position.y += 2.0
 
 		
 	if not is_on_floor():
@@ -213,7 +222,7 @@ func throw_grenade() -> void:
 	grenade.set_script(GRENADE_SCRIPT)
 	grenade.velocity = Vector2(facing_direction * grenade.speed_x, grenade.speed_y)
 	get_parent().add_child(grenade)
-	grenade.global_position = global_position + Vector2(facing_direction * 35.0, -10.0)
+	grenade.global_position = global_position
 	
 func die() -> void:
 	global_position = spawn_position

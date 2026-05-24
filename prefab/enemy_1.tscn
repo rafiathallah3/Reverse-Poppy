@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bq37curpo5rm1"]
+
+[ext_resource type="Script" uid="uid://r4qq3va5bahb" path="res://scripts/enemy.gd" id="1_w2xka"]
+[ext_resource type="Texture2D" uid="uid://c5fl3vpyxi7ll" path="res://assets/enemies.png" id="2_4yc75"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
+size = Vector2(120.454544, 94.44437)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2tadr"]
+size = Vector2(120.45456, 111.11109)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0lch"]
+atlas = ExtResource("2_4yc75")
+region = Rect2(5, 0, 51, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lx373"]
+atlas = ExtResource("2_4yc75")
+region = Rect2(61, 0, 51, 60)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tmn8n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0lch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lx373")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Enemy1" type="CharacterBody2D" unique_id=1510465436]
+script = ExtResource("1_w2xka")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=322478063]
+position = Vector2(60.227295, 75)
+shape = SubResource("RectangleShape2D_enemy")
+
+[node name="Hitbox (To hurt Player)" type="Area2D" parent="." unique_id=290919373]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox (To hurt Player)" unique_id=1926966958]
+position = Vector2(60.227295, 66.666626)
+shape = SubResource("RectangleShape2D_2tadr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2025904360]
+position = Vector2(65.65912, 82.22223)
+scale = Vector2(3.5748675, 3.740741)
+sprite_frames = SubResource("SpriteFrames_tmn8n")
+frame_progress = 0.5097055
+
+[connection signal="body_entered" from="Hitbox (To hurt Player)" to="." method="_on_hitbox_to_hurt_player_body_entered"]
