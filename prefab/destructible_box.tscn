@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bbmw66s1e7jhw" path="res://assets/BreakableBoxes.png" id="2_jws28"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fhsrn"]
-size = Vector2(145, 208)
+size = Vector2(161, 222)
 
 [node name="DestructibleBox" type="StaticBody2D" unique_id=1973914487]
 position = Vector2(-2890, 47)
@@ -16,5 +16,5 @@ scale = Vector2(9.062498, 12.875)
 texture = ExtResource("2_jws28")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1863147840]
-position = Vector2(77.5, 107)
+position = Vector2(75.5, 106)
 shape = SubResource("RectangleShape2D_fhsrn")

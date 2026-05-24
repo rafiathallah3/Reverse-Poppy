@@ -24,6 +24,7 @@ var led_on: bool = false
 var led_timer: float = 0.0
 var is_exploded: bool = false
 var explosion_real_time: float = -1.0
+var led_light: PointLight2D = null
 
 func _ready() -> void:
 	add_to_group("grenades")
@@ -34,6 +35,27 @@ func _ready() -> void:
 	shape.radius = 10.0
 	my_collision_shape.shape = shape
 	add_child(my_collision_shape)
+
+	# Add small glowing LED light
+	led_light = PointLight2D.new()
+	led_light.color = Color(1.0, 0.15, 0.15, 1.0)
+	led_light.energy = 0.0
+	led_light.texture_scale = 1.2
+	
+	var grad = Gradient.new()
+	grad.offsets = PackedFloat32Array([0.0, 1.0])
+	grad.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(0.0, 0.0, 0.0, 0.0)])
+	
+	var grad_tex = GradientTexture2D.new()
+	grad_tex.gradient = grad
+	grad_tex.fill = GradientTexture2D.FILL_RADIAL
+	grad_tex.fill_from = Vector2(0.5, 0.5)
+	grad_tex.fill_to = Vector2(0.85, 0.85)
+	grad_tex.width = 64
+	grad_tex.height = 64
+	
+	led_light.texture = grad_tex
+	add_child(led_light)
 
 	body_entered.connect(_on_body_entered)
 	
@@ -74,6 +96,9 @@ func _physics_process(delta: float) -> void:
 		led_timer = 0.0
 		led_on = !led_on
 		queue_redraw()
+		
+	if led_light:
+		led_light.energy = 1.8 if led_on else 0.1
 		
 	time_remaining -= delta
 	if time_remaining <= 0.0:
@@ -179,6 +204,8 @@ func explode() -> void:
 	_record_history()
 	
 	visible = false
+	if led_light:
+		led_light.visible = false
 	queue_redraw()
 	
 	if my_collision_shape:
@@ -208,7 +235,10 @@ func explode() -> void:
 	# ── DESTRUCTIBLE BOXES in radius ─────────────────────────────────────────
 	for box in get_tree().get_nodes_in_group("destructible"):
 		if is_instance_valid(box):
-			if global_position.distance_to(box.global_position) <= explosion_radius:
+			var box_center = box.global_position
+			if box.has_method("get_center_global_position"):
+				box_center = box.get_center_global_position()
+			if global_position.distance_to(box_center) <= explosion_radius:
 				if box.has_method("take_explosion_damage"):
 					box.take_explosion_damage()
 
@@ -379,6 +409,8 @@ func scrub_time_absolute(target_time: float) -> void:
 	is_exploded = closest_entry["exploded"]
 	explosion_real_time = closest_entry["exp_time"]
 	visible = closest_entry["visible"]
+	if led_light:
+		led_light.visible = visible and not is_exploded
 	
 	if my_collision_shape:
 		my_collision_shape.disabled = is_exploded

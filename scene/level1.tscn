@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="1_a215g"]
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="2_ebr37"]
-[ext_resource type="PackedScene" path="res://prefab/enemy_laser.tscn" id="3_e6f45"]
+[ext_resource type="PackedScene" uid="uid://1r2b8l18gpgq" path="res://prefab/enemy_laser.tscn" id="3_e6f45"]
 [ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="3_ebr37"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
 [ext_resource type="PackedScene" uid="uid://tybkxowgocmt" path="res://prefab/destructible_box.tscn" id="11_e6f45"]
+[ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_6i17f"]
+[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_wrpia"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(337, 50)
@@ -260,6 +262,7 @@ sources/1 = SubResource("TileSetAtlasSource_kjjd3")
 
 [node name="Level1" type="Node2D" unique_id=210175747]
 position = Vector2(98, 63)
+script = ExtResource("14_wrpia")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=351554841]
 position = Vector2(85, 280)
@@ -508,4 +511,11 @@ scale = Vector2(0.39277977, 0.44512913)
 [node name="DestructibleBox" parent="." unique_id=1973914487 instance=ExtResource("11_e6f45")]
 position = Vector2(761, 206)
 scale = Vector2(0.47197032, 0.4826077)
+
+
+[node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141141]
+stream = ExtResource("13_6i17f")
+volume_db = -8.665
+
+[connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
 

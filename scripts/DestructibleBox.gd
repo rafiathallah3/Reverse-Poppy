@@ -1,11 +1,38 @@
 extends StaticBody2D
 
+var is_destroyed: bool = false
+var spawn_position: Vector2 = Vector2.ZERO
+
+@onready var sprite: Sprite2D = get_node_or_null("Sprite2D")
+@onready var collision_shape: CollisionShape2D = get_node_or_null("CollisionShape2D")
+
 func _ready() -> void:
 	add_to_group("destructible")
+	spawn_position = position
+
+func get_center_global_position() -> Vector2:
+	if collision_shape:
+		return global_position + collision_shape.position
+	return global_position
 
 func take_explosion_damage() -> void:
+	if is_destroyed:
+		return
+	is_destroyed = true
 	_spawn_break_effect()
-	queue_free()
+	
+	if collision_shape:
+		collision_shape.set_deferred("disabled", true)
+	if sprite:
+		sprite.visible = false
+
+func revive_box() -> void:
+	is_destroyed = false
+	position = spawn_position
+	if collision_shape:
+		collision_shape.set_deferred("disabled", false)
+	if sprite:
+		sprite.visible = true
 
 func _spawn_break_effect() -> void:
 	var particles = CPUParticles2D.new()

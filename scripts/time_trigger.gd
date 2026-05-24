@@ -20,11 +20,26 @@ func _on_body_entered(body: Node2D) -> void:
 		if name == "LevelFinish" and (not st or not st.is_reversing):
 			return
 			
-		# Check if the player has at least 3 grenades to finish the level backward
+		# [REVERSE PHASE CHECKS]
 		if name == "LevelFinish" and st and st.is_reversing:
+			# 1. Grenade Check
 			if "grenades" in body and body.grenades < 3:
 				if st.has_method("show_warning"):
 					st.show_warning("Need 3 grenades to complete level!")
+				return
+				
+			# 2. Enemy Revive Check
+			var enemies = get_tree().get_nodes_in_group("enemies")
+			var unrevived_count = 0
+			
+			for enemy in enemies:
+				# If is_time_reversing is true, they are a pile of scrap waiting to be revived
+				if "is_time_reversing" in enemy and enemy.is_time_reversing:
+					unrevived_count += 1
+					
+			if unrevived_count > 0:
+				if st.has_method("show_warning"):
+					st.show_warning("Revive " + str(unrevived_count) + " more enemies!")
 				return
 			
 		triggered = true

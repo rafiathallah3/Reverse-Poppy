@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
+[ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_music"]
+[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_music_script"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_large"]
 size = Vector2(129, 38)
@@ -42,14 +44,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_medium"]
 size = Vector2(128, 41)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_tall"]
-size = Vector2(48, 150)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_small"]
-size = Vector2(50, 50)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_narrow"]
-size = Vector2(40, 50)
+size = Vector2(131, 36.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
 atlas = ExtResource("4_poppy_idle")
@@ -168,6 +164,7 @@ sources/1 = SubResource("TileSetAtlasSource_vwck2")
 
 [node name="Level2" type="Node2D" unique_id=1209518241]
 position = Vector2(98, 63)
+script = ExtResource("14_music_script")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1624380459]
 position = Vector2(800, 280)
@@ -283,66 +280,109 @@ sprite_frames = SubResource("SpriteFrames_epjhv")
 animation = &"float"
 autoplay = "float"
 
-[node name="Climb1" type="CollisionShape2D" parent="MainPlatform" unique_id=844326899]
-position = Vector2(506, 221)
-shape = SubResource("RectangleShape2D_tall")
-
 [node name="Platform4_Peak" type="CollisionShape2D" parent="MainPlatform" unique_id=851307039]
 position = Vector2(758, 429)
 shape = SubResource("RectangleShape2D_large")
 
+[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="MainPlatform/Platform4_Peak" unique_id=1131618583]
+position = Vector2(-45.66638, 2.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="MainPlatform/Platform4_Peak" unique_id=2009909956]
+position = Vector2(-3.0064087, 2.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="MainPlatform/Platform4_Peak" unique_id=1444920055]
+position = Vector2(39.663574, 2.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
 [node name="Platform5_Down1" type="CollisionShape2D" parent="MainPlatform" unique_id=506067366]
-position = Vector2(700, 160)
+position = Vector2(932, 391)
 shape = SubResource("RectangleShape2D_small")
 
-[node name="Platform6_Down2" type="CollisionShape2D" parent="MainPlatform" unique_id=542821932]
-position = Vector2(780, 220)
-shape = SubResource("RectangleShape2D_small")
+[node name="AnimatedSprite_8" type="AnimatedSprite2D" parent="MainPlatform/Platform5_Down1" unique_id=1064614638]
+position = Vector2(-44.66638, 3.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
 
-[node name="Platform7_Jump1" type="CollisionShape2D" parent="MainPlatform" unique_id=299680054]
-position = Vector2(840, 280)
-shape = SubResource("RectangleShape2D_small")
+[node name="AnimatedSprite_9" type="AnimatedSprite2D" parent="MainPlatform/Platform5_Down1" unique_id=1047170234]
+position = Vector2(-2.0064087, 3.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
 
-[node name="Platform8_Jump2" type="CollisionShape2D" parent="MainPlatform" unique_id=147908246]
-position = Vector2(900, 320)
-shape = SubResource("RectangleShape2D_small")
+[node name="AnimatedSprite_10" type="AnimatedSprite2D" parent="MainPlatform/Platform5_Down1" unique_id=1223426392]
+position = Vector2(40.663574, 3.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
 
 [node name="Platform9_Jump3" type="CollisionShape2D" parent="MainPlatform" unique_id=1668536681]
-position = Vector2(960, 360)
+position = Vector2(1110.5, 421)
 shape = SubResource("RectangleShape2D_small")
 
-[node name="Platform10_Narrows" type="CollisionShape2D" parent="MainPlatform" unique_id=1774697183]
-position = Vector2(1020, 380)
-shape = SubResource("RectangleShape2D_narrow")
+[node name="AnimatedSprite_8" type="AnimatedSprite2D" parent="MainPlatform/Platform9_Jump3" unique_id=695761950]
+position = Vector2(-40.66638, 2.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_9" type="AnimatedSprite2D" parent="MainPlatform/Platform9_Jump3" unique_id=1294711009]
+position = Vector2(1.9936523, 2.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_10" type="AnimatedSprite2D" parent="MainPlatform/Platform9_Jump3" unique_id=1143416000]
+position = Vector2(44.663574, 2.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
 
 [node name="Platform11_Final" type="CollisionShape2D" parent="MainPlatform" unique_id=464147123]
-position = Vector2(1100, 400)
+position = Vector2(1280, 384)
 shape = SubResource("RectangleShape2D_large")
+
+[node name="AnimatedSprite_8" type="AnimatedSprite2D" parent="MainPlatform/Platform11_Final" unique_id=1578960537]
+position = Vector2(-42.66638, 3.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_9" type="AnimatedSprite2D" parent="MainPlatform/Platform11_Final" unique_id=1011567850]
+position = Vector2(-0.0063476563, 3.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
+
+[node name="AnimatedSprite_10" type="AnimatedSprite2D" parent="MainPlatform/Platform11_Final" unique_id=1303933572]
+position = Vector2(42.663574, 3.0002441)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_epjhv")
+animation = &"float"
+autoplay = "float"
 
 [node name="KillZone" type="Area2D" parent="MainPlatform" unique_id=1604287393]
 collision_layer = 0
 script = ExtResource("3_ebr37")
-
-[node name="AnimatedSprite_5" type="AnimatedSprite2D" parent="MainPlatform" unique_id=1131618583]
-position = Vector2(712.3336, 431.00024)
-scale = Vector2(2.6667, 2.6667)
-sprite_frames = SubResource("SpriteFrames_epjhv")
-animation = &"float"
-autoplay = "float"
-
-[node name="AnimatedSprite_6" type="AnimatedSprite2D" parent="MainPlatform" unique_id=2009909956]
-position = Vector2(754.9936, 431.00024)
-scale = Vector2(2.6667, 2.6667)
-sprite_frames = SubResource("SpriteFrames_epjhv")
-animation = &"float"
-autoplay = "float"
-
-[node name="AnimatedSprite_7" type="AnimatedSprite2D" parent="MainPlatform" unique_id=1444920055]
-position = Vector2(797.6636, 431.00024)
-scale = Vector2(2.6667, 2.6667)
-sprite_frames = SubResource("SpriteFrames_epjhv")
-animation = &"float"
-autoplay = "float"
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1414785346]
 position = Vector2(85, 350)
@@ -367,19 +407,37 @@ metadata/_edit_lock_ = true
 position = Vector2(399, 349)
 scale = Vector2(0.5, 0.5)
 
+[node name="PointLight2D" type="PointLight2D" parent="Enemy1" unique_id=188151842]
+energy = 1.3
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+metadata/_edit_lock_ = true
+
 [node name="Enemy2" parent="." unique_id=2141758742 instance=ExtResource("8_3ud3r")]
 position = Vector2(559, 320)
 scale = Vector2(0.5, 0.5)
 
+[node name="PointLight2D" type="PointLight2D" parent="Enemy2" unique_id=1562992975]
+energy = 1.3
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+metadata/_edit_lock_ = true
+
 [node name="Enemy3" parent="." unique_id=1781924806 instance=ExtResource("8_3ud3r")]
-position = Vector2(880, 300)
+position = Vector2(930, 322)
 scale = Vector2(0.5, 0.5)
 
+[node name="PointLight2D" type="PointLight2D" parent="Enemy3" unique_id=1072481491]
+energy = 1.3
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 12.0
+metadata/_edit_lock_ = true
+
 [node name="LevelFinish" parent="." unique_id=1066231283 instance=ExtResource("7_3ud3r")]
-position = Vector2(1100, 340)
+position = Vector2(1315, 336)
 
 [node name="TimeTriggerArea" parent="." unique_id=1788768943 instance=ExtResource("8_ldwqa")]
-position = Vector2(1100, 340)
+position = Vector2(1315, 336)
 
 [node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=2032204257]
 layer = -100
@@ -389,7 +447,8 @@ modulate = Color(0.12, 0.12, 0.2, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 58.0
+offset_top = -4.0
+offset_right = 192.0
 offset_bottom = 58.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -418,3 +477,9 @@ scale_amount_min = 3.0
 scale_amount_max = 6.0
 color = Color(1, 0.9, 0.7, 0.3)
 
+
+[node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141142]
+stream = ExtResource("13_music")
+volume_db = -2.583
+
+[connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]

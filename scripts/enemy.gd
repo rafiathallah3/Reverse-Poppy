@@ -157,3 +157,22 @@ func _spawn_death_effect() -> void:
 	var effect = Node2D.new()
 	get_parent().add_child(effect)
 	effect.global_position = global_position
+
+func revive_enemy() -> void:
+	is_dead = false
+	is_time_reversing = false
+	was_revived_in_reverse = false
+	time_elapsed = 0.0
+	position = spawn_position
+
+	if main_collision:
+		main_collision.set_deferred("disabled", false)
+
+	if hurtbox:
+		hurtbox.set_deferred("monitoring", true)
+		
+	if scrap_sprite:
+		scrap_sprite.visible = false
+	var sprite = get_node_or_null("AnimatedSprite2D")
+	if sprite:
+		sprite.visible = true

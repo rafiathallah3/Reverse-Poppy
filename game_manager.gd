@@ -11,6 +11,7 @@ extends Node2D
 @onready var glitch_overlay: ColorRect = get_node_or_null("TimeGlitchCanvas/GlitchOverlay")
 
 var current_slider_offset_ms: float = 0.0
+var is_scrubbing: bool = false
 
 func _ready() -> void:
 	ui_canvas.visible = false
@@ -18,6 +19,8 @@ func _ready() -> void:
 		glitch_overlay.visible = false
 	
 	time_slider.value_changed.connect(_on_slider_value_changed)
+	time_slider.drag_started.connect(_on_slider_drag_started)
+	time_slider.drag_ended.connect(_on_slider_drag_ended)
 	resume_btn.pressed.connect(_on_resume_pressed)
 	
 	activate_btn.text = "RESET TO PRESENT"
@@ -39,10 +42,10 @@ func _on_slider_value_changed(value: float) -> void:
 		
 	# Dynamic Background Particles Speed & Direction
 	if bg_particles:
-		if value > 0:
+		if is_scrubbing and value > 0:
 			bg_particles.speed_scale = -1.0 - (value / 1000.0)
 		else:
-			bg_particles.speed_scale = 1.0
+			bg_particles.speed_scale = 0.0
 			
 	# Dynamic Fullscreen CRT / Glitch Overlay (scales while active)
 	if glitch_overlay and glitch_overlay.visible:
@@ -56,6 +59,14 @@ func _on_slider_value_changed(value: float) -> void:
 
 func _on_reset_pressed() -> void:
 	time_slider.value = 0.0
+
+func _on_slider_drag_started() -> void:
+	is_scrubbing = true
+
+func _on_slider_drag_ended() -> void:
+	is_scrubbing = false
+	if bg_particles:
+		bg_particles.speed_scale = 0.0
 
 func _on_resume_pressed() -> void:
 	var objects = get_tree().get_nodes_in_group("rewindable_objects")
