@@ -6,7 +6,6 @@ var is_finished: bool = false
 
 # GLOBAL REVERSE STATE
 var is_reversing: bool = false
-var is_scrubbing: bool = false
 
 const GLITCH_SHADER = preload("res://shaders/time_glitch.gdshader")
 
@@ -15,9 +14,10 @@ var canvas_layer: CanvasLayer
 var timer_panel: PanelContainer
 var timer_label: Label
 var grenade_label: Label
+var bullet_label: Label          # ← NEW
 var black_overlay: ColorRect
 var glitch_overlay: ColorRect
-var time_slider: HSlider 
+var time_slider: HSlider
 
 func _ready() -> void:
 	process_mode = PROCESS_MODE_ALWAYS
@@ -80,48 +80,27 @@ func setup_ui() -> void:
 	timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
 	vbox.add_child(timer_label)
 	
+	bullet_label = Label.new()          # ← NEW
+	bullet_label.text = "BULLETS: 30"  # ← NEW
+	bullet_label.add_theme_font_size_override("font_size", 16)
+	bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
+	vbox.add_child(bullet_label)        # ← NEW (sits between timer and grenades)
+	
 	grenade_label = Label.new()
 	grenade_label.text = "GRENADES: 3"
 	grenade_label.add_theme_font_size_override("font_size", 16)
 	grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
 	vbox.add_child(grenade_label)
+	
 	time_slider = HSlider.new()
-	time_slider.min_value = 0.0
-	time_slider.max_value = 5.0 
+	time_slider.max_value = 5.0
 	time_slider.step = 0.01
-	time_slider.visible = false 
+	time_slider.visible = false
 	time_slider.value_changed.connect(_on_slider_changed)
-	time_slider.drag_started.connect(_on_slider_drag_started)
-	time_slider.drag_ended.connect(_on_slider_drag_ended)
 	vbox.add_child(time_slider)
 
 func _on_slider_changed(value: float) -> void:
-	update_timer_text_to_val(value)
-	
-	var objects = get_tree().get_nodes_in_group("rewindable_objects")
-	for obj in objects:
-		if obj.has_method("scrub_time_absolute"):
-			obj.scrub_time_absolute(value)
-		elif obj.has_method("scrub_time"):
-			var offset_ms = (elapsed_time - value) * 1000.0
-			obj.scrub_time(offset_ms)
-			
-	# Dynamic visuals modulation for Background TimeDustParticles & SkyBackground
-	var current_scene = get_tree().current_scene
-	if current_scene:
-		var bg_particles = current_scene.get_node_or_null("ParticleCanvas/TimeDustParticles")
-		if not bg_particles:
-			bg_particles = current_scene.get_node_or_null("BackgroundCanvas/TimeDustParticles")
-		if bg_particles:
-			var max_val = time_slider.max_value if time_slider.max_value > time_slider.min_value else 5.0
-			var speed_factor = clamp((value - time_slider.min_value) / (max_val - time_slider.min_value), 0.0, 1.0) if max_val > time_slider.min_value else 1.0
-			bg_particles.speed_scale = -1.0 - (speed_factor * 4.0)
-			
-		var bg_sky = current_scene.get_node_or_null("BackgroundCanvas/SkyBackground")
-		if bg_sky:
-			var max_val = time_slider.max_value if time_slider.max_value > time_slider.min_value else 5.0
-			var t = clamp((value - time_slider.min_value) / (max_val - time_slider.min_value), 0.0, 1.0) if max_val > time_slider.min_value else 1.0
-			bg_sky.modulate = Color(0.12, 0.12, 0.2, 1.0).lerp(Color(0.45, 0.65, 1.0, 1.0), t)
+	get_tree().call_group("rewindable_objects", "scrub_time", value * 1000.0)
 
 func reset_overlay_position() -> void:
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -155,25 +134,19 @@ func _process(delta: float) -> void:
 	if not is_timer_running and not is_finished:
 		is_timer_running = true
 
-
 	if is_timer_running:
 		elapsed_time += delta
 		update_timer_text()
+	update_bullet_counter()    # ← NEW
 	update_grenade_counter()
 
-	# Dynamic particle direction reversal based on is_reversing state
-	if not is_scrubbing:
-		var current_scene = get_tree().current_scene
-		if current_scene:
-			var bg_particles = current_scene.get_node_or_null("ParticleCanvas/TimeDustParticles")
-			if not bg_particles:
-				bg_particles = current_scene.get_node_or_null("BackgroundCanvas/TimeDustParticles")
-			if bg_particles:
-				if is_reversing:
-					bg_particles.speed_scale = -1.0
-				else:
-					if bg_particles.speed_scale != 1.0:
-						bg_particles.speed_scale = 1.0
+# ── helper to grab the player from the current scene ──
+func _get_player() -> Node:
+	var current_scene = get_tree().current_scene
+	if not current_scene: return null
+	var player = current_scene.get_node_or_null("Player")
+	if not player: player = current_scene.get_node_or_null("Player (Testing)")
+	return player
 
 func update_timer_text() -> void:
 	if not timer_label: return
@@ -182,62 +155,28 @@ func update_timer_text() -> void:
 	var centiseconds = int((elapsed_time - int(elapsed_time)) * 100)
 	timer_label.text = "TIME: %02d:%02d.%02d" % [minutes, seconds, centiseconds]
 
-func update_timer_text_to_val(time_val: float) -> void:
-	if not timer_label: return
-	var minutes = int(time_val / 60.0)
-	var seconds = int(time_val) % 60
-	var centiseconds = int((time_val - int(time_val)) * 100)
-	timer_label.text = "TIME: %02d:%02d.%02d" % [minutes, seconds, centiseconds]
-
+func update_bullet_counter() -> void:      # ← NEW
+	if not bullet_label: return
+	var player = _get_player()
+	if player and "bullets" in player:
+		bullet_label.text = "BULLETS: %d" % player.bullets
 
 func update_grenade_counter() -> void:
 	if not grenade_label: return
-	var current_scene = get_tree().current_scene
-	if not current_scene: return
-	var player = current_scene.get_node_or_null("Player")
-	if not player: player = current_scene.get_node_or_null("Player (Testing)")
+	var player = _get_player()
 	if player and "grenades" in player:
 		grenade_label.text = "GRENADES: %d" % player.grenades
 
 func start_reverse_sequence() -> void:
-	is_timer_running = false
 	is_reversing = true
-	timer_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0)) 
+	timer_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0))
+	bullet_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0))   # ← NEW
 	grenade_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0))
 	var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
 	if style_box:
 		style_box.border_color = Color(0.9, 0.2, 1.0, 0.8)
-		
-	# Dynamic slider setup based on thrown grenades
-	var min_time = 0.0
-	var max_time = elapsed_time
-	var has_grenade_history = false
-	
-	var grenades = get_tree().get_nodes_in_group("grenades")
-	if grenades.size() > 0:
-		var oldest_throw = 999999.0
-		var latest_explosion = 0.0
-		for g in grenades:
-			if g.history.size() > 0:
-				has_grenade_history = true
-				var g_throw = g.history[0]["time"]
-				var g_explode = g.explosion_real_time if g.explosion_real_time > 0 else g.current_recording_time
-				if g_throw < oldest_throw:
-					oldest_throw = g_throw
-				if g_explode > latest_explosion:
-					latest_explosion = g_explode
-		if has_grenade_history:
-			min_time = oldest_throw
-			max_time = latest_explosion
-			
-	if max_time <= min_time:
-		max_time = min_time + 5.0
-		
-	time_slider.min_value = min_time
-	time_slider.max_value = max_time
-	time_slider.value = max_time
-	time_slider.visible = true 
-	
+	time_slider.value = 0.0
+	time_slider.visible = true
 	if glitch_overlay:
 		glitch_overlay.visible = true
 		glitch_overlay.modulate.a = 0.4
@@ -255,10 +194,8 @@ func start_reverse_sequence() -> void:
 				visual.modulate.a = 0.0
 				var tween = level_finish.create_tween()
 				tween.tween_property(visual, "modulate:a", 0.4, 0.8)
-	# The player stays in the level to run backward! No immediate complete_level() call.
 
 func complete_level() -> void:
-	# Animation
 	var viewport_size = get_viewport().get_visible_rect().size
 	black_overlay.position = Vector2(0, viewport_size.y)
 	var tween = create_tween()
@@ -266,27 +203,23 @@ func complete_level() -> void:
 	await tween.finished
 	await get_tree().create_timer(0.2).timeout
 	
-	# --- OPTIMIZED: AUTO-SCALING LEVEL ROUTING ---
 	var current_scene_path = get_tree().current_scene.scene_file_path
 	var next_scene_path = ""
 	
-	# Extract the number from the filename (e.g., "level2.tscn" -> 2)
 	var level_number = 0
 	var regex = RegEx.new()
-	regex.compile("\\d+") 
+	regex.compile("\\d+")
 	var result = regex.search(current_scene_path)
 	if result:
 		level_number = int(result.get_string())
 	
 	if not is_reversing:
-		# GOING FORWARD
 		if current_scene_path.contains("game_manager"):
 			next_scene_path = "res://scene/level1.tscn"
 		else:
 			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
 			
 	else:
-		# GOING BACKWARD
 		if level_number > 1:
 			next_scene_path = "res://scene/level" + str(level_number - 1) + ".tscn"
 		elif level_number == 1:
@@ -296,17 +229,18 @@ func complete_level() -> void:
 				glitch_overlay.visible = false
 			time_slider.visible = false
 			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))   # ← NEW
 			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
 			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
 			if style_box:
 				style_box.border_color = Color(0.0, 0.8, 1.0, 0.45)
 		else:
-			# REVERSED ALL THE WAY BACK
 			next_scene_path = "res://scene/StartMenu.tscn"
 			is_reversing = false
 			elapsed_time = 0.0
 			time_slider.visible = false
 			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))   # ← NEW
 			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
 			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
 			if style_box:
@@ -316,13 +250,7 @@ func complete_level() -> void:
 	await get_tree().process_frame
 	
 	if not is_reversing:
-		is_timer_running = true 
+		is_timer_running = true
 	
 	var out_tween = create_tween()
 	out_tween.tween_property(black_overlay, "position", Vector2(0, -viewport_size.y), 0.6)
-
-func _on_slider_drag_started() -> void:
-	is_scrubbing = true
-
-func _on_slider_drag_ended(_value_changed: bool) -> void:
-	is_scrubbing = false
