@@ -6,6 +6,13 @@
 [ext_resource type="Texture2D" uid="uid://cnopcenrf4k8j" path="res://assets/campfire.png" id="4_8t8u8"]
 [ext_resource type="FontFile" uid="uid://dww4fmuwatjsy" path="res://assets/font/upheavtt.ttf" id="4_font"]
 [ext_resource type="AudioStream" uid="uid://d3uc5wwsj8hwd" path="res://assets/ThemeSong/MainMenuSong.mp3" id="6_pbb8y"]
+[ext_resource type="Texture2D" uid="uid://cg8jfpdy316vj" path="res://assets/ReverseTitle.png" id="7_4vtxv"]
+[ext_resource type="Texture2D" uid="uid://24g2lwkc40pc" path="res://assets/P1Title.png" id="8_akhuw"]
+[ext_resource type="Script" uid="uid://c46ho8aiad02e" path="res://scene/texture_rect.gd" id="8_ols7h"]
+[ext_resource type="Texture2D" uid="uid://cfi3m36tva1wx" path="res://assets/Otitle.png" id="10_ad1t2"]
+[ext_resource type="Texture2D" uid="uid://bmy3kkx28w0j3" path="res://assets/P2Title.png" id="11_svnti"]
+[ext_resource type="Texture2D" uid="uid://buridxxspf07e" path="res://assets/P3Title.png" id="12_u6iap"]
+[ext_resource type="Texture2D" uid="uid://b5omigeklma8d" path="res://assets/YTitle.png" id="13_a3i8o"]
 
 [sub_resource type="Gradient" id="Gradient_campfire"]
 offsets = PackedFloat32Array(0, 0.75)
@@ -125,6 +132,28 @@ corner_radius_bottom_left = 4
 shadow_color = Color(0, 0, 0, 0.8)
 shadow_size = 16
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4vtxv"]
+light_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ols7h"]
+light_mode = 1
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_v2vl7"]
+a = Vector2(1, 2)
+b = Vector2(2, 41)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5mwqa"]
+light_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0yv6x"]
+light_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7u0vp"]
+light_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ui0tv"]
+light_mode = 1
+
 [node name="StartMenu" type="Node2D" unique_id=985188545]
 script = ExtResource("1_script")
 
@@ -191,15 +220,15 @@ offset_bottom = 210.0
 theme_override_colors/font_color = Color(1, 0.95, 0.95, 1)
 theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("4_font")
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 106
 text = "REVERSE POPPY"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="UI" unique_id=1180524542]
 offset_left = 176.0
-offset_top = 210.0
+offset_top = 189.0
 offset_right = 976.0
-offset_bottom = 250.0
+offset_bottom = 229.0
 theme_override_colors/font_color = Color(0.8, 0.5, 0.5, 1)
 theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("4_font")
@@ -209,9 +238,9 @@ horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=336182322]
 offset_left = 426.0
-offset_top = 300.0
+offset_top = 302.0
 offset_right = 726.0
-offset_bottom = 520.0
+offset_bottom = 522.0
 theme_override_constants/separation = 8
 
 [node name="PlayButton" type="Button" parent="UI/VBoxContainer" unique_id=1566473330]
@@ -345,6 +374,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 text = "X  CLOSE"
 
 [node name="TransitionOverlay" type="ColorRect" parent="." unique_id=613886250]
+visible = false
 z_index = 10
 anchors_preset = 15
 anchor_right = 1.0
@@ -362,6 +392,56 @@ color = Color(0, 0, 0, 1)
 stream = ExtResource("6_pbb8y")
 volume_db = -8.958
 autoplay = true
+
+[node name="TITLE" type="Node2D" parent="." unique_id=332200881]
+visible = false
+
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="TITLE" unique_id=492693]
+constant_linear_velocity = Vector2(10, 0)
+
+[node name="TextureRect" type="TextureRect" parent="TITLE/AnimatableBody2D" unique_id=1924856633]
+modulate = Color(0.7722583, 0.7722583, 0.7722583, 1)
+material = SubResource("CanvasItemMaterial_4vtxv")
+offset_left = 256.0
+offset_top = -44.0
+offset_right = 910.0
+offset_bottom = 302.0
+texture = ExtResource("7_4vtxv")
+script = ExtResource("8_ols7h")
+
+[node name="Sprite2D" type="Sprite2D" parent="TITLE/AnimatableBody2D" unique_id=826170518]
+material = SubResource("CanvasItemMaterial_ols7h")
+position = Vector2(393.00003, 259)
+scale = Vector2(1.375, 1.4609375)
+texture = ExtResource("8_akhuw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TITLE/AnimatableBody2D" unique_id=539058912]
+position = Vector2(154, -75)
+shape = SubResource("SegmentShape2D_v2vl7")
+
+[node name="Sprite2D" type="Sprite2D" parent="TITLE" unique_id=51443681]
+material = SubResource("CanvasItemMaterial_5mwqa")
+position = Vector2(443, 277)
+scale = Vector2(1.8593751, 1.7656246)
+texture = ExtResource("10_ad1t2")
+
+[node name="Sprite2D2" type="Sprite2D" parent="TITLE" unique_id=688563799]
+material = SubResource("CanvasItemMaterial_0yv6x")
+position = Vector2(509, 259)
+scale = Vector2(1.4062501, 1.5156251)
+texture = ExtResource("11_svnti")
+
+[node name="Sprite2D3" type="Sprite2D" parent="TITLE" unique_id=1181210838]
+material = SubResource("CanvasItemMaterial_7u0vp")
+position = Vector2(548, 267)
+scale = Vector2(1.5937507, 1.8046875)
+texture = ExtResource("12_u6iap")
+
+[node name="Sprite2D4" type="Sprite2D" parent="TITLE" unique_id=388503164]
+material = SubResource("CanvasItemMaterial_ui0tv")
+position = Vector2(629, 276)
+scale = Vector2(1.6718752, 1.6718749)
+texture = ExtResource("13_a3i8o")
 
 [connection signal="pressed" from="UI/VBoxContainer/PlayButton" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="UI/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
