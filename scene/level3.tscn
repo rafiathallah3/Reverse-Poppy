@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c0nxhx4s1t7o7"]
+[gd_scene format=4 uid="uid://df08wboxjo7lu"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="2_87m6s"]
@@ -7,8 +7,15 @@
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
 [ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
+[ext_resource type="Texture2D" uid="uid://civ3uxp6g03mi" path="res://assets/bossig.png" id="10_2ecjj"]
+[ext_resource type="Texture2D" uid="uid://5yuthhvugeaf" path="res://assets/Bosssegment1.png" id="11_mixx0"]
+[ext_resource type="Texture2D" uid="uid://bmhryvqc8ei3c" path="res://assets/Bosssegment2.png" id="12_1crou"]
+[ext_resource type="Texture2D" uid="uid://cahte17xdwy3s" path="res://assets/Bossegment3.png" id="13_1turj"]
 [ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_music"]
-[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_music_script"]
+[ext_resource type="Script" path="res://scripts/level_music.gd" id="14_music_script"]
+[ext_resource type="Texture2D" uid="uid://bnsokl3kgntnm" path="res://assets/Bossdead.png" id="14_pj0nk"]
+[ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="15_blocks1"]
+[ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="16_blocks2"]
 
 [sub_resource type="RectangleShape2D" id="Shape_floor"]
 size = Vector2(2400, 48)
@@ -114,6 +121,160 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(24, 31)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7vj47"]
+atlas = ExtResource("11_mixx0")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nnj4a"]
+atlas = ExtResource("11_mixx0")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tmhul"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7vj47")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nnj4a")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j5agm"]
+atlas = ExtResource("12_1crou")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yjwg2"]
+atlas = ExtResource("12_1crou")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oa4at"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j5agm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yjwg2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_668nj"]
+atlas = ExtResource("13_1turj")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nuwie"]
+atlas = ExtResource("13_1turj")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t16p1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_668nj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nuwie")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oavgg"]
+texture = ExtResource("15_blocks1")
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2riin"]
+texture = ExtResource("16_blocks2")
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+13:3/0 = 0
+14:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+9:4/0 = 0
+10:4/0 = 0
+11:4/0 = 0
+12:4/0 = 0
+13:4/0 = 0
+0:5/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_kbefo"]
+sources/0 = SubResource("TileSetAtlasSource_oavgg")
+sources/1 = SubResource("TileSetAtlasSource_2riin")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0s2gs"]
+texture = ExtResource("15_blocks1")
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ww17"]
+texture = ExtResource("16_blocks2")
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+13:3/0 = 0
+14:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+9:4/0 = 0
+10:4/0 = 0
+11:4/0 = 0
+12:4/0 = 0
+13:4/0 = 0
+0:5/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_jbo0k"]
+sources/0 = SubResource("TileSetAtlasSource_0s2gs")
+sources/1 = SubResource("TileSetAtlasSource_3ww17")
 
 [node name="Level3" type="Node2D" unique_id=1209518241]
 script = ExtResource("14_music_script")
@@ -496,5 +657,45 @@ position = Vector2(1200, 240)
 [node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141142]
 stream = ExtResource("13_music")
 volume_db = -2.583
+
+[node name="Boss" type="Node2D" parent="." unique_id=286568751]
+
+[node name="Sprite2D" type="Sprite2D" parent="Boss" unique_id=58128664]
+position = Vector2(1201, 221.99998)
+scale = Vector2(1.5, 1.517)
+texture = ExtResource("10_2ecjj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Boss" unique_id=1070699661]
+position = Vector2(441, -521)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_tmhul")
+frame_progress = 0.67303604
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Boss" unique_id=1152455074]
+position = Vector2(540, -521)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_oa4at")
+frame_progress = 0.7521596
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="Boss" unique_id=1254010985]
+position = Vector2(640, -521)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_t16p1")
+frame_progress = 0.32057372
+
+[node name="Sprite2D2" type="Sprite2D" parent="Boss" unique_id=452735226]
+position = Vector2(742, -521)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("14_pj0nk")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1602310231]
+scale = Vector2(5, 5)
+tile_map_data = PackedByteArray("AAAEAAgAAQAMAAQAAAAEAAcAAQAMAAQAAAAEAAYAAQAMAAQAAAAEAAUAAQAMAAQAAAAEAAQAAQAMAAQAAAAEAAMAAQAMAAQAAAAEAAIAAQAMAAQAAAAEAAEAAQAMAAQAAAAEAAAAAQAMAAQAAAAEAP//AQAMAAQAAAAEAP7/AQAMAAQAAAAEAP3/AQAMAAQAAAAMAAkAAQAMAAQAAAAMAAgAAQAMAAQAAAAMAAcAAQAMAAQAAAAMAAYAAQAMAAQAAAAMAAUAAQAMAAQAAAAMAAQAAQAMAAQAAAAMAAMAAQAMAAQAAAAMAAIAAQAMAAQAAAAMAAEAAQAMAAQAAAAMAAAAAQAMAAQAAAAMAP//AQAMAAQAAAAMAP7/AQAMAAQAAAAMAP3/AQAMAAQAAAAMAPz/AQAMAAQAAAAVAAkAAQAMAAQAAAAVAAgAAQAMAAQAAAAVAAcAAQAMAAQAAAAVAAYAAQAMAAQAAAAVAAUAAQAMAAQAAAAVAAQAAQAMAAQAAAAVAAMAAQANAAQAAAA=")
+tile_set = SubResource("TileSet_kbefo")
+
+[node name="TileMapLayer2" type="TileMapLayer" parent="." unique_id=837927838]
+scale = Vector2(8, 8)
+tile_map_data = PackedByteArray("AAAEAAUAAQAMAAQAAAAEAAQAAQAMAAQAAAAEAAMAAQAMAAQAAAAEAAIAAQAMAAQAAAAEAAEAAQAMAAQAAAAEAAAAAQAMAAQAAAAEAP//AQAMAAQAAAAEAP7/AQAMAAQAAAAEAP3/AQAMAAQAAAAKAAUAAQAMAAQAAAAKAAQAAQAMAAQAAAAKAAMAAQAMAAQAAAAKAAIAAQAMAAQAAAAKAAEAAQAMAAQAAAAKAAAAAQAMAAQAAAAKAP//AQAMAAQAAAAKAP7/AQAMAAQAAAAKAP3/AQAMAAQAAAACAAUAAQAMAAQAAAACAAQAAQAMAAQAAAACAAMAAQAMAAQAAAACAAIAAQAMAAQAAAACAAEAAQAMAAQAAAACAAAAAQAMAAQAAAACAP//AQAMAAQAAAACAP7/AQAMAAQAAAACAP3/AQAMAAQAAAAPAP3/AQAMAAQAAAAPAP7/AQAMAAQAAAAPAP//AQAMAAQAAAAPAAAAAQAMAAQAAAAPAAEAAQAMAAQAAAAPAAIAAQANAAQAACA=")
+tile_set = SubResource("TileSet_jbo0k")
 
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
