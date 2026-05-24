@@ -19,6 +19,7 @@ var bullet_label: Label # ← NEW
 var black_overlay: ColorRect
 var glitch_overlay: ColorRect
 var time_slider: HSlider
+var go_back_label: Label
 
 func _ready() -> void:
 	process_mode = PROCESS_MODE_ALWAYS
@@ -101,7 +102,6 @@ func setup_ui() -> void:
 	vbox.add_child(time_slider)
 
 func _on_slider_changed(value: float) -> void:
-	get_tree().call_group("rewindable_objects", "scrub_time", value * 1000.0)
 	update_timer_text_to_val(value)
 	
 	var objects = get_tree().get_nodes_in_group("rewindable_objects")
@@ -279,8 +279,56 @@ func start_reverse_sequence() -> void:
 			var visual = level_finish.get_node_or_null("PortalVisual")
 			if visual:
 				visual.modulate.a = 0.0
-				var tween = level_finish.create_tween()
-				tween.tween_property(visual, "modulate:a", 0.4, 0.8)
+				var portal_tween = level_finish.create_tween()
+				portal_tween.tween_property(visual, "modulate:a", 0.4, 0.8)
+
+	# Premium animated banner "Go back to the beginning"
+	if go_back_label:
+		go_back_label.queue_free()
+		
+	go_back_label = Label.new()
+	go_back_label.name = "GoBackLabel"
+	go_back_label.text = "Go back to the beginning"
+	go_back_label.add_theme_font_size_override("font_size", 28)
+	go_back_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0)) # Vibrant magenta
+	go_back_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	go_back_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	
+	# Glowing effect outline
+	go_back_label.add_theme_constant_override("outline_size", 6)
+	go_back_label.add_theme_color_override("font_outline_color", Color(0.1, 0.0, 0.15, 0.9))
+	
+	canvas_layer.add_child(go_back_label)
+	
+	# Set responsive layout anchors and offsets after adding to tree
+	go_back_label.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	go_back_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	go_back_label.grow_vertical = Control.GROW_DIRECTION_BOTH
+	
+	go_back_label.offset_left = 0
+	go_back_label.offset_right = 0
+	go_back_label.offset_top = -160
+	go_back_label.offset_bottom = -110
+	
+	# Scale pop and fade in intro animation
+	var viewport_size = get_viewport().get_visible_rect().size
+	go_back_label.modulate.a = 0.0
+	go_back_label.scale = Vector2(0.8, 0.8)
+	go_back_label.pivot_offset = Vector2(viewport_size.x / 2.0, 25.0) # Perfect centered pivot
+	
+	var banner_tween = create_tween()
+	banner_tween.tween_property(go_back_label, "modulate:a", 1.0, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	banner_tween.parallel().tween_property(go_back_label, "scale", Vector2(1.0, 1.0), 0.6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	
+	# Looping neon pulse micro-animation (chained to run after intro)
+	banner_tween.tween_callback(func():
+		if is_instance_valid(go_back_label):
+			var pulse_tween = go_back_label.create_tween().set_loops()
+			pulse_tween.tween_property(go_back_label, "scale", Vector2(1.04, 1.04), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			pulse_tween.parallel().tween_property(go_back_label, "modulate", Color(1.2, 1.2, 1.2, 1.0), 0.8)
+			pulse_tween.tween_property(go_back_label, "scale", Vector2(1.0, 1.0), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			pulse_tween.parallel().tween_property(go_back_label, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.8)
+	)
 
 # ── helper: stop battle music di level sebelum pindah scene ──
 func _stop_level_music() -> void:
@@ -293,7 +341,15 @@ func _stop_level_music() -> void:
 
 func complete_level() -> void:
 	_stop_level_music()
+
+	if go_back_label and is_instance_valid(go_back_label):
+		go_back_label.queue_free()
+		go_back_label = null
+		
 	var viewport_size = get_viewport().get_visible_rect().size
+	# Pastikan overlay visible, ukuran benar, dan tidak transparan
+	black_overlay.size = viewport_size
+	black_overlay.color = Color(0.0, 0.0, 0.0, 1.0)
 	black_overlay.position = Vector2(0, viewport_size.y)
 	var tween = create_tween()
 	tween.tween_property(black_overlay, "position", Vector2.ZERO, 0.6)
@@ -351,8 +407,16 @@ func complete_level() -> void:
 	if not is_reversing:
 		is_timer_running = true
 	
+	# Reset ukuran overlay lagi setelah scene baru (viewport bisa berubah)
+	var new_viewport_size = get_viewport().get_visible_rect().size
+	black_overlay.size = new_viewport_size
+	black_overlay.color = Color(0.0, 0.0, 0.0, 1.0)
+	black_overlay.position = Vector2.ZERO
 	var out_tween = create_tween()
-	out_tween.tween_property(black_overlay, "position", Vector2(0, -viewport_size.y), 0.6)
+	out_tween.tween_property(black_overlay, "position", Vector2(0, -new_viewport_size.y), 0.6)
+	out_tween.tween_callback(func():
+		black_overlay.position = Vector2(0, new_viewport_size.y)
+	)
 
 func _on_slider_drag_started() -> void:
 	is_scrubbing = true

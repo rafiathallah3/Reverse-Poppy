@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
 [ext_resource type="PackedScene" uid="uid://tybkxowgocmt" path="res://prefab/destructible_box.tscn" id="11_e6f45"]
 [ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_6i17f"]
-[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_wrpia"]
+[ext_resource type="Script" path="res://scripts/level_music.gd" id="14_wrpia"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(337, 50)
@@ -259,6 +259,9 @@ texture = ExtResource("2_ebr37")
 [sub_resource type="TileSet" id="TileSet_e6f45"]
 sources/0 = SubResource("TileSetAtlasSource_ebr37")
 sources/1 = SubResource("TileSetAtlasSource_kjjd3")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nlrn2"]
+size = Vector2(2840.909, 316.66672)
 
 [node name="Level1" type="Node2D" unique_id=210175747]
 position = Vector2(98, 63)
@@ -517,5 +520,17 @@ scale = Vector2(0.47197032, 0.4826077)
 stream = ExtResource("13_6i17f")
 volume_db = -8.665
 
+[node name="Area2D (Death Area)" type="Area2D" parent="." unique_id=186933494]
+position = Vector2(-725, 773)
+script = ExtResource("3_ebr37")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D (Death Area)" unique_id=35902201]
+position = Vector2(1122.7272, -13.888916)
+shape = SubResource("RectangleShape2D_nlrn2")
+
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
+
+
+
+[connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
 
