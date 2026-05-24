@@ -502,4 +502,3 @@ color = Color(1, 0.9, 0.7, 0.3)
 [node name="DestructibleBox" parent="." unique_id=1973914487 instance=ExtResource("11_e6f45")]
 position = Vector2(821.00006, 212)
 scale = Vector2(0.39277977, 0.44512913)
->>>>>>> Stashed changes
