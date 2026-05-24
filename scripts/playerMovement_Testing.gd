@@ -282,7 +282,7 @@ func die() -> void:
 	
 	# Reset bullet and grenade counts
 	if get_tree().current_scene and get_tree().current_scene.name == "Level3":
-		bullets = 30
+		bullets = 90
 		grenades = 20
 	else:
 		bullets = 10

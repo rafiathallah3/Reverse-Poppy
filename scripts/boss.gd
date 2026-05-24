@@ -14,8 +14,8 @@ const PROJECTILE_SCRIPT = preload("res://scripts/boss_projectile.gd")
 # ── Shooting State ──────────────────────────────────────────────────────────
 var shoot_timer: float = 0.5 # 0.5s initial delay
 var has_been_hit: bool = false
-var base_attack_cooldown: float = 2.2 # Initial delay (not too fast, not too slow)
-var min_attack_cooldown: float = 0.8
+var base_attack_cooldown: float = 2.8 # Initial delay (slower)
+var min_attack_cooldown: float = 1.2
 var cooldown_reduction_per_hit: float = 0.35 # Slightly faster shooting per hit
 
 var current_attack_cooldown: float = base_attack_cooldown

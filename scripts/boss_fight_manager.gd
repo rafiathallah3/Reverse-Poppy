@@ -88,9 +88,9 @@ func _setup_boss_fight() -> void:
 	# Create Dialogue UI structure (hidden by default)
 	_create_dialogue_ui()
 
-	# Grant the player 20 grenades and 30 bullets, and show intro dialogue
+	# Grant the player 20 grenades and 90 bullets, and show intro dialogue
 	if player and is_instance_valid(player):
-		player.bullets = 30
+		player.bullets = 90
 		player.grenades = 20
 		if player.has_method("set_paused"):
 			player.set_paused(true)
@@ -107,7 +107,7 @@ func _setup_boss_fight() -> void:
 			camera.position_smoothing_enabled = true
 
 	is_intro_dialogue = true
-	dialogue_lines = ["You are suddenly granted with 20 grenades and 30 bullets for some reason..."]
+	dialogue_lines = ["You are suddenly granted with 20 grenades and 90 bullets for some reason..."]
 	_start_dialogue_sequence()
 
 func _create_boss_ui() -> void:
