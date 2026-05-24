@@ -98,8 +98,6 @@ func setup_ui() -> void:
 	time_slider.step = 0.01
 	time_slider.visible = false
 	time_slider.value_changed.connect(_on_slider_changed)
-	time_slider.drag_started.connect(_on_slider_drag_started)
-	time_slider.drag_ended.connect(_on_slider_drag_ended)
 	vbox.add_child(time_slider)
 
 func _on_slider_changed(value: float) -> void:
@@ -121,17 +119,14 @@ func _on_slider_changed(value: float) -> void:
 		if not bg_particles:
 			bg_particles = current_scene.get_node_or_null("BackgroundCanvas/TimeDustParticles")
 		if bg_particles:
-			if is_scrubbing:
-				# Determine scrub direction and speed scale
-				var diff = value - previous_slider_value
-				if diff < 0.0:
-					bg_particles.speed_scale = -2.5 # Scrubbing backwards: move backwards!
-				elif diff > 0.0:
-					bg_particles.speed_scale = 2.5 # Scrubbing forwards: move forwards!
-				else:
-					bg_particles.speed_scale = 0.0 # Frozen if slider didn't change
+			# Determine scrub direction and speed scale
+			var diff = value - previous_slider_value
+			if diff < 0.0:
+				bg_particles.speed_scale = -2.5 # Scrubbing backwards: move backwards!
+			elif diff > 0.0:
+				bg_particles.speed_scale = 2.5 # Scrubbing forwards: move forwards!
 			else:
-				bg_particles.speed_scale = 0.0
+				bg_particles.speed_scale = 0.0 # Frozen if slider didn't change
 			
 		var bg_sky = current_scene.get_node_or_null("BackgroundCanvas/SkyBackground")
 		if bg_sky:
@@ -287,7 +282,17 @@ func start_reverse_sequence() -> void:
 				var tween = level_finish.create_tween()
 				tween.tween_property(visual, "modulate:a", 0.4, 0.8)
 
+# ── helper: stop battle music di level sebelum pindah scene ──
+func _stop_level_music() -> void:
+	var current_scene = get_tree().current_scene
+	if not current_scene:
+		return
+	var music = current_scene.get_node_or_null("BattleMusic")
+	if music and music.playing:
+		music.stop()
+
 func complete_level() -> void:
+	_stop_level_music()
 	var viewport_size = get_viewport().get_visible_rect().size
 	black_overlay.position = Vector2(0, viewport_size.y)
 	var tween = create_tween()
@@ -308,6 +313,10 @@ func complete_level() -> void:
 	if not is_reversing:
 		if current_scene_path.contains("game_manager"):
 			next_scene_path = "res://scene/level1.tscn"
+		elif level_number >= 3:
+			# Level 3 adalah boss stage / level terakhir
+			next_scene_path = "res://scene/StartMenu.tscn"
+			elapsed_time = 0.0
 		else:
 			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
 			
