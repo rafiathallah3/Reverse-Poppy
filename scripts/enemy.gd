@@ -12,7 +12,7 @@ var was_revived_in_reverse: bool = false
 var player_in_zone: bool = false
 
 const SCRAP_TEXTURE = preload("res://assets/Scrap.png")
-const SFX_REVIVE = preload("res://assets/SFX/revive.mp3")
+@onready var SFX_REVIVE = load("res://assets/SFX/revive.mp3")
 var scrap_sprite: Sprite2D = null
 
 @onready var revive_label: Label = $ReviveLabel

@@ -1,12 +1,10 @@
-[gd_scene format=4 uid="uid://df08wboxjo7lu"]
+[gd_scene format=4 uid="uid://buwl0obsxp2eu"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="2_87m6s"]
 [ext_resource type="Texture2D" uid="uid://cwwd5310gdmsq" path="res://assets/platform_float.png" id="3_8s5jp"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
-[ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
-[ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
 [ext_resource type="Texture2D" uid="uid://civ3uxp6g03mi" path="res://assets/bossig.png" id="10_2ecjj"]
 [ext_resource type="Texture2D" uid="uid://5yuthhvugeaf" path="res://assets/Bosssegment1.png" id="11_mixx0"]
 [ext_resource type="Texture2D" uid="uid://bmhryvqc8ei3c" path="res://assets/Bosssegment2.png" id="12_1crou"]
@@ -16,7 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://bnsokl3kgntnm" path="res://assets/Bossdead.png" id="14_pj0nk"]
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="15_blocks1"]
 [ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="16_blocks2"]
-[ext_resource type="Script" uid="uid://or276grgot5x" path="res://scripts/pause_menu.gd" id="17_mixx0"]
+[ext_resource type="Script" uid="uid://dv3356keuo2oy" path="res://scripts/boss.gd" id="17_boss_script"]
+[ext_resource type="Script" uid="uid://c2o1ue7xnbsji" path="res://scripts/boss_fight_manager.gd" id="18_boss_fight_manager"]
 
 [sub_resource type="RectangleShape2D" id="Shape_floor"]
 size = Vector2(2400, 48)
@@ -189,6 +188,42 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mixx0"]
+texture = ExtResource("16_blocks2")
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+13:3/0 = 0
+14:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+9:4/0 = 0
+10:4/0 = 0
+11:4/0 = 0
+12:4/0 = 0
+13:4/0 = 0
+0:5/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_1crou"]
+sources/0 = SubResource("TileSetAtlasSource_mixx0")
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oavgg"]
 texture = ExtResource("15_blocks1")
 0:0/0 = 0
@@ -279,14 +314,6 @@ sources/1 = SubResource("TileSetAtlasSource_3ww17")
 
 [node name="Level3" type="Node2D" unique_id=1209518241]
 script = ExtResource("14_music_script")
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1205140196]
-position = Vector2(1200, 400)
-limit_left = 0
-limit_top = -200
-limit_right = 2400
-limit_bottom = 700
-position_smoothing_enabled = true
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=265017318]
 color = Color(0.08, 0.07, 0.13, 1)
@@ -596,7 +623,7 @@ texture_scale = 8.0
 [node name="AmbientLights" type="Node2D" parent="." unique_id=3300000]
 
 [node name="AmbLight1" type="PointLight2D" parent="AmbientLights" unique_id=3300001]
-position = Vector2(300, 530)
+position = Vector2(236, 569)
 color = Color(0.2, 0.4, 1, 1)
 energy = 0.5
 texture = SubResource("GradientTexture2D_light")
@@ -649,45 +676,56 @@ texture = SubResource("GradientTexture2D_light")
 texture_scale = 12.0
 metadata/_edit_lock_ = true
 
-[node name="LevelFinish" parent="." unique_id=1066231283 instance=ExtResource("7_3ud3r")]
-position = Vector2(1200, 240)
-
-[node name="TimeTriggerArea" parent="." unique_id=1788768943 instance=ExtResource("8_ldwqa")]
-position = Vector2(1200, 240)
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1205140196]
+limit_left = 0
+limit_top = -200
+limit_right = 2400
+limit_bottom = 580
+position_smoothing_enabled = true
 
 [node name="BattleMusic" type="AudioStreamPlayer" parent="." unique_id=1596141142]
 stream = ExtResource("13_music")
 volume_db = -2.583
 
-[node name="Boss" type="Node2D" parent="." unique_id=286568751]
+[node name="BossFightManager" type="Node" parent="." unique_id=1033805850]
+script = ExtResource("18_boss_fight_manager")
 
-[node name="Sprite2D" type="Sprite2D" parent="Boss" unique_id=58128664]
+[node name="Boss" type="CharacterBody2D" parent="." unique_id=286568751]
+script = ExtResource("17_boss_script")
+
+[node name="4" type="Sprite2D" parent="Boss" unique_id=58128664]
 position = Vector2(1201, 221.99998)
 scale = Vector2(1.5, 1.517)
 texture = ExtResource("10_2ecjj")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Boss" unique_id=1070699661]
+[node name="3" type="AnimatedSprite2D" parent="Boss" unique_id=1070699661]
 position = Vector2(441, -521)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_tmhul")
 frame_progress = 0.67303604
 
-[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Boss" unique_id=1152455074]
+[node name="2" type="AnimatedSprite2D" parent="Boss" unique_id=1152455074]
 position = Vector2(540, -521)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_oa4at")
 frame_progress = 0.7521596
 
-[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="Boss" unique_id=1254010985]
+[node name="1" type="AnimatedSprite2D" parent="Boss" unique_id=1254010985]
 position = Vector2(640, -521)
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_t16p1")
 frame_progress = 0.32057372
 
-[node name="Sprite2D2" type="Sprite2D" parent="Boss" unique_id=452735226]
+[node name="Death" type="Sprite2D" parent="Boss" unique_id=452735226]
 position = Vector2(742, -521)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("14_pj0nk")
+
+[node name="TileMapLayer3" type="TileMapLayer" parent="." unique_id=2023571644]
+position = Vector2(0, -8.005)
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAABABEAAAAOAAMAAAACABEAAAAOAAMAAAADABEAAAAOAAMAAAAEABEAAAAOAAMAAAAFABEAAAAOAAMAAAAGABEAAAAOAAMAAAAHABEAAAAOAAMAAAAAABEAAAAOAAMAAAD//xEAAAAOAAMAAAD+/xEAAAAOAAMAAAAIABEAAAAOAAMAAAAJABEAAAAOAAMAAAAKABEAAAAOAAMAAAALABEAAAAOAAMAAAAMABEAAAAOAAMAAAANABEAAAAOAAMAAAAOABEAAAAOAAMAAAAPABEAAAAOAAMAAAAQABEAAAAOAAMAAAARABEAAAAOAAMAAAASABEAAAAOAAMAAAATABEAAAAOAAMAAAAUABEAAAAOAAMAAAAVABEAAAAOAAMAAAAWABEAAAAOAAMAAAAXABEAAAAOAAMAAAAYABEAAAAOAAMAAAAZABEAAAAOAAMAAAAaABEAAAAOAAMAAAAbABEAAAAOAAMAAAAcABEAAAAOAAMAAAAdABEAAAAOAAMAAAAeABEAAAAOAAMAAAAfABEAAAAOAAMAAAAgABEAAAAOAAMAAAAhABEAAAAOAAMAAAAiABEAAAAOAAMAAAAjABEAAAAOAAMAAAAkABEAAAAOAAMAAAAlABEAAAAOAAMAAAAmABEAAAAOAAMAAAAnABEAAAAOAAMAAAAoABEAAAAOAAMAAAApABEAAAAOAAMAAAAqABEAAAAOAAMAAAArABEAAAAOAAMAAAAsABEAAAAOAAMAAAAtABEAAAAOAAMAAAAuABEAAAAOAAMAAAAvABEAAAAOAAMAAAAwABEAAAAOAAMAAAAxABEAAAAOAAMAAAAyABEAAAAOAAMAAAAzABEAAAAOAAMAAAA0ABEAAAAOAAMAAAA1ABEAAAAOAAMAAAA2ABEAAAAOAAMAAAA3ABEAAAAOAAMAAAA4ABEAAAAOAAMAAAA5ABEAAAAOAAMAAAA6ABEAAAAOAAMAAAA7ABEAAAAOAAMAAAA8ABEAAAAOAAMAAAA9ABEAAAAOAAMAAAA+ABEAAAAOAAMAAAA/ABEAAAAOAAMAAABAABEAAAAOAAMAAABBABEAAAAOAAMAAABCABEAAAAOAAMAAABDABEAAAAOAAMAAABEABEAAAAOAAMAAABFABEAAAAOAAMAAABGABEAAAAOAAMAAABHABEAAAAOAAMAAABIABEAAAAOAAMAAABJABEAAAAOAAMAAABKABEAAAAOAAMAAABLABEAAAAOAAMAAAD//w8AAAAIAAMAAAD//xAAAAAIAAQAAAAAAA8AAAAJAAMAAAAAABAAAAAJAAQAAAD//w0AAAAIAAMAAAD//w4AAAAIAAQAAAAAAA0AAAAJAAMAAAAAAA4AAAAJAAQAAAD//wsAAAAIAAMAAAD//wwAAAAIAAQAAAAAAAsAAAAJAAMAAAAAAAwAAAAJAAQAAAD//wkAAAAIAAMAAAD//woAAAAIAAQAAAAAAAkAAAAJAAMAAAAAAAoAAAAJAAQAAAD//wcAAAAIAAMAAAD//wgAAAAIAAQAAAAAAAcAAAAJAAMAAAAAAAgAAAAJAAQAAAD//wUAAAAIAAMAAAD//wYAAAAIAAQAAAAAAAUAAAAJAAMAAAAAAAYAAAAJAAQAAAD//wMAAAAIAAMAAAD//wQAAAAIAAQAAAAAAAMAAAAJAAMAAAAAAAQAAAAJAAQAAAD//wEAAAAIAAMAAAD//wIAAAAIAAQAAAAAAAEAAAAJAAMAAAAAAAIAAAAJAAQAAAD/////AAAIAAMAAAD//wAAAAAIAAQAAAAAAP//AAAJAAMAAAAAAAAAAAAJAAQAAAD///3/AAAIAAMAAAD///7/AAAIAAQAAAAAAP3/AAAJAAMAAAAAAP7/AAAJAAQAAAD///v/AAAIAAQAAAD///z/AAAIAAQAAAAAAPv/AAAJAAQAAAAAAPz/AAAJAAQAAAD///r/AAAIAAMAAAAAAPr/AAAJAAMAAABKAPr/AAAIAAMAAABKAPv/AAAIAAQAAABLAPr/AAAJAAMAAABLAPv/AAAJAAQAAABKAPz/AAAIAAMAAABKAP3/AAAIAAQAAABLAPz/AAAJAAMAAABLAP3/AAAJAAQAAABKAP7/AAAIAAMAAABKAP//AAAIAAQAAABLAP7/AAAJAAMAAABLAP//AAAJAAQAAABKAAAAAAAIAAMAAABKAAEAAAAIAAQAAABLAAAAAAAJAAMAAABLAAEAAAAJAAQAAABKAAIAAAAIAAMAAABKAAMAAAAIAAQAAABLAAIAAAAJAAMAAABLAAMAAAAJAAQAAABKAAQAAAAIAAMAAABKAAUAAAAIAAQAAABLAAQAAAAJAAMAAABLAAUAAAAJAAQAAABKAAYAAAAIAAMAAABKAAcAAAAIAAQAAABLAAYAAAAJAAMAAABLAAcAAAAJAAQAAABKAAgAAAAIAAMAAABKAAkAAAAIAAQAAABLAAgAAAAJAAMAAABLAAkAAAAJAAQAAABKAAoAAAAIAAMAAABKAAsAAAAIAAQAAABLAAoAAAAJAAMAAABLAAsAAAAJAAQAAABKAAwAAAAIAAMAAABKAA0AAAAIAAMAAABLAAwAAAAJAAMAAABLAA0AAAAJAAMAAABKAA8AAAAIAAMAAABKABAAAAAIAAQAAABLAA8AAAAJAAMAAABLABAAAAAJAAQAAABKAA4AAAAIAAQAAABLAA4AAAAJAAQAAAA=")
+tile_set = SubResource("TileSet_1crou")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1602310231]
 scale = Vector2(5, 5)
@@ -698,8 +736,5 @@ tile_set = SubResource("TileSet_kbefo")
 scale = Vector2(8, 8)
 tile_map_data = PackedByteArray("AAAEAAUAAQAMAAQAAAAEAAQAAQAMAAQAAAAEAAMAAQAMAAQAAAAEAAIAAQAMAAQAAAAEAAEAAQAMAAQAAAAEAAAAAQAMAAQAAAAEAP//AQAMAAQAAAAEAP7/AQAMAAQAAAAEAP3/AQAMAAQAAAAKAAUAAQAMAAQAAAAKAAQAAQAMAAQAAAAKAAMAAQAMAAQAAAAKAAIAAQAMAAQAAAAKAAEAAQAMAAQAAAAKAAAAAQAMAAQAAAAKAP//AQAMAAQAAAAKAP7/AQAMAAQAAAAKAP3/AQAMAAQAAAACAAUAAQAMAAQAAAACAAQAAQAMAAQAAAACAAMAAQAMAAQAAAACAAIAAQAMAAQAAAACAAEAAQAMAAQAAAACAAAAAQAMAAQAAAACAP//AQAMAAQAAAACAP7/AQAMAAQAAAACAP3/AQAMAAQAAAAPAP3/AQAMAAQAAAAPAP7/AQAMAAQAAAAPAP//AQAMAAQAAAAPAAAAAQAMAAQAAAAPAAEAAQAMAAQAAAAPAAIAAQANAAQAACA=")
 tile_set = SubResource("TileSet_jbo0k")
-
-[node name="PauseMenu" type="CanvasLayer" parent="." unique_id=219409900]
-script = ExtResource("17_mixx0")
 
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]

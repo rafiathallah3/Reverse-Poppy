@@ -377,8 +377,8 @@ func complete_level() -> void:
 			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
 			
 	else:
-		if level_number == 1:
-			next_scene_path = "res://scene/level2.tscn"
+		if level_number < 3:
+			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
 			is_reversing = false
 			if glitch_overlay:
 				glitch_overlay.visible = false

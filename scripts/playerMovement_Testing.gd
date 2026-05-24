@@ -38,8 +38,8 @@ var spawn_position: Vector2
 var bullets: int = max_bullets
 var grenades: int = max_grenades
 
-const SFX_SHOOTING = preload("res://assets/SFX/shooting.mp3")
-const SFX_DEATH = preload("res://assets/SFX/death.mp3")
+@onready var SFX_SHOOTING = load("res://assets/SFX/shooting.mp3")
+@onready var SFX_DEATH = load("res://assets/SFX/death.mp3")
 
 func _ready() -> void:
 	_add_key_to_action("move_left", KEY_LEFT)

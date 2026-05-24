@@ -9,6 +9,8 @@ var is_invulnerable: bool = false # Brief invulnerability after hit
 
 const PROJECTILE_SCRIPT = preload("res://scripts/boss_projectile.gd")
 
+@onready var SFX_BOSS_TEMBAK = load("res://assets/SFX/boss_tembak.mp3")
+
 # ── Shooting State ──────────────────────────────────────────────────────────
 var shoot_timer: float = 0.5 # 0.5s initial delay
 var has_been_hit: bool = false
@@ -18,6 +20,11 @@ var cooldown_reduction_per_hit: float = 0.35 # Slightly faster shooting per hit
 
 var current_attack_cooldown: float = base_attack_cooldown
 var shoot_alternate: bool = false # Alternate projectile types
+
+# ── Sprite References ───────────────────────────────────────────────────────
+var head_sprite: Sprite2D = null
+var segment_sprites: Array = []
+var death_sprite: Sprite2D = null
 
 # ── Floating animation ──────────────────────────────────────────────────────
 var float_time: float = 0.0
@@ -50,6 +57,30 @@ func _ready() -> void:
 	add_to_group("boss")
 	
 	base_y = position.y
+	
+	# Reference sprites
+	head_sprite = get_node_or_null("4")
+	var s3 = get_node_or_null("3")
+	var s2 = get_node_or_null("2")
+	var s1 = get_node_or_null("1")
+	segment_sprites.clear()
+	if s3: segment_sprites.append(s3)
+	if s2: segment_sprites.append(s2)
+	if s1: segment_sprites.append(s1)
+	death_sprite = get_node_or_null("Death")
+	
+	# Center all sprites on the boss local origin
+	if head_sprite:
+		head_sprite.position = Vector2(0, 0)
+	if death_sprite:
+		death_sprite.position = Vector2(0, 0)
+	for seg in segment_sprites:
+		if is_instance_valid(seg):
+			seg.position = Vector2(0, 0)
+			if seg is AnimatedSprite2D:
+				seg.play("default")
+				
+	_update_sprite_visibility()
 	
 	# ── Main collision shape (for grenade physics / body detection) ──
 	my_collision = CollisionShape2D.new()
@@ -104,9 +135,16 @@ func _process(delta: float) -> void:
 				shoot_projectile()
 				shoot_timer = get_current_cooldown()
 	
-	# Floating hover animation
+	# Floating hover animation applied to all sprites
 	float_time += delta
-	position.y = base_y + sin(float_time * float_speed) * float_amplitude
+	var hover_offset = sin(float_time * float_speed) * float_amplitude
+	if is_instance_valid(head_sprite):
+		head_sprite.position = Vector2(0, hover_offset)
+	if is_instance_valid(death_sprite):
+		death_sprite.position = Vector2(0, hover_offset)
+	for seg in segment_sprites:
+		if is_instance_valid(seg):
+			seg.position = Vector2(0, hover_offset)
 	
 	# Eye glow pulsing
 	eye_glow_timer += delta
@@ -118,65 +156,28 @@ func _process(delta: float) -> void:
 	# Hit flash decay
 	if hit_flash_timer > 0.0:
 		hit_flash_timer -= delta
+		
+	# Hit flash glow on all sprites
+	var is_flashing = hit_flash_timer > 0.0
+	var flash_mod = Color(5.0, 5.0, 5.0, 1.0) if is_flashing else Color(1.0, 1.0, 1.0, 1.0)
+	
+	if is_instance_valid(head_sprite):
+		head_sprite.modulate = flash_mod
+	if is_instance_valid(death_sprite):
+		death_sprite.modulate = flash_mod
+	for seg in segment_sprites:
+		if is_instance_valid(seg):
+			seg.modulate = flash_mod
 	
 	# Boss light pulsing
 	if boss_light:
 		boss_light.energy = 1.5 + sin(aura_pulse_timer * 2.5) * 0.8
+		boss_light.global_position = global_position
 	
 	queue_redraw()
 
 func _draw() -> void:
-	if is_dead:
-		return
-	
-	var flash = hit_flash_timer > 0.0
-	
-	# ── Aura glow (outer energy) ──
-	var aura_alpha = 0.15 + sin(aura_pulse_timer * 3.0) * 0.08
-	var aura_color = Color(0.6, 0.1, 0.9, aura_alpha)
-	if flash:
-		aura_color = Color(1.0, 1.0, 1.0, 0.5)
-	draw_circle(Vector2(0, 0), 42.0, aura_color)
-	
-	# ── Body (dark silhouette) ──
-	var body_color = Color(0.08, 0.05, 0.12, 1.0)
-	if flash:
-		body_color = Color(1.0, 0.8, 0.8, 1.0)
-	
-	# Torso
-	draw_rect(Rect2(-14, -20, 28, 36), body_color)
-	# Head
-	draw_circle(Vector2(0, -28), 14.0, body_color)
-	# Legs
-	draw_rect(Rect2(-12, 16, 8, 18), body_color)
-	draw_rect(Rect2(4, 16, 8, 18), body_color)
-	# Arms
-	draw_rect(Rect2(-20, -16, 6, 24), body_color)
-	draw_rect(Rect2(14, -16, 6, 24), body_color)
-	
-	# ── Cloak/cape detail ──
-	var cape_color = Color(0.12, 0.05, 0.18, 0.9)
-	if flash:
-		cape_color = Color(0.9, 0.7, 0.9, 0.9)
-	draw_rect(Rect2(-16, -10, 32, 28), cape_color)
-	
-	# ── Glowing eyes ──
-	var eye_color = Color(1.0, 0.15, 0.15, eye_glow_intensity)
-	if flash:
-		eye_color = Color(1.0, 1.0, 1.0, 1.0)
-	draw_circle(Vector2(-5, -30), 2.5, eye_color)
-	draw_circle(Vector2(5, -30), 2.5, eye_color)
-	
-	# Eye glow halo
-	var halo_color = Color(1.0, 0.1, 0.1, eye_glow_intensity * 0.3)
-	draw_circle(Vector2(-5, -30), 5.0, halo_color)
-	draw_circle(Vector2(5, -30), 5.0, halo_color)
-	
-	# ── Purple energy lines on body ──
-	var energy_color = Color(0.7, 0.2, 1.0, 0.4 + sin(aura_pulse_timer * 5.0) * 0.2)
-	draw_line(Vector2(-10, -15), Vector2(-10, 10), energy_color, 1.5)
-	draw_line(Vector2(10, -15), Vector2(10, 10), energy_color, 1.5)
-	draw_line(Vector2(-6, -5), Vector2(6, -5), energy_color, 1.5)
+	pass
 
 func take_damage(amount: int, from_grenade: bool = false) -> void:
 	if is_dead or is_invulnerable or not from_grenade:
@@ -188,6 +189,8 @@ func take_damage(amount: int, from_grenade: bool = false) -> void:
 	
 	_spawn_hit_particles()
 	_apply_screen_shake()
+	
+	_update_sprite_visibility()
 	
 	boss_damaged.emit(health)
 	
@@ -221,6 +224,15 @@ func get_current_cooldown() -> float:
 	var limit = 0.5 if is_shielded else min_attack_cooldown
 	return max(cd, limit)
 
+func _play_sfx_detached(stream: AudioStream) -> void:
+	var audio_player = AudioStreamPlayer2D.new()
+	audio_player.stream = stream
+	audio_player.volume_db = -6.0
+	audio_player.global_position = global_position
+	get_parent().add_child(audio_player)
+	audio_player.play()
+	audio_player.finished.connect(audio_player.queue_free)
+
 func shoot_projectile() -> void:
 	var current_scene = get_tree().current_scene
 	var player_node = null
@@ -232,6 +244,8 @@ func shoot_projectile() -> void:
 	if not player_node or not is_instance_valid(player_node) or player_node.is_dying:
 		return
 		
+	_play_sfx_detached(SFX_BOSS_TEMBAK)
+	
 	var proj = Area2D.new()
 	proj.set_script(PROJECTILE_SCRIPT)
 	
@@ -294,9 +308,15 @@ func _die() -> void:
 	
 	boss_defeated.emit()
 	
+	# Hide living sprites, show death sprite
+	_update_sprite_visibility()
+	if is_instance_valid(death_sprite):
+		death_sprite.modulate.a = 1.0
+	
 	# Fade out boss visual
 	var tween = create_tween()
-	tween.tween_property(self , "modulate:a", 0.0, 1.0)
+	if is_instance_valid(death_sprite):
+		tween.tween_property(death_sprite, "modulate:a", 0.0, 1.2)
 	await tween.finished
 	visible = false
 
@@ -453,6 +473,18 @@ func reset_boss() -> void:
 	shoot_timer = 0.5
 	shoot_alternate = false
 	
+	if is_instance_valid(head_sprite):
+		head_sprite.position = Vector2(0, 0)
+		head_sprite.modulate = Color(1, 1, 1)
+	for seg in segment_sprites:
+		if is_instance_valid(seg):
+			seg.position = Vector2(0, 0)
+			seg.modulate = Color(1, 1, 1)
+	if is_instance_valid(death_sprite):
+		death_sprite.visible = false
+		
+	_update_sprite_visibility()
+	
 	if my_collision:
 		my_collision.set_deferred("disabled", false)
 	if hurtbox:
@@ -461,3 +493,28 @@ func reset_boss() -> void:
 		boss_light.visible = true
 	
 	queue_redraw()
+
+func _update_sprite_visibility() -> void:
+	# At full health (5), use assets/bossig.png (head_sprite "4")
+	# After first hit (4), switch to assets/Bosssegment1 (node "3")
+	# After second hit (3), switch to assets/Bosssegment2 (node "2")
+	# After third hit (2 or 1), switch to assets/Bossegment3 (node "1")
+	# When no HP left (0), sprite is assets/Bossdead.png (death_sprite)
+	
+	if is_instance_valid(head_sprite):
+		head_sprite.visible = (health == 5)
+		
+	var s3 = get_node_or_null("3")
+	if is_instance_valid(s3):
+		s3.visible = (health == 4)
+		
+	var s2 = get_node_or_null("2")
+	if is_instance_valid(s2):
+		s2.visible = (health == 3)
+		
+	var s1 = get_node_or_null("1")
+	if is_instance_valid(s1):
+		s1.visible = (health == 2 or health == 1)
+		
+	if is_instance_valid(death_sprite):
+		death_sprite.visible = (health == 0)

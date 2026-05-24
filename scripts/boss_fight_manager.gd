@@ -88,12 +88,23 @@ func _setup_boss_fight() -> void:
 	# Create Dialogue UI structure (hidden by default)
 	_create_dialogue_ui()
 
-	# Grant the player 20 grenades and 20 bullets, and show intro dialogue
+	# Grant the player 20 grenades and 30 bullets, and show intro dialogue
 	if player and is_instance_valid(player):
 		player.bullets = 30
 		player.grenades = 20
 		if player.has_method("set_paused"):
 			player.set_paused(true)
+			
+		var camera = player.get_node_or_null("Camera2D")
+		if camera and camera is Camera2D:
+			camera.enabled = true
+			camera.make_current()
+			camera.position = Vector2.ZERO
+			camera.limit_left = 0
+			camera.limit_top = -200
+			camera.limit_right = 2400
+			camera.limit_bottom = 580
+			camera.position_smoothing_enabled = true
 
 	is_intro_dialogue = true
 	dialogue_lines = ["You are suddenly granted with 20 grenades and 30 bullets for some reason..."]
@@ -162,20 +173,18 @@ func _spawn_boss() -> void:
 			center_top_index = i
 			break
 
-	boss = CharacterBody2D.new()
-	boss.name = "Boss"
-	boss.set_script(BOSS_SCRIPT)
-	boss.position = spawn_pos + Vector2(0, -50)
-	boss.platform_positions = platform_positions
-	boss.current_platform_index = center_top_index
-	boss.max_health = boss_max_health
-	boss.health = boss_current_health
+	# Find the existing Boss node in the scene tree
+	boss = get_parent().get_node_or_null("Boss")
+	if boss:
+		boss.position = spawn_pos + Vector2(0, -50)
+		boss.platform_positions = platform_positions
+		boss.current_platform_index = center_top_index
+		boss.max_health = boss_max_health
+		boss.health = boss_current_health
 
-	get_parent().add_child(boss)
-
-	# Connect signals
-	boss.boss_damaged.connect(_on_boss_damaged)
-	boss.boss_defeated.connect(_on_boss_defeated)
+		# Connect signals
+		boss.boss_damaged.connect(_on_boss_damaged)
+		boss.boss_defeated.connect(_on_boss_defeated)
 
 func _create_dialogue_ui() -> void:
 	# Subtitle dialogue panel at the bottom
@@ -358,8 +367,9 @@ func _finish_boss_fight() -> void:
 		fade_panel.tween_property(dialogue_panel, "modulate:a", 0.0, 0.4)
 		fade_panel.tween_callback(func(): dialogue_panel.visible = false)
 
-	# Fade in white screen
+	# Fade in white screen with screen shake
 	if white_fade_rect:
+		_apply_long_screen_shake(2.0)
 		var fade_white = create_tween()
 		fade_white.tween_property(white_fade_rect, "color:a", 1.0, 2.0)
 		await fade_white.finished
@@ -372,6 +382,19 @@ func _finish_boss_fight() -> void:
 
 	# Transition back to menu
 	get_tree().change_scene_to_file("res://scene/StartMenu.tscn")
+
+func _apply_long_screen_shake(duration: float) -> void:
+	var camera = get_viewport().get_camera_2d()
+	if camera:
+		var original_offset = camera.offset
+		var shake_tween = camera.create_tween()
+		var step_time = 0.04
+		var steps = int(duration / step_time)
+		for i in range(steps):
+			var intensity = 10.0
+			var rand_offset = Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity))
+			shake_tween.tween_property(camera, "offset", rand_offset, step_time)
+		shake_tween.tween_property(camera, "offset", original_offset, 0.05)
 
 # ── Reset for player death ──────────────────────────────────────────────────
 func reset_boss_fight() -> void:

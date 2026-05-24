@@ -26,7 +26,8 @@ var is_exploded: bool = false
 var explosion_real_time: float = -1.0
 var led_light: PointLight2D = null
 
-const SFX_EXPLODE = preload("res://assets/SFX/explode.mp3")
+@onready var SFX_EXPLODE = load("res://assets/SFX/explode.mp3")
+@onready var SFX_AMBIL = load("res://assets/SFX/ambil.mp3")
 
 func _ready() -> void:
 	add_to_group("grenades")
@@ -145,6 +146,7 @@ func _on_body_entered(body: Node2D) -> void:
 				body.grenades += 1
 				if "max_grenades" in body and body.grenades > body.max_grenades:
 					body.grenades = body.max_grenades
+			_play_sfx_detached(SFX_AMBIL)
 			queue_free()
 		# else: do nothing — grenade passes through the player.
 		#       Damage is handled purely by blast radius in explode().

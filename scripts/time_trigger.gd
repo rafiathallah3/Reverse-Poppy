@@ -5,6 +5,8 @@ extends Area2D
 
 var triggered: bool = false
 
+@onready var SFX_BALIK_WAKTU = load("res://assets/SFX/balik_waktu.mp3")
+
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	if name == "LevelFinish":
@@ -57,14 +59,24 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		# --- ROUTE TO THE CORRECT GLOBAL FUNCTION ---
 		if st:
-			if st.is_reversing and get_tree().current_scene.scene_file_path.contains("level2"):
+			if st.is_reversing and get_tree().current_scene.scene_file_path.contains("level3"):
 				# We are in the Finish scene and touched the finish object!
 				st.is_timer_running = false
 				st.is_finished = true
 				st.complete_level()
 			elif is_final_trigger:
 				# It's the end of the game! Start the reverse phase.
+				_play_sfx_detached(SFX_BALIK_WAKTU)
 				st.start_reverse_sequence()
 			else:
 				# Normal level progression.
 				st.complete_level()
+
+func _play_sfx_detached(stream: AudioStream) -> void:
+	var audio_player = AudioStreamPlayer2D.new()
+	audio_player.stream = stream
+	audio_player.volume_db = -6.0
+	audio_player.global_position = global_position
+	get_parent().add_child(audio_player)
+	audio_player.play()
+	audio_player.finished.connect(audio_player.queue_free)
