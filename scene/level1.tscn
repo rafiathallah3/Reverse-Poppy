@@ -6,10 +6,11 @@
 [ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="3_ebr37"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
-[ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
+[ext_resource type="PackedScene" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
-[ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
+[ext_resource type="PackedScene" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
+[ext_resource type="PackedScene" uid="uid://cmbsdxjvlxbat" path="res://prefab/destructible_box.tscn" id="11_e6f45"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(337, 50)
@@ -493,4 +494,12 @@ scale_amount_min = 3.0
 scale_amount_max = 6.0
 color = Color(1, 0.9, 0.7, 0.3)
 
+<<<<<<< Updated upstream
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=16448617]
+=======
+[node name="Sprite2D" parent="." unique_id=621962263 instance=ExtResource("11_e6f45")]
+
+[node name="DestructibleBox" parent="." unique_id=1973914487 instance=ExtResource("11_e6f45")]
+position = Vector2(821.00006, 212)
+scale = Vector2(0.39277977, 0.44512913)
+>>>>>>> Stashed changes
