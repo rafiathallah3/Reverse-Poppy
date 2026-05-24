@@ -461,7 +461,6 @@ position = Vector2(117, 288)
 [node name="TimeTriggerArea" parent="." unique_id=483465147 instance=ExtResource("8_ldwqa")]
 position = Vector2(867, 453)
 
-
 [node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=334985016]
 layer = -100
 
@@ -477,7 +476,6 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="ParticleCanvas" type="CanvasLayer" parent="." unique_id=334985018]
-layer = 1
 
 [node name="TimeDustParticles" type="CPUParticles2D" parent="ParticleCanvas" unique_id=12494085]
 position = Vector2(576, 680)
@@ -496,4 +494,3 @@ scale_amount_max = 6.0
 color = Color(1, 0.9, 0.7, 0.3)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=16448617]
-

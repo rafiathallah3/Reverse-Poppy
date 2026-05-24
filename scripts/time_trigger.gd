@@ -42,7 +42,7 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		# --- ROUTE TO THE CORRECT GLOBAL FUNCTION ---
 		if st:
-			if st.is_reversing and get_tree().current_scene.scene_file_path.contains("game_manager"):
+			if st.is_reversing and get_tree().current_scene.scene_file_path.contains("level2"):
 				# We are in the Finish scene and touched the finish object!
 				st.is_timer_running = false
 				st.is_finished = true

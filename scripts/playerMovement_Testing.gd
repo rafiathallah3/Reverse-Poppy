@@ -18,6 +18,7 @@ var coyote_timer = 0.0
 var jump_buffer_timer = 0.0
 
 var is_paused: bool = false
+var is_dying: bool = false
 
 const BULLET_SCRIPT = preload("res://scripts/bullet.gd")
 @export var shoot_cooldown: float = 0.3
@@ -67,6 +68,27 @@ func _ready() -> void:
 	_add_joypad_motion_to_action("move_down", JOY_AXIS_LEFT_Y, 1.0)
 	
 	spawn_position = global_position
+	
+	# Dynamically register the death animation if not already present
+	if animated_sprite and animated_sprite.sprite_frames:
+		var sf = animated_sprite.sprite_frames
+		if not sf.has_animation("death"):
+			sf.add_animation("death")
+			sf.set_animation_loop("death", false)
+			
+			var death_tex = load("res://assets/Poppydeath.png")
+			if death_tex:
+				for y in range(2):
+					for x in range(2):
+						var atlas = AtlasTexture.new()
+						atlas.atlas = death_tex
+						atlas.region = Rect2(x * 64, y * 64, 64, 64)
+						sf.add_frame("death", atlas)
+			else:
+				print("Failed to load Poppydeath.png")
+		sf.set_animation_speed("death", 16.0)
+
+
 
 func _add_key_to_action(action_name: String, keycode: int) -> void:
 	if not InputMap.has_action(action_name):
@@ -223,5 +245,36 @@ func throw_grenade() -> void:
 	grenade.global_position = global_position
 
 func die() -> void:
+	if is_dying:
+		return
+	is_dying = true
+	is_paused = true
+	velocity = Vector2.ZERO
+	
+	if animated_sprite:
+		animated_sprite.play("death")
+		await animated_sprite.animation_finished
+	else:
+		await get_tree().create_timer(0.2).timeout
+		
+	var st = get_node_or_null("/root/SceneTransition")
+	if st:
+		await st.fade_to_black(0.4)
+	else:
+		await get_tree().create_timer(0.4).timeout
+		
 	global_position = spawn_position
 	velocity = Vector2.ZERO
+	
+	if animated_sprite:
+		animated_sprite.play("idle")
+	
+	await get_tree().create_timer(0.1).timeout
+	
+	if st:
+		await st.fade_from_black(0.4)
+	else:
+		await get_tree().create_timer(0.4).timeout
+		
+	is_paused = false
+	is_dying = false

@@ -307,16 +307,14 @@ func complete_level() -> void:
 			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
 			
 	else:
-		if level_number > 1:
-			next_scene_path = "res://scene/level" + str(level_number - 1) + ".tscn"
-		elif level_number == 1:
-			next_scene_path = "res://game_manager.tscn"
+		if level_number == 1:
+			next_scene_path = "res://scene/level2.tscn"
 			is_reversing = false
 			if glitch_overlay:
 				glitch_overlay.visible = false
 			time_slider.visible = false
 			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
-			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2)) # ← NEW
+			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
 			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
 			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
 			if style_box:
@@ -327,7 +325,7 @@ func complete_level() -> void:
 			elapsed_time = 0.0
 			time_slider.visible = false
 			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
-			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2)) # ← NEW
+			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
 			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
 			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
 			if style_box:
@@ -371,3 +369,21 @@ func show_warning(text_msg: String) -> void:
 	tween.tween_property(label, "position:y", 60.0, 1.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(label, "modulate:a", 0.0, 1.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_callback(label.queue_free)
+
+func fade_to_black(duration: float = 0.4) -> Signal:
+	var viewport_size = get_viewport().get_visible_rect().size
+	black_overlay.size = viewport_size
+	black_overlay.position = Vector2.ZERO
+	black_overlay.color = Color(0.0, 0.0, 0.0, 0.0)
+	var tween = create_tween()
+	tween.tween_property(black_overlay, "color:a", 1.0, duration)
+	return tween.finished
+
+func fade_from_black(duration: float = 0.4) -> Signal:
+	var tween = create_tween()
+	tween.tween_property(black_overlay, "color:a", 0.0, duration)
+	tween.tween_callback(func():
+		var viewport_size = get_viewport().get_visible_rect().size
+		black_overlay.position = Vector2(0, viewport_size.y)
+	)
+	return tween.finished

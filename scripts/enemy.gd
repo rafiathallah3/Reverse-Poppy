@@ -11,6 +11,9 @@ var is_time_reversing: bool = false
 var was_revived_in_reverse: bool = false  
 var player_in_zone: bool = false
 
+const SCRAP_TEXTURE = preload("res://assets/Scrap.png")
+var scrap_sprite: Sprite2D = null
+
 @onready var revive_label: Label = $ReviveLabel
 @onready var revive_zone: Area2D = $ReviveZone
 @onready var main_collision: CollisionShape2D = $CollisionShape2D
@@ -71,14 +74,51 @@ func take_damage(_amount: int) -> void:
 
 	if hurtbox:
 		hurtbox.set_deferred("monitoring", false)
+		
+	# Hide animated sprite
+	var sprite = get_node_or_null("AnimatedSprite2D")
+	if sprite:
+		sprite.visible = false
+		
+	# Find the ground directly underneath the enemy using a temporary RayCast2D
+	var ground_local_pos = Vector2(65, 82) # Fallback to original sprite position
+	var raycast = RayCast2D.new()
+	raycast.target_position = Vector2(0, 500) # Raycast downwards up to 500 pixels
+	raycast.exclude_parent = true
+	raycast.collision_mask = 1 # Detect solid floors/geometry
+	add_child(raycast)
+	raycast.force_raycast_update()
+	if raycast.is_colliding():
+		ground_local_pos = to_local(raycast.get_collision_point())
+		# Align Scrap with the center of the enemy X-wise, but put Y on the ground
+		ground_local_pos.x = sprite.position.x if sprite else 65.0
+		# Offset slightly upwards so the bottom of the scrap sits nicely on the ground
+		ground_local_pos.y -= 8.0
+	raycast.queue_free()
+		
+	if not scrap_sprite:
+		scrap_sprite = Sprite2D.new()
+		scrap_sprite.texture = SCRAP_TEXTURE
+		scrap_sprite.position = ground_local_pos
+		scrap_sprite.scale = Vector2(4.5, 4.5) # Scale up to make it bigger and prominent
+		add_child(scrap_sprite)
+	else:
+		scrap_sprite.position = ground_local_pos
+		scrap_sprite.visible = true
 
 func revive() -> void:
 	is_time_reversing = false
 	was_revived_in_reverse = true  
 
-
 	if revive_label:
 		revive_label.visible = false
+		
+	# Hide Scrap sprite and show animated sprite
+	if scrap_sprite:
+		scrap_sprite.visible = false
+	var sprite = get_node_or_null("AnimatedSprite2D")
+	if sprite:
+		sprite.visible = true
 
 func _fully_restore() -> void:
 	was_revived_in_reverse = false
@@ -88,6 +128,13 @@ func _fully_restore() -> void:
 
 	if hurtbox:
 		hurtbox.set_deferred("monitoring", true)
+		
+	# Double check visuals are restored
+	if scrap_sprite:
+		scrap_sprite.visible = false
+	var sprite = get_node_or_null("AnimatedSprite2D")
+	if sprite:
+		sprite.visible = true
 
 
 func _on_zone_entered(body: Node2D) -> void:
