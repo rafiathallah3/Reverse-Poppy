@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://dr2lmx8tbee1j" path="res://prefab/time_trigger_area.tscn" id="8_ldwqa"]
+[ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
 size = Vector2(337, 50)
@@ -500,3 +501,36 @@ position = Vector2(117, 288)
 
 [node name="TimeTriggerArea" parent="." unique_id=483465147 instance=ExtResource("8_ldwqa")]
 position = Vector2(867, 453)
+
+[node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=334985016]
+layer = -100
+
+[node name="SkyBackground" type="TextureRect" parent="BackgroundCanvas" unique_id=334985017]
+modulate = Color(0.12, 0.12, 0.2, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_pipes")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ParticleCanvas" type="CanvasLayer" parent="." unique_id=334985018]
+layer = 1
+
+[node name="TimeDustParticles" type="CPUParticles2D" parent="ParticleCanvas" unique_id=12494085]
+position = Vector2(576, 680)
+amount = 60
+lifetime = 12.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(576, 1)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+scale_amount_min = 3.0
+scale_amount_max = 6.0
+color = Color(1, 0.9, 0.7, 0.3)

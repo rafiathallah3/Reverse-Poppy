@@ -74,13 +74,9 @@ func _physics_process(delta: float) -> void:
 		set_physics_process(false)
 		return
 		
-	# If already exploded, we wait in the background for time scrubbing history cleanup
+	# If already exploded, we pause physics processing and wait for time scrubbing
 	if is_exploded:
-		current_recording_time += delta
-		_record_history()
-		# Clean up if the explosion has fallen out of the 5-second rewind history window
-		if current_recording_time - explosion_real_time > max_history_duration:
-			queue_free()
+		set_physics_process(false)
 		return
 		
 	# Apply physics
@@ -99,14 +95,17 @@ func _physics_process(delta: float) -> void:
 	time_remaining -= delta
 	if time_remaining <= 0.0:
 		explode()
+		return
 		
 	# Update recording parameters
 	current_recording_time += delta
 	_record_history()
 
 func _record_history() -> void:
+	var st = get_node_or_null("/root/SceneTransition")
+	var record_time = st.elapsed_time if st else current_recording_time
 	history.append({
-		"time": current_recording_time,
+		"time": record_time,
 		"pos": position,
 		"vel": velocity,
 		"time_rem": time_remaining,
@@ -114,10 +113,7 @@ func _record_history() -> void:
 		"exp_time": explosion_real_time,
 		"visible": visible
 	})
-	
-	# Limit history length
-	while history.size() > 0 and (current_recording_time - history[0]["time"]) > max_history_duration:
-		history.remove_at(0)
+
 
 func _on_body_entered(body: Node2D) -> void:
 	if is_exploded:
@@ -203,7 +199,11 @@ func explode() -> void:
 		return
 		
 	is_exploded = true
-	explosion_real_time = current_recording_time
+	var st = get_node_or_null("/root/SceneTransition")
+	explosion_real_time = st.elapsed_time if st else current_recording_time
+	
+	# Record the exploded state in history immediately
+	_record_history()
 	
 	# Hide visual representation
 	visible = false
@@ -325,12 +325,10 @@ func set_paused(paused: bool) -> void:
 	is_paused = paused
 	set_physics_process(not paused)
 
-func scrub_time(offset_ms: float) -> void:
+func scrub_time_absolute(target_time: float) -> void:
 	if history.size() == 0:
 		return
 		
-	var target_time = current_recording_time - (offset_ms / 1000.0)
-	
 	var closest_entry = history[0]
 	var min_diff = abs(closest_entry["time"] - target_time)
 	
@@ -354,11 +352,20 @@ func scrub_time(offset_ms: float) -> void:
 		
 	queue_redraw()
 
+func scrub_time(offset_ms: float) -> void:
+	if history.size() == 0:
+		return
+		
+	var latest_time = history[history.size() - 1]["time"]
+	var target_time = latest_time - (offset_ms / 1000.0)
+	scrub_time_absolute(target_time)
+
 func commit_scrubbed_state(offset_ms: float) -> void:
 	if history.size() == 0:
 		return
 		
-	var target_time = current_recording_time - (offset_ms / 1000.0)
+	var latest_time = history[history.size() - 1]["time"]
+	var target_time = latest_time - (offset_ms / 1000.0)
 	
 	var new_history = []
 	for entry in history:
@@ -368,5 +375,9 @@ func commit_scrubbed_state(offset_ms: float) -> void:
 	history = new_history
 	if history.size() > 0:
 		current_recording_time = history[history.size() - 1]["time"]
+		var last_entry = history[history.size() - 1]
+		is_exploded = last_entry["exploded"]
+		if not is_exploded:
+			set_physics_process(true)
 	else:
 		current_recording_time = 0.0
