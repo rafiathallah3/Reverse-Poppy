@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Reverse Poppy"
-run/main_scene="uid://c6120o0llrrjn"
+run/main_scene="uid://ccij7klgautp5"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 

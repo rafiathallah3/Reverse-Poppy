@@ -4,11 +4,14 @@ var elapsed_time: float = 0.0
 var is_timer_running: bool = true
 var is_finished: bool = false
 
+# Per-level time tracking
+var level_times: Dictionary = {}   # e.g. { "Level 1": 32.5, "Level 2": 45.1 }
+var level_start_time: float = 0.0  # elapsed_time value at the start of the current level
+
 var is_reversing: bool = false
 var is_scrubbing: bool = false
+var is_using_controller: bool = false  # toggled true when a controller input is detected
 var previous_slider_value: float = 0.0
-var is_using_controller: bool = false
-var is_joystick_scrubbing: bool = false
 
 const GLITCH_SHADER = preload("res://shaders/time_glitch.gdshader")
 
@@ -100,7 +103,6 @@ func setup_ui() -> void:
 	time_slider.max_value = 5.0
 	time_slider.step = 0.01
 	time_slider.visible = false
-	time_slider.focus_mode = Control.FOCUS_NONE
 	time_slider.value_changed.connect(_on_slider_changed)
 	vbox.add_child(time_slider)
 
@@ -149,15 +151,9 @@ func reset_overlay_position() -> void:
 
 func _is_menu_scene() -> bool:
 	var current_scene = get_tree().current_scene
-	if not current_scene: return true
+	if not current_scene: return false  # null during transitions — do NOT treat as menu or level_times gets wiped
 	var path = current_scene.scene_file_path
-	return path.contains("StartMenu") or path.contains("start_menu")
-
-func _input(event: InputEvent) -> void:
-	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
-		is_using_controller = true
-	elif event is InputEventKey or event is InputEventMouseButton or event is InputEventMouseMotion:
-		is_using_controller = false
+	return path.contains("StartMenu") or path.contains("start_menu") or path.contains("EndMenu") or path.contains("end_menu")
 
 func _process(delta: float) -> void:
 	var on_menu = _is_menu_scene()
@@ -169,9 +165,14 @@ func _process(delta: float) -> void:
 		is_timer_running = false
 		is_reversing = false
 		elapsed_time = 0.0
+		level_start_time = 0.0
 		is_finished = false
 		if glitch_overlay:
 			glitch_overlay.visible = false
+		# Only wipe saved times when back at StartMenu, not on EndMenu
+		var cs = get_tree().current_scene
+		if cs and (cs.scene_file_path.contains("StartMenu") or cs.scene_file_path.contains("start_menu")):
+			level_times.clear()
 		return
 
 	if not is_timer_running and not is_finished:
@@ -183,21 +184,19 @@ func _process(delta: float) -> void:
 	update_bullet_counter()
 	update_grenade_counter()
 
-	# Handle Right Joystick scrubbing during reverse phase
-	if is_reversing and time_slider and time_slider.visible:
-		var joy_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
-		if abs(joy_x) > 0.15:
-			is_joystick_scrubbing = true
-			var time_range = time_slider.max_value - time_slider.min_value
-			var speed = time_range / 2.0  # Scrub full range in 2 seconds at max deflection
-			var delta_val = joy_x * speed * delta
-			time_slider.value = clamp(time_slider.value + delta_val, time_slider.min_value, time_slider.max_value)
-		else:
-			is_joystick_scrubbing = false
+	# Detect whether the player is using a controller or keyboard/mouse
+	if Input.get_connected_joypads().size() > 0:
+		for action in ["jump", "shoot", "interact"]:
+			if Input.is_action_just_pressed(action):
+				var event = InputMap.action_get_events(action)
+				for e in event:
+					if e is InputEventJoypadButton or e is InputEventJoypadMotion:
+						is_using_controller = true
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.get_last_mouse_velocity().length() > 0:
+		is_using_controller = false
 
 	# Dynamic particle direction reversal based on is_reversing state
-	var currently_scrubbing = is_scrubbing or is_joystick_scrubbing
-	if not currently_scrubbing:
+	if not is_scrubbing:
 		var current_scene = get_tree().current_scene
 		if current_scene:
 			var bg_particles = current_scene.get_node_or_null("ParticleCanvas/TimeDustParticles")
@@ -215,7 +214,11 @@ func _get_player() -> Node:
 	var current_scene = get_tree().current_scene
 	if not current_scene: return null
 	var player = current_scene.get_node_or_null("Player")
-	if not player: player = current_scene.get_node_or_null("Player (Testing)")
+	if not player: 
+		player = current_scene.get_node_or_null("Player (Testing)")
+	# Safety check — make sure it's actually the player script
+	if player and not ("bullets" in player):
+		return null
 	return player
 
 func update_timer_text() -> void:
@@ -243,6 +246,19 @@ func update_grenade_counter() -> void:
 	var player = _get_player()
 	if player and "grenades" in player:
 		grenade_label.text = "GRENADES: %d" % player.grenades
+
+# ── Level-time helpers (used by EndMenu) ──
+func format_time(time_val: float) -> String:
+	var minutes = int(time_val / 60.0)
+	var seconds = int(time_val) % 60
+	var centiseconds = int((time_val - int(time_val)) * 100)
+	return "%02d:%02d.%02d" % [minutes, seconds, centiseconds]
+
+func get_total_time() -> float:
+	var total = 0.0
+	for t in level_times.values():
+		total += t
+	return total
 
 func start_reverse_sequence() -> void:
 	is_reversing = true
@@ -392,42 +408,46 @@ func complete_level() -> void:
 		if current_scene_path.contains("game_manager"):
 			next_scene_path = "res://scene/level1.tscn"
 		elif level_number >= 3:
-			# Level 3 adalah boss stage / level terakhir
-			next_scene_path = "res://scene/StartMenu.tscn"
-			elapsed_time = 0.0
+			# Final level done (non-reversing path) — save time and go to EndMenu
+			var level_time = elapsed_time - level_start_time
+			level_times["Level " + str(level_number)] = level_time
+			next_scene_path = "res://scene/EndMenu.tscn"
 		else:
+			# Save this level's time and go to next level
+			var level_time = elapsed_time - level_start_time
+			level_times["Level " + str(level_number)] = level_time
 			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
-			
+
 	else:
-		if level_number < 3:
-			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
-			is_reversing = false
-			if glitch_overlay:
-				glitch_overlay.visible = false
-			time_slider.visible = false
-			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
-			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
-			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
-			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
-			if style_box:
-				style_box.border_color = Color(0.0, 0.8, 1.0, 0.45)
+		# Save this level's time — reversing path is the real level completion
+		var level_time = elapsed_time - level_start_time
+		level_times["Level " + str(level_number)] = level_time
+
+		# Reset reverse-mode visuals
+		is_reversing = false
+		time_slider.visible = false
+		if glitch_overlay:
+			glitch_overlay.visible = false
+		timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+		bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
+		grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
+		var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
+		if style_box:
+			style_box.border_color = Color(0.0, 0.8, 1.0, 0.45)
+
+		if level_number >= 3:
+			# Final level done — go to EndMenu with all times saved
+			next_scene_path = "res://scene/EndMenu.tscn"
 		else:
-			next_scene_path = "res://scene/StartMenu.tscn"
-			is_reversing = false
-			elapsed_time = 0.0
-			time_slider.visible = false
-			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
-			bullet_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
-			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
-			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
-			if style_box:
-				style_box.border_color = Color(0.0, 0.8, 1.0, 0.45)
+			# More levels to go
+			next_scene_path = "res://scene/level" + str(level_number + 1) + ".tscn"
 		
 	get_tree().change_scene_to_file(next_scene_path)
 	await get_tree().process_frame
 	
 	if not is_reversing:
 		is_timer_running = true
+		level_start_time = elapsed_time  # mark when this new level begins
 	
 	# Reset ukuran overlay lagi setelah scene baru (viewport bisa berubah)
 	var new_viewport_size = get_viewport().get_visible_rect().size

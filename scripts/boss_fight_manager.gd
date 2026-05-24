@@ -3,30 +3,25 @@ extends Node
 const BOSS_SCRIPT = preload("res://scripts/boss.gd")
 const FORCE_FIELD_SCRIPT = preload("res://scripts/force_field.gd")
 
-# ── References ──────────────────────────────────────────────────────────────
 var boss: CharacterBody2D = null
 var active_force_field: StaticBody2D = null
 var player: CharacterBody2D = null
 
-# ── UI Nodes ────────────────────────────────────────────────────────────────
 var ui_canvas: CanvasLayer = null
 var boss_ui_panel: PanelContainer = null
 var boss_name_label: Label = null
 var boss_health_label: Label = null
 
-# ── Dialogue UI Nodes ───────────────────────────────────────────────────────
 var dialogue_panel: PanelContainer = null
 var dialogue_text: Label = null
 var dialogue_prompt: Label = null
 var white_fade_rect: ColorRect = null
 
-# ── Boss Fight State ────────────────────────────────────────────────────────
-var boss_max_health: int = 5
-var boss_current_health: int = 5
+var boss_max_health: int = 1
+var boss_current_health: int = 1
 var platform_positions: Array = []
 var active_platform_nodes: Array = []
 
-# ── Dialogue State ──────────────────────────────────────────────────────────
 var dialogue_lines: Array = [
 	"I am not a mere scrapile.",
 	"I'm your father, Poppy.",
@@ -41,7 +36,7 @@ var dialogue_timer: float = 0.0
 
 func _ready() -> void:
 	name = "BossFightManager"
-	_setup_boss_fight()
+	call_deferred("_setup_boss_fight")
 
 func _setup_boss_fight() -> void:
 	# Find player
@@ -60,7 +55,6 @@ func _setup_boss_fight() -> void:
 			active_platform_nodes.append(child)
 
 	if platform_positions.size() == 0:
-		# Fallback positions in case platforms are missing
 		platform_positions = [
 			Vector2(280, 350),
 			Vector2(180, 440),
@@ -73,22 +67,17 @@ func _setup_boss_fight() -> void:
 			Vector2(2120, 350)
 		]
 
-	# Create Canvas Layer for Boss UI
 	ui_canvas = CanvasLayer.new()
 	ui_canvas.layer = 100
 	ui_canvas.name = "BossFightCanvas"
 	add_child(ui_canvas)
 
-	# Setup Boss Health UI at the top
 	_create_boss_ui()
 
-	# Spawn the Boss
 	_spawn_boss()
 
-	# Create Dialogue UI structure (hidden by default)
 	_create_dialogue_ui()
 
-	# Grant the player 20 grenades and 90 bullets, and show intro dialogue
 	if player and is_instance_valid(player):
 		player.bullets = 90
 		player.grenades = 20
@@ -374,14 +363,16 @@ func _finish_boss_fight() -> void:
 		fade_white.tween_property(white_fade_rect, "color:a", 1.0, 2.0)
 		await fade_white.finished
 
-	# Stop time triggers and music if any remaining
+	# Stop time triggers and save level 3 time before going to EndMenu
 	if get_tree().root.has_node("SceneTransition"):
 		var st = get_node("/root/SceneTransition")
 		st.is_timer_running = false
-		st.elapsed_time = 0.0
+		# Save level 3's time into level_times so EndMenu can display it
+		var level_time = st.elapsed_time - st.level_start_time
+		st.level_times["Level 3"] = level_time
 
-	# Transition back to menu
-	get_tree().change_scene_to_file("res://scene/StartMenu.tscn")
+	# Transition to EndMenu
+	get_tree().change_scene_to_file("res://scene/EndMenu.tscn")
 
 func _apply_long_screen_shake(duration: float) -> void:
 	var camera = get_viewport().get_camera_2d()
