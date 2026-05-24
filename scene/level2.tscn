@@ -116,6 +116,7 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.85, 0.85)
 
 
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_epjhv"]
 texture = ExtResource("9_yilmc")
 0:0/0 = 0
@@ -160,6 +161,10 @@ texture = ExtResource("2_ebr37")
 sources/0 = SubResource("TileSetAtlasSource_epjhv")
 sources/1 = SubResource("TileSetAtlasSource_vwck2")
 
+
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vwck2"]
+size = Vector2(2840.909, 316.66672)
 
 
 [node name="Level2" type="Node2D" unique_id=1209518241]
@@ -434,10 +439,10 @@ texture_scale = 12.0
 metadata/_edit_lock_ = true
 
 [node name="LevelFinish" parent="." unique_id=1066231283 instance=ExtResource("7_3ud3r")]
-position = Vector2(1315, 336)
+position = Vector2(1144, 380)
 
 [node name="TimeTriggerArea" parent="." unique_id=1788768943 instance=ExtResource("8_ldwqa")]
-position = Vector2(1315, 336)
+position = Vector2(1144, 380)
 
 [node name="BackgroundCanvas" type="CanvasLayer" parent="." unique_id=2032204257]
 layer = -100
@@ -482,4 +487,13 @@ color = Color(1, 0.9, 0.7, 0.3)
 stream = ExtResource("13_music")
 volume_db = -2.583
 
+[node name="Area2D (Death Area)" type="Area2D" parent="." unique_id=1728348027]
+position = Vector2(-821, 674)
+script = ExtResource("3_ebr37")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D (Death Area)" unique_id=1799784709]
+position = Vector2(1122.7272, -13.888916)
+shape = SubResource("RectangleShape2D_vwck2")
+
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
+[connection signal="body_entered" from="Area2D (Death Area)" to="Area2D (Death Area)" method="_on_body_entered"]
