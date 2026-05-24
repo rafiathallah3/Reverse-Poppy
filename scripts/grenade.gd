@@ -114,13 +114,34 @@ func _on_body_entered(body: Node2D) -> void:
 	if is_exploded:
 		return
 		
+	# --- NEW CATCH MECHANIC ---
+	if body.name.contains("Player"):
+		# Safely check if the global Scene Transition manager exists
+		var st = get_node_or_null("/root/SceneTransition")
+		
+		# If we are currently in the Time Reverse phase...
+		if st and st.is_reversing:
+			# Give the grenade back to the player
+			if "grenades" in body:
+				body.grenades += 1
+				
+				# Prevent the player from hoarding more than their max limit!
+				if "max_grenades" in body and body.grenades > body.max_grenades:
+					body.grenades = body.max_grenades
+					
+			# Delete the grenade from the world (it has been caught)
+			queue_free()
+			
+		# Whether caught or not, the grenade should not bounce off the player
+		return
+		
 	# Explode immediately on contact with enemies
 	if body.is_in_group("enemies"):
 		explode()
 		return
 		
-	# Ignore player, bullets, and other grenades
-	if body.name.contains("Player") or body.is_in_group("bullets") or body.is_in_group("grenades"):
+	# Ignore bullets and other grenades
+	if body.is_in_group("bullets") or body.is_in_group("grenades"):
 		return
 		
 	# Bounce off of solid environment tiles / platforms

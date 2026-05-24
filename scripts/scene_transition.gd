@@ -112,7 +112,6 @@ func _is_menu_scene() -> bool:
 func _process(delta: float) -> void:
 	var on_menu = _is_menu_scene()
 
-	# Sembunyikan HUD di main menu, tampilkan saat game
 	if timer_panel:
 		timer_panel.visible = not on_menu
 
@@ -152,7 +151,6 @@ func update_grenade_counter() -> void:
 
 func start_reverse_sequence() -> void:
 	is_reversing = true
-	# Timer keeps running during reverse transition
 	timer_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0)) 
 	grenade_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0))
 	var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
