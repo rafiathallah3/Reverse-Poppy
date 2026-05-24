@@ -369,7 +369,6 @@ func show_warning(text_msg: String) -> void:
 	tween.tween_property(label, "position:y", 60.0, 1.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(label, "modulate:a", 0.0, 1.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_callback(label.queue_free)
-<<<<<<< Updated upstream
 
 func fade_to_black(duration: float = 0.4) -> Signal:
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -388,5 +387,3 @@ func fade_from_black(duration: float = 0.4) -> Signal:
 		black_overlay.position = Vector2(0, viewport_size.y)
 	)
 	return tween.finished
-=======
->>>>>>> Stashed changes

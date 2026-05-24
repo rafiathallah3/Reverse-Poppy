@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://1r2b8l18gpgq"]
+
+[ext_resource type="Script" path="res://scripts/enemy_laser.gd" id="1_laser_script"]
+[ext_resource type="Texture2D" uid="uid://crhwccuamyvct" path="res://assets/Enemy2.png" id="2_laser_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_laser_enemy"]
+size = Vector2(84, 105)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_laser_hurtbox"]
+size = Vector2(90, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_laser_idle"]
+atlas = ExtResource("2_laser_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_laser_shoot_1"]
+atlas = ExtResource("2_laser_texture")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_laser_shoot_2"]
+atlas = ExtResource("2_laser_texture")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_laser_shoot_3"]
+atlas = ExtResource("2_laser_texture")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_laser_shoot_4"]
+atlas = ExtResource("2_laser_texture")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_laser_enemy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_laser_idle")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_laser_shoot_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_laser_shoot_2")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_laser_shoot_3")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_laser_shoot_4")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_laser_revive"]
+size = Vector2(140, 140)
+
+[node name="EnemyLaser" type="CharacterBody2D" unique_id=370826370]
+script = ExtResource("1_laser_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=937303108]
+shape = SubResource("RectangleShape2D_laser_enemy")
+
+[node name="Hitbox_to_hurt_player" type="Area2D" parent="." unique_id=388851162]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox_to_hurt_player" unique_id=1933190231]
+shape = SubResource("RectangleShape2D_laser_hurtbox")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1827598673]
+scale = Vector2(3.5, 3.5)
+sprite_frames = SubResource("SpriteFrames_laser_enemy")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="ReviveLabel" type="Label" parent="." unique_id=482224964]
+offset_left = -67.0
+offset_top = -80.0
+offset_right = 68.0
+offset_bottom = -50.0
+theme_override_font_sizes/font_size = 44
+horizontal_alignment = 1
+
+[node name="ReviveZone" type="Area2D" parent="." unique_id=1417465455]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ReviveZone" unique_id=1712463897]
+shape = SubResource("RectangleShape2D_laser_revive")
