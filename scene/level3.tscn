@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://buwl0obsxp2eu"]
+[gd_scene format=4 uid="uid://df08wboxjo7lu"]
 
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="2_87m6s"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="15_blocks1"]
 [ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="16_blocks2"]
 [ext_resource type="Script" uid="uid://dv3356keuo2oy" path="res://scripts/boss.gd" id="17_boss_script"]
+[ext_resource type="Script" uid="uid://or276grgot5x" path="res://scripts/pause_menu.gd" id="17_mixx0"]
 [ext_resource type="Script" uid="uid://c2o1ue7xnbsji" path="res://scripts/boss_fight_manager.gd" id="18_boss_fight_manager"]
 
 [sub_resource type="RectangleShape2D" id="Shape_floor"]
@@ -478,6 +479,32 @@ energy = 0.9
 texture = SubResource("GradientTexture2D_light")
 texture_scale = 8.0
 
+[node name="FP_CenterL2" type="StaticBody2D" parent="." unique_id=1756591246]
+position = Vector2(949, 472)
+
+[node name="Col" type="CollisionShape2D" parent="FP_CenterL2" unique_id=1859787600]
+shape = SubResource("Shape_plat_M")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_CenterL2" unique_id=1077222181]
+position = Vector2(-42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_CenterL2" unique_id=649521051]
+position = Vector2(42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_CenterL2" unique_id=1703425484]
+color = Color(0.6, 0.3, 1, 1)
+energy = 0.9
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 8.0
+
 [node name="FP_CenterTop" type="StaticBody2D" parent="." unique_id=3204001]
 position = Vector2(1200, 290)
 
@@ -531,6 +558,32 @@ animation = &"float"
 autoplay = "float"
 
 [node name="Light" type="PointLight2D" parent="FP_CenterR" unique_id=3205005]
+color = Color(0.6, 0.3, 1, 1)
+energy = 0.9
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 8.0
+
+[node name="FP_CenterR2" type="StaticBody2D" parent="." unique_id=2074153672]
+position = Vector2(1455, 467)
+
+[node name="Col" type="CollisionShape2D" parent="FP_CenterR2" unique_id=356078895]
+shape = SubResource("Shape_plat_M")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_CenterR2" unique_id=946699592]
+position = Vector2(-42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_CenterR2" unique_id=338645251]
+position = Vector2(42, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_CenterR2" unique_id=2118036642]
 color = Color(0.6, 0.3, 1, 1)
 energy = 0.9
 texture = SubResource("GradientTexture2D_light")
@@ -736,5 +789,8 @@ tile_set = SubResource("TileSet_kbefo")
 scale = Vector2(8, 8)
 tile_map_data = PackedByteArray("AAAEAAUAAQAMAAQAAAAEAAQAAQAMAAQAAAAEAAMAAQAMAAQAAAAEAAIAAQAMAAQAAAAEAAEAAQAMAAQAAAAEAAAAAQAMAAQAAAAEAP//AQAMAAQAAAAEAP7/AQAMAAQAAAAEAP3/AQAMAAQAAAAKAAUAAQAMAAQAAAAKAAQAAQAMAAQAAAAKAAMAAQAMAAQAAAAKAAIAAQAMAAQAAAAKAAEAAQAMAAQAAAAKAAAAAQAMAAQAAAAKAP//AQAMAAQAAAAKAP7/AQAMAAQAAAAKAP3/AQAMAAQAAAACAAUAAQAMAAQAAAACAAQAAQAMAAQAAAACAAMAAQAMAAQAAAACAAIAAQAMAAQAAAACAAEAAQAMAAQAAAACAAAAAQAMAAQAAAACAP//AQAMAAQAAAACAP7/AQAMAAQAAAACAP3/AQAMAAQAAAAPAP3/AQAMAAQAAAAPAP7/AQAMAAQAAAAPAP//AQAMAAQAAAAPAAAAAQAMAAQAAAAPAAEAAQAMAAQAAAAPAAIAAQANAAQAACA=")
 tile_set = SubResource("TileSet_jbo0k")
+
+[node name="PauseMenu" type="CanvasLayer" parent="." unique_id=251860495]
+script = ExtResource("17_mixx0")
 
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]
