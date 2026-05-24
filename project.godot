@@ -15,6 +15,10 @@ run/main_scene="uid://b7ka55n8a4okr"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SceneTransition="*res://scripts/scene_transition.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
@@ -52,8 +56,3 @@ textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
 environment/defaults/default_clear_color=Color(0.53, 0.81, 0.92, 1)
-
-[autoload]
-
-SceneTransition="*res://scripts/scene_transition.gd"
-
