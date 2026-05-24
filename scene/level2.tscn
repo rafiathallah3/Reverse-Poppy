@@ -161,11 +161,9 @@ texture = ExtResource("2_ebr37")
 sources/0 = SubResource("TileSetAtlasSource_epjhv")
 sources/1 = SubResource("TileSetAtlasSource_vwck2")
 
-[node name="Level2" type="Node2D" unique_id=884368807]
-position = Vector2(100, 64)
-
 [node name="Level2" type="Node2D" unique_id=1209518241]
 position = Vector2(98, 63)
+
 
 [node name="Background" type="Sprite2D" parent="." unique_id=1624380459]
 position = Vector2(800, 280)
