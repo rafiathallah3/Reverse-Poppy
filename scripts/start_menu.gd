@@ -4,9 +4,9 @@ extends Node2D
 @onready var poppy_idle: AnimatedSprite2D = $CampfireScene/PoppyIdle
 @onready var bg_music: AudioStreamPlayer = $BGMusic
 @onready var settings_panel: Control = $UI/SettingsPanel
-@onready var volume_slider: HSlider = $UI/SettingsPanel/VBoxContainer/VolumeRow/VolumeSlider
-@onready var volume_value_label: Label = $UI/SettingsPanel/VBoxContainer/VolumeRow/VolumeValueLabel
-@onready var fullscreen_check: CheckButton = $UI/SettingsPanel/VBoxContainer/FullscreenRow/FullscreenToggle
+@onready var volume_slider: HSlider = $UI/SettingsPanel/MarginContainer/VBoxContainer/VolumeRow/VolumeSlider
+@onready var volume_value_label: Label = $UI/SettingsPanel/MarginContainer/VBoxContainer/VolumeRow/VolumeValueLabel
+@onready var fullscreen_check: CheckButton = $UI/SettingsPanel/MarginContainer/VBoxContainer/FullscreenRow/FullscreenToggle
 
 func _ready() -> void:
 	if get_tree().root.has_node("SceneTransition"):

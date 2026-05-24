@@ -19,9 +19,14 @@ config/icon="res://icon.svg"
 
 SceneTransition="*res://scripts/scene_transition.gd"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
+enabled=PackedStringArray()
 
 [input]
 

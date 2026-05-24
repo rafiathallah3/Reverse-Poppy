@@ -12,10 +12,11 @@
 [ext_resource type="Texture2D" uid="uid://bmhryvqc8ei3c" path="res://assets/Bosssegment2.png" id="12_1crou"]
 [ext_resource type="Texture2D" uid="uid://cahte17xdwy3s" path="res://assets/Bossegment3.png" id="13_1turj"]
 [ext_resource type="AudioStream" uid="uid://dimu7ty8lhb0a" path="res://assets/ThemeSong/battlemusic.mp3" id="13_music"]
-[ext_resource type="Script" path="res://scripts/level_music.gd" id="14_music_script"]
+[ext_resource type="Script" uid="uid://ddtcks3xhtn78" path="res://scripts/level_music.gd" id="14_music_script"]
 [ext_resource type="Texture2D" uid="uid://bnsokl3kgntnm" path="res://assets/Bossdead.png" id="14_pj0nk"]
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="15_blocks1"]
 [ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="16_blocks2"]
+[ext_resource type="Script" uid="uid://or276grgot5x" path="res://scripts/pause_menu.gd" id="17_mixx0"]
 
 [sub_resource type="RectangleShape2D" id="Shape_floor"]
 size = Vector2(2400, 48)
@@ -697,5 +698,8 @@ tile_set = SubResource("TileSet_kbefo")
 scale = Vector2(8, 8)
 tile_map_data = PackedByteArray("AAAEAAUAAQAMAAQAAAAEAAQAAQAMAAQAAAAEAAMAAQAMAAQAAAAEAAIAAQAMAAQAAAAEAAEAAQAMAAQAAAAEAAAAAQAMAAQAAAAEAP//AQAMAAQAAAAEAP7/AQAMAAQAAAAEAP3/AQAMAAQAAAAKAAUAAQAMAAQAAAAKAAQAAQAMAAQAAAAKAAMAAQAMAAQAAAAKAAIAAQAMAAQAAAAKAAEAAQAMAAQAAAAKAAAAAQAMAAQAAAAKAP//AQAMAAQAAAAKAP7/AQAMAAQAAAAKAP3/AQAMAAQAAAACAAUAAQAMAAQAAAACAAQAAQAMAAQAAAACAAMAAQAMAAQAAAACAAIAAQAMAAQAAAACAAEAAQAMAAQAAAACAAAAAQAMAAQAAAACAP//AQAMAAQAAAACAP7/AQAMAAQAAAACAP3/AQAMAAQAAAAPAP3/AQAMAAQAAAAPAP7/AQAMAAQAAAAPAP//AQAMAAQAAAAPAAAAAQAMAAQAAAAPAAEAAQAMAAQAAAAPAAIAAQANAAQAACA=")
 tile_set = SubResource("TileSet_jbo0k")
+
+[node name="PauseMenu" type="CanvasLayer" parent="." unique_id=219409900]
+script = ExtResource("17_mixx0")
 
 [connection signal="finished" from="BattleMusic" to="." method="_on_battle_music_finished"]

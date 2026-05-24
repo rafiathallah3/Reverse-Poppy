@@ -159,8 +159,14 @@ script = ExtResource("1_script")
 
 [node name="Background" type="TextureRect" parent="." unique_id=1951788522]
 z_index = -2
-offset_right = 1152.0
-offset_bottom = 648.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -6.0
+offset_right = 1925.0
+offset_bottom = 1086.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("2_bg")
 stretch_mode = 1
 
@@ -213,10 +219,11 @@ frame_progress = 0.19152918
 [node name="UI" type="CanvasLayer" parent="." unique_id=244191597]
 
 [node name="GameTitle" type="Label" parent="UI" unique_id=1711656231]
-offset_left = 176.0
-offset_top = 100.0
-offset_right = 976.0
-offset_bottom = 210.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 60.0
+offset_bottom = 180.0
+grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.95, 1)
 theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("4_font")
@@ -225,10 +232,14 @@ text = "REVERSE POPPY"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="UI" unique_id=1180524542]
-offset_left = 176.0
-offset_top = 189.0
-offset_right = 976.0
-offset_bottom = 229.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -958.0
+offset_top = 159.0
+offset_right = -958.0
+offset_bottom = 199.0
+grow_horizontal = 2
+scale = Vector2(2, 2)
 theme_override_colors/font_color = Color(0.8, 0.5, 0.5, 1)
 theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
 theme_override_fonts/font = ExtResource("4_font")
@@ -237,10 +248,17 @@ text = "TIME WAITS FOR NO ONE"
 horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=336182322]
-offset_left = 426.0
-offset_top = 302.0
-offset_right = 726.0
-offset_bottom = 522.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -100.0
+offset_right = 160.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="PlayButton" type="Button" parent="UI/VBoxContainer" unique_id=1566473330]
@@ -286,19 +304,26 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -210.0
-offset_right = 260.0
-offset_bottom = 210.0
+offset_left = -240.0
+offset_top = -145.0
+offset_right = 240.0
+offset_bottom = 145.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/SettingsPanel" unique_id=711200002]
+[node name="MarginContainer" type="MarginContainer" parent="UI/SettingsPanel" unique_id=711200020]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SettingsPanel/MarginContainer" unique_id=711200002]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="TitleLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200003]
+[node name="TitleLabel" type="Label" parent="UI/SettingsPanel/MarginContainer/VBoxContainer" unique_id=711200003]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
 theme_override_colors/font_shadow_color = Color(0.4, 0, 0, 1)
@@ -307,14 +332,14 @@ theme_override_font_sizes/font_size = 26
 text = "— SETTINGS —"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200010]
+[node name="HSeparator" type="HSeparator" parent="UI/SettingsPanel/MarginContainer/VBoxContainer" unique_id=711200010]
 layout_mode = 2
 
-[node name="VolumeRow" type="HBoxContainer" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200004]
+[node name="VolumeRow" type="HBoxContainer" parent="UI/SettingsPanel/MarginContainer/VBoxContainer" unique_id=711200004]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="VolumeLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer/VolumeRow" unique_id=711200005]
+[node name="VolumeLabel" type="Label" parent="UI/SettingsPanel/MarginContainer/VBoxContainer/VolumeRow" unique_id=711200005]
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.85, 0.85, 1)
@@ -323,13 +348,13 @@ theme_override_font_sizes/font_size = 16
 text = "MUSIC VOL"
 vertical_alignment = 1
 
-[node name="VolumeSlider" type="HSlider" parent="UI/SettingsPanel/VBoxContainer/VolumeRow" unique_id=711200006]
+[node name="VolumeSlider" type="HSlider" parent="UI/SettingsPanel/MarginContainer/VBoxContainer/VolumeRow" unique_id=711200006]
 custom_minimum_size = Vector2(200, 28)
 layout_mode = 2
 size_flags_horizontal = 3
 value = 80.0
 
-[node name="VolumeValueLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer/VolumeRow" unique_id=711200009]
+[node name="VolumeValueLabel" type="Label" parent="UI/SettingsPanel/MarginContainer/VBoxContainer/VolumeRow" unique_id=711200009]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
@@ -338,11 +363,11 @@ theme_override_font_sizes/font_size = 16
 text = "80%"
 horizontal_alignment = 2
 
-[node name="FullscreenRow" type="HBoxContainer" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200007]
+[node name="FullscreenRow" type="HBoxContainer" parent="UI/SettingsPanel/MarginContainer/VBoxContainer" unique_id=711200007]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="FullscreenLabel" type="Label" parent="UI/SettingsPanel/VBoxContainer/FullscreenRow" unique_id=711200011]
+[node name="FullscreenLabel" type="Label" parent="UI/SettingsPanel/MarginContainer/VBoxContainer/FullscreenRow" unique_id=711200011]
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.85, 0.85, 1)
@@ -351,17 +376,17 @@ theme_override_font_sizes/font_size = 16
 text = "FULLSCREEN"
 vertical_alignment = 1
 
-[node name="FullscreenToggle" type="CheckButton" parent="UI/SettingsPanel/VBoxContainer/FullscreenRow" unique_id=711200008]
+[node name="FullscreenToggle" type="CheckButton" parent="UI/SettingsPanel/MarginContainer/VBoxContainer/FullscreenRow" unique_id=711200008]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 14
 text = "OFF"
 
-[node name="HSeparator2" type="HSeparator" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200013]
+[node name="HSeparator2" type="HSeparator" parent="UI/SettingsPanel/MarginContainer/VBoxContainer" unique_id=711200013]
 layout_mode = 2
 
-[node name="CloseButton" type="Button" parent="UI/SettingsPanel/VBoxContainer" unique_id=711200012]
+[node name="CloseButton" type="Button" parent="UI/SettingsPanel/MarginContainer/VBoxContainer" unique_id=711200012]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
@@ -379,10 +404,6 @@ z_index = 10
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -2.0
-offset_top = -1.0
-offset_right = 1150.0
-offset_bottom = 647.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -446,7 +467,7 @@ texture = ExtResource("13_a3i8o")
 [connection signal="pressed" from="UI/VBoxContainer/PlayButton" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="UI/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="UI/VBoxContainer/QuitButton" to="." method="_on_quit_pressed"]
-[connection signal="value_changed" from="UI/SettingsPanel/VBoxContainer/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_changed"]
-[connection signal="toggled" from="UI/SettingsPanel/VBoxContainer/FullscreenRow/FullscreenToggle" to="." method="_on_fullscreen_toggled"]
-[connection signal="pressed" from="UI/SettingsPanel/VBoxContainer/CloseButton" to="." method="_on_close_settings_pressed"]
+[connection signal="value_changed" from="UI/SettingsPanel/MarginContainer/VBoxContainer/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_changed"]
+[connection signal="toggled" from="UI/SettingsPanel/MarginContainer/VBoxContainer/FullscreenRow/FullscreenToggle" to="." method="_on_fullscreen_toggled"]
+[connection signal="pressed" from="UI/SettingsPanel/MarginContainer/VBoxContainer/CloseButton" to="." method="_on_close_settings_pressed"]
 [connection signal="finished" from="BGMusic" to="." method="_on_bg_music_finished"]
