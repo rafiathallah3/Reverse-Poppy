@@ -453,6 +453,32 @@ energy = 0.65
 texture = SubResource("GradientTexture2D_light")
 texture_scale = 6.0
 
+[node name="FP_QuarterL2" type="StaticBody2D" parent="." unique_id=581176345]
+position = Vector2(392, 437)
+
+[node name="Col" type="CollisionShape2D" parent="FP_QuarterL2" unique_id=416687268]
+shape = SubResource("Shape_plat_S")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_QuarterL2" unique_id=1097267297]
+position = Vector2(-21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_QuarterL2" unique_id=1034198954]
+position = Vector2(21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_QuarterL2" unique_id=1230190781]
+color = Color(0.3, 0.8, 1, 1)
+energy = 0.65
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 6.0
+
 [node name="FP_CenterL" type="StaticBody2D" parent="." unique_id=3203001]
 position = Vector2(820, 430)
 
@@ -610,6 +636,32 @@ animation = &"float"
 autoplay = "float"
 
 [node name="Light" type="PointLight2D" parent="FP_QuarterR" unique_id=3206005]
+color = Color(0.3, 0.8, 1, 1)
+energy = 0.65
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 6.0
+
+[node name="FP_QuarterR2" type="StaticBody2D" parent="." unique_id=854687778]
+position = Vector2(1974, 419)
+
+[node name="Col" type="CollisionShape2D" parent="FP_QuarterR2" unique_id=2021036102]
+shape = SubResource("Shape_plat_S")
+
+[node name="Spr1" type="AnimatedSprite2D" parent="FP_QuarterR2" unique_id=973733898]
+position = Vector2(-21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Spr2" type="AnimatedSprite2D" parent="FP_QuarterR2" unique_id=708376423]
+position = Vector2(21, 0)
+scale = Vector2(2.6667, 2.6667)
+sprite_frames = SubResource("SpriteFrames_float")
+animation = &"float"
+autoplay = "float"
+
+[node name="Light" type="PointLight2D" parent="FP_QuarterR2" unique_id=1407811623]
 color = Color(0.3, 0.8, 1, 1)
 energy = 0.65
 texture = SubResource("GradientTexture2D_light")
