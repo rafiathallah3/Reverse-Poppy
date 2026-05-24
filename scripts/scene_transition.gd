@@ -7,6 +7,8 @@ var is_finished: bool = false
 var is_reversing: bool = false
 var is_scrubbing: bool = false
 var previous_slider_value: float = 0.0
+var is_using_controller: bool = false
+var is_joystick_scrubbing: bool = false
 
 const GLITCH_SHADER = preload("res://shaders/time_glitch.gdshader")
 
@@ -98,6 +100,7 @@ func setup_ui() -> void:
 	time_slider.max_value = 5.0
 	time_slider.step = 0.01
 	time_slider.visible = false
+	time_slider.focus_mode = Control.FOCUS_NONE
 	time_slider.value_changed.connect(_on_slider_changed)
 	vbox.add_child(time_slider)
 
@@ -150,6 +153,12 @@ func _is_menu_scene() -> bool:
 	var path = current_scene.scene_file_path
 	return path.contains("StartMenu") or path.contains("start_menu")
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		is_using_controller = true
+	elif event is InputEventKey or event is InputEventMouseButton or event is InputEventMouseMotion:
+		is_using_controller = false
+
 func _process(delta: float) -> void:
 	var on_menu = _is_menu_scene()
 
@@ -174,8 +183,21 @@ func _process(delta: float) -> void:
 	update_bullet_counter()
 	update_grenade_counter()
 
+	# Handle Right Joystick scrubbing during reverse phase
+	if is_reversing and time_slider and time_slider.visible:
+		var joy_x = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
+		if abs(joy_x) > 0.15:
+			is_joystick_scrubbing = true
+			var time_range = time_slider.max_value - time_slider.min_value
+			var speed = time_range / 2.0  # Scrub full range in 2 seconds at max deflection
+			var delta_val = joy_x * speed * delta
+			time_slider.value = clamp(time_slider.value + delta_val, time_slider.min_value, time_slider.max_value)
+		else:
+			is_joystick_scrubbing = false
+
 	# Dynamic particle direction reversal based on is_reversing state
-	if not is_scrubbing:
+	var currently_scrubbing = is_scrubbing or is_joystick_scrubbing
+	if not currently_scrubbing:
 		var current_scene = get_tree().current_scene
 		if current_scene:
 			var bg_particles = current_scene.get_node_or_null("ParticleCanvas/TimeDustParticles")

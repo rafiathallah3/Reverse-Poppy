@@ -70,6 +70,9 @@ func _ready() -> void:
 	_add_joypad_button_to_action("move_down", JOY_BUTTON_DPAD_DOWN)
 	_add_joypad_motion_to_action("move_down", JOY_AXIS_LEFT_Y, 1.0)
 	
+	_add_key_to_action("interact", KEY_Y)
+	_add_joypad_motion_to_action("interact", JOY_AXIS_TRIGGER_LEFT, 1.0)
+	
 	spawn_position = global_position
 	
 	# Dynamically register the death animation if not already present

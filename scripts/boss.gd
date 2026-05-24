@@ -180,6 +180,16 @@ func _draw() -> void:
 	pass
 
 func take_damage(amount: int, from_grenade: bool = false) -> void:
+	var current_scene = get_tree().current_scene
+	var player_node = null
+	if current_scene:
+		player_node = current_scene.get_node_or_null("Player")
+		if not player_node:
+			player_node = current_scene.get_node_or_null("Player (Testing)")
+			
+	if not player_node or not is_instance_valid(player_node) or player_node.is_dying:
+		return
+
 	if is_dead or is_invulnerable or not from_grenade:
 		return
 	
@@ -312,13 +322,6 @@ func _die() -> void:
 	_update_sprite_visibility()
 	if is_instance_valid(death_sprite):
 		death_sprite.modulate.a = 1.0
-	
-	# Fade out boss visual
-	var tween = create_tween()
-	if is_instance_valid(death_sprite):
-		tween.tween_property(death_sprite, "modulate:a", 0.0, 1.2)
-	await tween.finished
-	visible = false
 
 func _on_hurtbox_entered(body: Node2D) -> void:
 	if is_dead or is_invulnerable:
@@ -500,7 +503,6 @@ func _update_sprite_visibility() -> void:
 	# After second hit (3), switch to assets/Bosssegment2 (node "2")
 	# After third hit (2 or 1), switch to assets/Bossegment3 (node "1")
 	# When no HP left (0), sprite is assets/Bossdead.png (death_sprite)
-	
 	if is_instance_valid(head_sprite):
 		head_sprite.visible = (health == 5)
 		

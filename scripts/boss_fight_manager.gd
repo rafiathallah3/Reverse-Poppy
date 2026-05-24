@@ -41,7 +41,7 @@ var dialogue_timer: float = 0.0
 
 func _ready() -> void:
 	name = "BossFightManager"
-	call_deferred("_setup_boss_fight")
+	_setup_boss_fight()
 
 func _setup_boss_fight() -> void:
 	# Find player

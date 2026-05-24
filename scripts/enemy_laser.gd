@@ -89,6 +89,12 @@ func _process(_delta: float) -> void:
 
 	if revive_label:
 		revive_label.visible = in_reverse and is_time_reversing and player_in_zone
+		if revive_label.visible:
+			var st = _get_st()
+			if st and st.is_using_controller:
+				revive_label.text = "Press LT to Revive"
+			else:
+				revive_label.text = "Press Y to Revive"
 
 	if in_reverse and is_time_reversing and player_in_zone:
 		if Input.is_action_just_pressed("interact"):

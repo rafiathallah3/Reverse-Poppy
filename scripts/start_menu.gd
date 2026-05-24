@@ -36,6 +36,31 @@ func _ready() -> void:
 	fullscreen_check.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	_update_fullscreen_label(fullscreen_check.button_pressed)
 
+	# Dynamic focus styling overrides so selected buttons are visible
+	for btn in [$UI/VBoxContainer/PlayButton, $UI/VBoxContainer/SettingsButton, $UI/VBoxContainer/QuitButton]:
+		if btn:
+			var hover_style = btn.get_theme_stylebox("hover")
+			if hover_style:
+				btn.add_theme_stylebox_override("focus", hover_style)
+
+	var close_btn = $UI/SettingsPanel/MarginContainer/VBoxContainer/CloseButton
+	if close_btn:
+		var hover_style = close_btn.get_theme_stylebox("hover")
+		if hover_style:
+			close_btn.add_theme_stylebox_override("focus", hover_style)
+
+	# Robust focus neighbor configurations for the Settings Panel
+	if volume_slider and fullscreen_check and close_btn:
+		volume_slider.focus_neighbor_bottom = fullscreen_check.get_path()
+		fullscreen_check.focus_neighbor_top = volume_slider.get_path()
+		fullscreen_check.focus_neighbor_bottom = close_btn.get_path()
+		close_btn.focus_neighbor_top = fullscreen_check.get_path()
+
+	# Focus PlayButton initially
+	var play_btn = $UI/VBoxContainer/PlayButton
+	if play_btn:
+		play_btn.grab_focus()
+
 func _on_play_pressed() -> void:
 	_fade_and_go("res://scene/level1.tscn")
 
@@ -44,11 +69,18 @@ func _on_settings_pressed() -> void:
 	settings_panel.visible = true
 	var tween = create_tween()
 	tween.tween_property(settings_panel, "modulate:a", 1.0, 0.2)
+	if volume_slider:
+		volume_slider.grab_focus()
 
 func _on_close_settings_pressed() -> void:
 	var tween = create_tween()
 	tween.tween_property(settings_panel, "modulate:a", 0.0, 0.15)
-	tween.tween_callback(func(): settings_panel.visible = false)
+	tween.tween_callback(func():
+		settings_panel.visible = false
+		var settings_btn = $UI/VBoxContainer/SettingsButton
+		if settings_btn:
+			settings_btn.grab_focus()
+	)
 
 func _on_volume_slider_changed(value: float) -> void:
 	if value <= 0.0:
