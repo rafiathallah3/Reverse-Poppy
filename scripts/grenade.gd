@@ -26,6 +26,8 @@ var is_exploded: bool = false
 var explosion_real_time: float = -1.0
 var led_light: PointLight2D = null
 
+const SFX_EXPLODE = preload("res://assets/SFX/explode.mp3")
+
 func _ready() -> void:
 	add_to_group("grenades")
 	add_to_group("rewindable_objects")
@@ -76,6 +78,15 @@ func _draw() -> void:
 	draw_arc(Vector2(-6, -11), 3.0, 0.0, TAU, 8, Color(0.5, 0.5, 0.5, 1.0), 1.5)
 	var led_color = Color(1.0, 0.1, 0.1, 1.0) if led_on else Color(0.1, 0.0, 0.0, 1.0)
 	draw_circle(Vector2(0, -2), 2.5, led_color)
+
+func _play_sfx_detached(stream: AudioStream) -> void:
+	var audio_player = AudioStreamPlayer2D.new()
+	audio_player.stream = stream
+	audio_player.volume_db = -6.0 # <--- ADD THIS (Cuts volume in half)
+	audio_player.global_position = global_position
+	get_parent().add_child(audio_player) 
+	audio_player.play()
+	audio_player.finished.connect(audio_player.queue_free)
 
 func _physics_process(delta: float) -> void:
 	var st = get_node_or_null("/root/SceneTransition")
@@ -196,8 +207,10 @@ func _on_body_entered(body: Node2D) -> void:
 func explode() -> void:
 	if is_exploded:
 		return
-		
 	is_exploded = true
+	
+	_play_sfx_detached(SFX_EXPLODE)
+	
 	var st = get_node_or_null("/root/SceneTransition")
 	explosion_real_time = st.elapsed_time if st else current_recording_time
 	

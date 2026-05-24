@@ -17,6 +17,7 @@ var was_revived_in_reverse: bool = false
 var player_in_zone: bool = false
 
 const SCRAP_TEXTURE = preload("res://assets/Scrap.png")
+const SFX_REVIVE = preload("res://assets/SFX/revive.mp3")
 var scrap_sprite: Sprite2D = null
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -24,6 +25,8 @@ var scrap_sprite: Sprite2D = null
 @onready var revive_zone: Area2D = $ReviveZone
 @onready var main_collision: CollisionShape2D = $CollisionShape2D
 @onready var hurtbox: Area2D = $Hitbox_to_hurt_player
+
+
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -68,6 +71,15 @@ func _physics_process(delta: float) -> void:
 		if animated_sprite and not is_dead:
 			animated_sprite.play("shoot")
 
+func _play_sfx(stream: AudioStream) -> void:
+	var audio_player = AudioStreamPlayer2D.new()
+	audio_player.stream = stream
+	audio_player.volume_db = -6.0 # <--- ADD THIS (Cuts volume in half)
+	add_child(audio_player)
+	audio_player.play()
+	audio_player.finished.connect(audio_player.queue_free)
+	
+
 func _process(_delta: float) -> void:
 	var in_reverse: bool = _is_reverse_phase()
 
@@ -81,10 +93,6 @@ func _process(_delta: float) -> void:
 	if in_reverse and is_time_reversing and player_in_zone:
 		if Input.is_action_just_pressed("interact"):
 			revive()
-			
-	var light = get_node_or_null("PointLight2D")
-	if light:
-		light.visible = not is_dead and not is_time_reversing
 
 func _on_frame_changed() -> void:
 	if is_dead or is_time_reversing or was_revived_in_reverse:
@@ -259,6 +267,8 @@ func revive() -> void:
 	is_time_reversing = false
 	was_revived_in_reverse = true
 	shoot_timer = shoot_interval # Reset firing timer upon revival
+	
+	_play_sfx(SFX_REVIVE)
 
 	if revive_label:
 		revive_label.visible = false

@@ -38,6 +38,9 @@ var spawn_position: Vector2
 var bullets: int = max_bullets
 var grenades: int = max_grenades
 
+const SFX_SHOOTING = preload("res://assets/SFX/shooting.mp3")
+const SFX_DEATH = preload("res://assets/SFX/death.mp3")
+
 func _ready() -> void:
 	_add_key_to_action("move_left", KEY_LEFT)
 	_add_key_to_action("move_right", KEY_RIGHT)
@@ -88,6 +91,14 @@ func _ready() -> void:
 				print("Failed to load Poppydeath.png")
 		sf.set_animation_speed("death", 16.0)
 
+
+func _play_sfx(stream: AudioStream) -> void:
+	var audio_player = AudioStreamPlayer.new()
+	audio_player.stream = stream
+	audio_player.volume_db = -6.0 # <--- ADD THIS (Cuts volume in half)
+	add_child(audio_player)
+	audio_player.play()
+	audio_player.finished.connect(audio_player.queue_free)
 
 func _add_key_to_action(action_name: String, keycode: int) -> void:
 	if not InputMap.has_action(action_name):
@@ -219,6 +230,8 @@ func shoot() -> void:
 	shoot_timer = shoot_cooldown
 	bullets -= 1
 	
+	_play_sfx(SFX_SHOOTING)
+	
 	var bullet = Area2D.new()
 	bullet.set_script(BULLET_SCRIPT)
 	bullet.direction = Vector2(facing_direction, 0.0)
@@ -249,6 +262,8 @@ func die() -> void:
 	is_dying = true
 	is_paused = true
 	velocity = Vector2.ZERO
+	
+	_play_sfx(SFX_DEATH)
 	
 	if animated_sprite:
 		animated_sprite.play("death")
