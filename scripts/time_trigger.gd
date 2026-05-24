@@ -7,12 +7,19 @@ var triggered: bool = false
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	if name == "LevelFinish":
+		visible = false
+		monitoring = false
 
 func _on_body_entered(body: Node2D) -> void:
 	if triggered:
 		return
 		
 	if body.name.contains("Player"):
+		var st = get_node_or_null("/root/SceneTransition")
+		if name == "LevelFinish" and (not st or not st.is_reversing):
+			return
+			
 		triggered = true
 		
 		# Disable physics monitoring immediately
@@ -27,10 +34,15 @@ func _on_body_entered(body: Node2D) -> void:
 			tween.parallel().tween_property(visual, "scale", Vector2(1.6, 1.6), 0.4)
 		
 		# --- ROUTE TO THE CORRECT GLOBAL FUNCTION ---
-		if get_tree().root.has_node("SceneTransition"):
-			if is_final_trigger:
+		if st:
+			if st.is_reversing and get_tree().current_scene.scene_file_path.contains("game_manager"):
+				# We are in the Finish scene and touched the finish object!
+				st.is_timer_running = false
+				st.is_finished = true
+				st.complete_level()
+			elif is_final_trigger:
 				# It's the end of the game! Start the reverse phase.
-				get_node("/root/SceneTransition").start_reverse_sequence()
+				st.start_reverse_sequence()
 			else:
 				# Normal level progression.
-				get_node("/root/SceneTransition").complete_level()
+				st.complete_level()

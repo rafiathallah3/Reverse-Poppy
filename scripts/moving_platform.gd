@@ -30,6 +30,7 @@ func _physics_process(delta: float) -> void:
 		return
 		
 	if is_paused:
+		set_physics_process(false)
 		return
 		
 	current_recording_time += delta
@@ -67,6 +68,7 @@ func _arrive_at_destination() -> void:
 
 func set_paused(paused: bool) -> void:
 	is_paused = paused
+	set_physics_process(not paused)
 
 func scrub_time(offset_ms: float) -> void:
 	if history.size() == 0:

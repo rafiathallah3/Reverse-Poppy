@@ -21,24 +21,24 @@ func _ready() -> void:
 	
 	# Create a visual representation: a modern, glowing neon red laser beam
 	laser_rect = ColorRect.new()
-	laser_rect.color = Color(1.0, 0.0, 0.1, 1.0) # Vivid neon red
-	laser_rect.size = Vector2(36, 10) # Larger size for high visibility
-	laser_rect.position = -laser_rect.size / 2.0 # Center the rect at bullet's position
+	laser_rect.color = Color(2.5, 0.1, 0.25, 1.0) # Blindingly bright glowing HDR neon red
+	laser_rect.size = Vector2(100, 6) # Extremely long and sleek for high velocity
+	laser_rect.position = - laser_rect.size / 2.0 # Center the rect at bullet's position
 	add_child(laser_rect)
 	
 	# Add a subtle inner bright core to make it look extremely premium
 	laser_core = ColorRect.new()
-	laser_core.color = Color(1.0, 0.9, 0.9, 1.0) # Bright rose-white core
-	laser_core.size = Vector2(28, 4) # Thicker inner core
-	laser_core.position = -laser_core.size / 2.0
+	laser_core.color = Color(2.5, 2.5, 2.5, 1.0) # Pure white glowing core
+	laser_core.size = Vector2(94, 2) # Extra long matching inner core
+	laser_core.position = - laser_core.size / 2.0
 	add_child(laser_core)
 	
 	# Create a tiny point light to make the laser beam glow in the dark
 	var light = PointLight2D.new()
 	light.name = "PointLight2D"
-	light.color = Color(1.0, 0.1, 0.2, 1.0) # Vibrant neon red glow
-	light.energy = 1.8
-	light.texture_scale = 3.0 # Compact glow surrounding the laser
+	light.color = Color(1.0, 0.15, 0.25, 1.0) # Vibrant neon red glow
+	light.energy = 3.5 # Intense energy for blinding brightness
+	light.texture_scale = 5.0 # Large glow aura # Compact glow surrounding the laser
 	
 	var grad = Gradient.new()
 	grad.offsets = PackedFloat32Array([0.0, 1.0])
@@ -66,7 +66,9 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 func _physics_process(delta: float) -> void:
-	if is_paused:
+	var st = get_node_or_null("/root/SceneTransition")
+	if is_paused or (st and st.is_reversing):
+		set_physics_process(false)
 		return
 		
 	# Move the bullet forward
@@ -180,6 +182,7 @@ func _get_circle_points(radius: float) -> PackedVector2Array:
 
 func set_paused(paused: bool) -> void:
 	is_paused = paused
+	set_physics_process(not paused)
 	if laser_rect:
 		if paused:
 			laser_rect.color = Color(0.0, 0.8, 1.0, 1.0) # Tint neon cyan when paused/rewinding

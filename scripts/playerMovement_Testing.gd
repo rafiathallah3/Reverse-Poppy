@@ -171,6 +171,7 @@ func _physics_process(delta):
 
 func set_paused(paused: bool) -> void:
 	is_paused = paused
+	set_physics_process(not paused)
 	if paused:
 		velocity = Vector2.ZERO
 

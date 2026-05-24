@@ -60,7 +60,9 @@ func _draw() -> void:
 	draw_circle(Vector2(0, -2), 2.5, led_color)
 
 func _physics_process(delta: float) -> void:
-	if is_paused:
+	var st = get_node_or_null("/root/SceneTransition")
+	if is_paused or (st and st.is_reversing):
+		set_physics_process(false)
 		return
 		
 	# If already exploded, we wait in the background for time scrubbing history cleanup
@@ -258,6 +260,7 @@ func _apply_screen_shake() -> void:
 
 func set_paused(paused: bool) -> void:
 	is_paused = paused
+	set_physics_process(not paused)
 
 func scrub_time(offset_ms: float) -> void:
 	if history.size() == 0:

@@ -2,9 +2,12 @@ extends Node
 
 var elapsed_time: float = 0.0
 var is_timer_running: bool = true
+var is_finished: bool = false
 
 # GLOBAL REVERSE STATE
 var is_reversing: bool = false
+
+const GLITCH_SHADER = preload("res://shaders/time_glitch.gdshader")
 
 # UI Nodes
 var canvas_layer: CanvasLayer
@@ -12,6 +15,7 @@ var timer_panel: PanelContainer
 var timer_label: Label
 var grenade_label: Label
 var black_overlay: ColorRect
+var glitch_overlay: ColorRect
 var time_slider: HSlider 
 
 func _ready() -> void:
@@ -29,6 +33,17 @@ func setup_ui() -> void:
 	black_overlay.color = Color(0.0, 0.0, 0.0, 1.0)
 	black_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	canvas_layer.add_child(black_overlay)
+	
+	glitch_overlay = ColorRect.new()
+	glitch_overlay.name = "GlitchOverlay"
+	glitch_overlay.visible = false
+	glitch_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	
+	var shader_mat = ShaderMaterial.new()
+	shader_mat.shader = GLITCH_SHADER
+	glitch_overlay.material = shader_mat
+	canvas_layer.add_child(glitch_overlay)
+	
 	call_deferred("reset_overlay_position")
 	
 	timer_panel = PanelContainer.new()
@@ -84,6 +99,9 @@ func reset_overlay_position() -> void:
 	var viewport_size = get_viewport().get_visible_rect().size
 	black_overlay.size = viewport_size
 	black_overlay.position = Vector2(0, viewport_size.y)
+	if glitch_overlay:
+		glitch_overlay.size = viewport_size
+		glitch_overlay.position = Vector2.ZERO
 
 func _is_menu_scene() -> bool:
 	var current_scene = get_tree().current_scene
@@ -99,7 +117,17 @@ func _process(delta: float) -> void:
 		timer_panel.visible = not on_menu
 
 	if on_menu:
+		is_timer_running = false
+		is_reversing = false
+		elapsed_time = 0.0
+		is_finished = false
+		if glitch_overlay:
+			glitch_overlay.visible = false
 		return
+
+	if not is_timer_running and not is_finished:
+		is_timer_running = true
+
 
 	if is_timer_running:
 		elapsed_time += delta
@@ -124,14 +152,32 @@ func update_grenade_counter() -> void:
 
 func start_reverse_sequence() -> void:
 	is_reversing = true
-	is_timer_running = false 
+	# Timer keeps running during reverse transition
 	timer_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0)) 
 	grenade_label.add_theme_color_override("font_color", Color(0.9, 0.2, 1.0))
 	var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
 	if style_box:
 		style_box.border_color = Color(0.9, 0.2, 1.0, 0.8)
+	time_slider.value = 0.0
 	time_slider.visible = true 
-	complete_level()
+	if glitch_overlay:
+		glitch_overlay.visible = true
+		glitch_overlay.modulate.a = 0.4
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	
+	# Make LevelFinish visible with premium fade-in animation
+	var current_scene = get_tree().current_scene
+	if current_scene:
+		var level_finish = current_scene.get_node_or_null("LevelFinish")
+		if level_finish:
+			level_finish.visible = true
+			level_finish.monitoring = true
+			var visual = level_finish.get_node_or_null("PortalVisual")
+			if visual:
+				visual.modulate.a = 0.0
+				var tween = level_finish.create_tween()
+				tween.tween_property(visual, "modulate:a", 0.4, 0.8)
+	# The player stays in the level to run backward! No immediate complete_level() call.
 
 func complete_level() -> void:
 	# Animation
@@ -166,7 +212,16 @@ func complete_level() -> void:
 		if level_number > 1:
 			next_scene_path = "res://scene/level" + str(level_number - 1) + ".tscn"
 		elif level_number == 1:
-			next_scene_path = "res://scene/game_manager.tscn"
+			next_scene_path = "res://game_manager.tscn"
+			is_reversing = false
+			if glitch_overlay:
+				glitch_overlay.visible = false
+			time_slider.visible = false
+			timer_label.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+			grenade_label.add_theme_color_override("font_color", Color(0.2, 1.0, 0.5))
+			var style_box = timer_panel.get_theme_stylebox("panel") as StyleBoxFlat
+			if style_box:
+				style_box.border_color = Color(0.0, 0.8, 1.0, 0.45)
 		else:
 			# REVERSED ALL THE WAY BACK
 			next_scene_path = "res://scene/StartMenu.tscn"
