@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="1_a215g"]
 [ext_resource type="Script" uid="uid://bcokbjl4mu0lf" path="res://scripts/playerMovement_Testing.gd" id="1_player_script"]
 [ext_resource type="Texture2D" uid="uid://dsbdp3w8eurgt" path="res://assets/BuildingBlocks2.png" id="2_ebr37"]
-[ext_resource type="PackedScene" path="res://prefab/enemy_laser.tscn" id="3_e6f45"]
+[ext_resource type="PackedScene" uid="uid://1r2b8l18gpgq" path="res://prefab/enemy_laser.tscn" id="3_e6f45"]
 [ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="3_ebr37"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
@@ -497,5 +497,5 @@ scale_amount_max = 6.0
 color = Color(1, 0.9, 0.7, 0.3)
 
 [node name="DestructibleBox" parent="." unique_id=1973914487 instance=ExtResource("11_e6f45")]
-position = Vector2(761, 206)
+position = Vector2(776, 206)
 scale = Vector2(0.47197032, 0.4826077)
