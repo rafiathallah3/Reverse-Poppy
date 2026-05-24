@@ -369,3 +369,4 @@ autoplay = true
 [connection signal="value_changed" from="UI/SettingsPanel/VBoxContainer/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_changed"]
 [connection signal="toggled" from="UI/SettingsPanel/VBoxContainer/FullscreenRow/FullscreenToggle" to="." method="_on_fullscreen_toggled"]
 [connection signal="pressed" from="UI/SettingsPanel/VBoxContainer/CloseButton" to="." method="_on_close_settings_pressed"]
+[connection signal="finished" from="BGMusic" to="." method="_on_bg_music_finished"]

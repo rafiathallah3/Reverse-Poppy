@@ -42,8 +42,6 @@ func _on_play_pressed() -> void:
 func _on_settings_pressed() -> void:
 	settings_panel.modulate.a = 0
 	settings_panel.visible = true
-	# Gelapi background dengan modulate UI sebelum panel muncul
-	var ui = $UI
 	var tween = create_tween()
 	tween.tween_property(settings_panel, "modulate:a", 1.0, 0.2)
 
@@ -69,6 +67,9 @@ func _on_fullscreen_toggled(toggled: bool) -> void:
 
 func _update_fullscreen_label(is_on: bool) -> void:
 	fullscreen_check.text = "ON" if is_on else "OFF"
+
+func _on_bg_music_finished() -> void:
+	bg_music.play()
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()

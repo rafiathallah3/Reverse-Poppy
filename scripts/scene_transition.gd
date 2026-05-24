@@ -85,7 +85,22 @@ func reset_overlay_position() -> void:
 	black_overlay.size = viewport_size
 	black_overlay.position = Vector2(0, viewport_size.y)
 
+func _is_menu_scene() -> bool:
+	var current_scene = get_tree().current_scene
+	if not current_scene: return true
+	var path = current_scene.scene_file_path
+	return path.contains("StartMenu") or path.contains("start_menu")
+
 func _process(delta: float) -> void:
+	var on_menu = _is_menu_scene()
+
+	# Sembunyikan HUD di main menu, tampilkan saat game
+	if timer_panel:
+		timer_panel.visible = not on_menu
+
+	if on_menu:
+		return
+
 	if is_timer_running:
 		elapsed_time += delta
 		update_timer_text()
