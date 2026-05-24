@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cn1ot6tui6pkd" path="res://scripts/Killzone.gd" id="3_ebr37"]
 [ext_resource type="Texture2D" uid="uid://cctv5j7ofr5q" path="res://assets/Poppyidle.png" id="4_poppy_idle"]
 [ext_resource type="Texture2D" uid="uid://ctcfr1j0b1w60" path="res://assets/Poppywalk.png" id="5_poppy_walk"]
-[ext_resource type="PackedScene" uid="uid://brx5x6b7jlyd4" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
+[ext_resource type="PackedScene" path="res://prefab/level_finish.tscn" id="7_3ud3r"]
 [ext_resource type="PackedScene" uid="uid://bq37curpo5rm1" path="res://prefab/enemy_1.tscn" id="8_3ud3r"]
 [ext_resource type="Texture2D" uid="uid://53n8rlagdxb8" path="res://assets/PipesBackground.png" id="9_pipes"]
 [ext_resource type="Texture2D" uid="uid://mk3vwmws65ct" path="res://assets/BuildingBlocks1.png" id="9_yilmc"]
