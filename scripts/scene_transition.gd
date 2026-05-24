@@ -98,6 +98,8 @@ func setup_ui() -> void:
 	time_slider.step = 0.01
 	time_slider.visible = false
 	time_slider.value_changed.connect(_on_slider_changed)
+	time_slider.drag_started.connect(_on_slider_drag_started)
+	time_slider.drag_ended.connect(_on_slider_drag_ended)
 	vbox.add_child(time_slider)
 
 func _on_slider_changed(value: float) -> void:
@@ -119,14 +121,17 @@ func _on_slider_changed(value: float) -> void:
 		if not bg_particles:
 			bg_particles = current_scene.get_node_or_null("BackgroundCanvas/TimeDustParticles")
 		if bg_particles:
-			# Determine scrub direction and speed scale
-			var diff = value - previous_slider_value
-			if diff < 0.0:
-				bg_particles.speed_scale = -2.5 # Scrubbing backwards: move backwards!
-			elif diff > 0.0:
-				bg_particles.speed_scale = 2.5 # Scrubbing forwards: move forwards!
+			if is_scrubbing:
+				# Determine scrub direction and speed scale
+				var diff = value - previous_slider_value
+				if diff < 0.0:
+					bg_particles.speed_scale = -2.5 # Scrubbing backwards: move backwards!
+				elif diff > 0.0:
+					bg_particles.speed_scale = 2.5 # Scrubbing forwards: move forwards!
+				else:
+					bg_particles.speed_scale = 0.0 # Frozen if slider didn't change
 			else:
-				bg_particles.speed_scale = 0.0 # Frozen if slider didn't change
+				bg_particles.speed_scale = 0.0
 			
 		var bg_sky = current_scene.get_node_or_null("BackgroundCanvas/SkyBackground")
 		if bg_sky:

@@ -294,3 +294,23 @@ func _on_hurtbox_entered(body: Node2D) -> void:
 	if not is_dead and not is_time_reversing and not was_revived_in_reverse:
 		if body.has_method("die"):
 			body.die()
+
+func revive_enemy() -> void:
+	is_dead = false
+	is_time_reversing = false
+	was_revived_in_reverse = false
+	time_elapsed = 0.0
+	shoot_timer = shoot_interval
+	position = spawn_position
+
+	if main_collision:
+		main_collision.set_deferred("disabled", false)
+
+	if hurtbox:
+		hurtbox.set_deferred("monitoring", true)
+		
+	if scrap_sprite:
+		scrap_sprite.visible = false
+	if animated_sprite:
+		animated_sprite.visible = true
+		animated_sprite.play("idle")

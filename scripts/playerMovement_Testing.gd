@@ -266,6 +266,33 @@ func die() -> void:
 	global_position = spawn_position
 	velocity = Vector2.ZERO
 	
+	# Reset bullet and grenade counts
+	bullets = 10
+	grenades = 3
+	
+	# Clear active bullets and grenades in the scene from the previous life
+	var active_bullets = get_tree().get_nodes_in_group("bullets")
+	for bullet in active_bullets:
+		if is_instance_valid(bullet):
+			bullet.queue_free()
+			
+	var active_grenades = get_tree().get_nodes_in_group("grenades")
+	for grenade in active_grenades:
+		if is_instance_valid(grenade):
+			grenade.queue_free()
+	
+	# Revive all enemies
+	var enemies = get_tree().get_nodes_in_group("enemies")
+	for enemy in enemies:
+		if enemy.has_method("revive_enemy"):
+			enemy.revive_enemy()
+	
+	# Revive all destructible boxes
+	var boxes = get_tree().get_nodes_in_group("destructible")
+	for box in boxes:
+		if box.has_method("revive_box"):
+			box.revive_box()
+	
 	if animated_sprite:
 		animated_sprite.play("idle")
 	
